@@ -1,0 +1,316 @@
+# ==============================================================
+#  .editorconfig — Unreal Engine 5 C++ 개발 표준 설정
+#
+#  적용 범위:
+#    - 포맷팅  : 모든 주요 파일 형식 (UE5 코딩 표준 준수)
+#    - 한글    : UTF-8 BOM 전략으로 MSVC 컴파일 오류 차단
+#    - 네이밍  : UE5 공식 접두사 규칙 (Visual Studio 실시간 경고)
+#
+#  지원 IDE  : Visual Studio 2022, JetBrains Rider, VS Code
+#  참고 문서  : https://dev.epicgames.com/documentation/coding-standard
+# ==============================================================
+
+root = true
+
+
+# --------------------------------------------------------------
+# [1] 전체 파일 기본값
+#     — 아래 섹션에서 재정의되지 않는 모든 파일에 적용
+# --------------------------------------------------------------
+[*]
+charset                  = utf-8
+end_of_line              = crlf
+insert_final_newline     = true
+trim_trailing_whitespace = true
+indent_style             = tab
+indent_size              = 4
+tab_width                = 4
+
+
+# ==============================================================
+#  C / C++ 소스 및 헤더
+# ==============================================================
+
+# --------------------------------------------------------------
+# [2] C++ 핵심 파일 — 포맷팅 + 한글 지원
+#
+#  charset = utf-8-bom
+#    → MSVC 컴파일러는 BOM이 없으면 한글 주석을 ANSI로 해석해
+#      C4819 경고 또는 컴파일 오류가 발생합니다.
+#      BOM을 붙이면 Rider / VS Code도 정상 인식합니다.
+# --------------------------------------------------------------
+[*.{cpp,h,hpp,inl,cc}]
+charset                  = utf-8-bom
+indent_style             = tab
+indent_size              = 4
+tab_width                = 4
+end_of_line              = crlf
+insert_final_newline     = true
+trim_trailing_whitespace = true
+max_line_length          = 120
+
+# --------------------------------------------------------------
+# [3] C++ 네이밍 컨벤션 (Visual Studio 전용)
+#
+#  UE5 공식 접두사 규칙을 에디터 수준에서 실시간으로 강제합니다.
+#  규칙 우선순위: 구체적(파생 클래스) → 추상적(전체) 순서로 선언
+#  참고: Rider / VS Code 에서는 무시됨 → .clang-tidy 병행 권장
+#
+#  [규칙 → 심볼 → 스타일] 3단 구조로 작동합니다.
+# --------------------------------------------------------------
+
+# ── 규칙(Rule): 심볼과 스타일을 연결 ─────────────────────────
+#  우선순위 높음(구체적) → 낮음(포괄적) 순 정렬 필수
+
+cpp_naming_rule.aactor_prefixed.symbols               = aactor_class
+cpp_naming_rule.aactor_prefixed.style                 = aactor_style
+
+cpp_naming_rule.swidget_prefixed.symbols              = swidget_class
+cpp_naming_rule.swidget_prefixed.style                = swidget_style
+
+cpp_naming_rule.uobject_prefixed.symbols              = uobject_class
+cpp_naming_rule.uobject_prefixed.style                = uobject_style
+
+cpp_naming_rule.interfaces_prefixed.symbols           = interfaces
+cpp_naming_rule.interfaces_prefixed.style             = unreal_engine_interfaces
+
+cpp_naming_rule.templates_prefixed.symbols            = templates
+cpp_naming_rule.templates_prefixed.style              = unreal_engine_templates
+
+cpp_naming_rule.structs_prefixed.symbols              = structs
+cpp_naming_rule.structs_prefixed.style                = unreal_engine_structs
+
+cpp_naming_rule.enums_prefixed.symbols                = enums
+cpp_naming_rule.enums_prefixed.style                  = unreal_engine_enums
+
+cpp_naming_rule.booleans_prefixed.symbols             = boolean_vars
+cpp_naming_rule.booleans_prefixed.style               = boolean_style
+
+cpp_naming_rule.general_names.symbols                 = all_symbols
+cpp_naming_rule.general_names.style                   = unreal_engine_default
+
+# ── 심볼(Symbol): 어떤 코드 요소에 적용할지 정의 ─────────────
+
+# AActor 파생 클래스 → A 접두사
+cpp_naming_symbols.aactor_class.applicable_kinds      = class
+cpp_naming_symbols.aactor_class.applicable_type       = AActor
+
+# SWidget 파생 클래스 → S 접두사 (Slate UI)
+cpp_naming_symbols.swidget_class.applicable_kinds     = class
+cpp_naming_symbols.swidget_class.applicable_type      = SWidget
+
+# UObject 파생 클래스 → U 접두사
+cpp_naming_symbols.uobject_class.applicable_kinds     = class
+cpp_naming_symbols.uobject_class.applicable_type      = UObject
+
+# 인터페이스 → I 접두사
+cpp_naming_symbols.interfaces.applicable_kinds        = interface
+
+# 템플릿 클래스 → T 접두사
+cpp_naming_symbols.templates.applicable_kinds         = template_class
+
+# 구조체 → F 접두사
+cpp_naming_symbols.structs.applicable_kinds           = struct
+
+# 열거형 → E 접두사
+cpp_naming_symbols.enums.applicable_kinds             = enum
+
+# bool 변수(지역/파라미터/멤버) → b 접두사
+cpp_naming_symbols.boolean_vars.applicable_kinds      = local,parameter,field
+cpp_naming_symbols.boolean_vars.applicable_type       = bool
+
+# 그 외 모든 심볼
+cpp_naming_symbols.all_symbols.applicable_kinds       = *
+
+# ── 스타일(Style): 접두사 + 대소문자 규칙 정의 ───────────────
+
+# 기본: PascalCase, 접두사 없음 (일반 함수, 변수 등)
+cpp_naming_style.unreal_engine_default.capitalization = pascal_case
+cpp_naming_style.unreal_engine_default.required_prefix =
+cpp_naming_style.unreal_engine_default.required_suffix =
+cpp_naming_style.unreal_engine_default.word_separator  =
+
+# U — UObject 파생 클래스
+cpp_naming_style.uobject_style.capitalization         = pascal_case
+cpp_naming_style.uobject_style.required_prefix        = U
+cpp_naming_style.uobject_style.required_suffix        =
+cpp_naming_style.uobject_style.word_separator         =
+
+# A — AActor 파생 클래스
+cpp_naming_style.aactor_style.capitalization          = pascal_case
+cpp_naming_style.aactor_style.required_prefix         = A
+cpp_naming_style.aactor_style.required_suffix         =
+cpp_naming_style.aactor_style.word_separator          =
+
+# S — Slate SWidget 파생 클래스
+cpp_naming_style.swidget_style.capitalization         = pascal_case
+cpp_naming_style.swidget_style.required_prefix        = S
+cpp_naming_style.swidget_style.required_suffix        =
+cpp_naming_style.swidget_style.word_separator         =
+
+# I — 인터페이스 (UE5: IMyInterface + UMyInterface 쌍 구조)
+cpp_naming_style.unreal_engine_interfaces.capitalization = pascal_case
+cpp_naming_style.unreal_engine_interfaces.required_prefix = I
+cpp_naming_style.unreal_engine_interfaces.required_suffix =
+cpp_naming_style.unreal_engine_interfaces.word_separator  =
+
+# T — 템플릿 클래스
+cpp_naming_style.unreal_engine_templates.capitalization = pascal_case
+cpp_naming_style.unreal_engine_templates.required_prefix = T
+cpp_naming_style.unreal_engine_templates.required_suffix =
+cpp_naming_style.unreal_engine_templates.word_separator  =
+
+# F — 구조체
+cpp_naming_style.unreal_engine_structs.capitalization = pascal_case
+cpp_naming_style.unreal_engine_structs.required_prefix = F
+cpp_naming_style.unreal_engine_structs.required_suffix =
+cpp_naming_style.unreal_engine_structs.word_separator  =
+
+# E — 열거형
+cpp_naming_style.unreal_engine_enums.capitalization   = pascal_case
+cpp_naming_style.unreal_engine_enums.required_prefix  = E
+cpp_naming_style.unreal_engine_enums.required_suffix  =
+cpp_naming_style.unreal_engine_enums.word_separator   =
+
+# b — bool 변수 (소문자 b + PascalCase)
+cpp_naming_style.boolean_style.capitalization         = pascal_case
+cpp_naming_style.boolean_style.required_prefix        = b
+cpp_naming_style.boolean_style.required_suffix        =
+cpp_naming_style.boolean_style.word_separator         =
+
+
+# ==============================================================
+#  빌드 / 모듈 설정 파일
+# ==============================================================
+
+# --------------------------------------------------------------
+# [4] C# 빌드 규칙 (Build.cs / Target.cs)
+#     UBT(Unreal Build Tool)가 읽는 파일
+# --------------------------------------------------------------
+[*.{Build.cs,Target.cs}]
+charset      = utf-8-bom
+indent_style = tab
+indent_size  = 4
+end_of_line  = crlf
+
+# --------------------------------------------------------------
+# [5] Visual Studio 프로젝트 파일
+# --------------------------------------------------------------
+[*.sln]
+charset      = utf-8
+indent_style = tab
+end_of_line  = crlf
+
+[*.{vcxproj,vcxproj.filters,props}]
+charset      = utf-8-bom
+indent_style = space
+indent_size  = 2
+end_of_line  = crlf
+
+
+# ==============================================================
+#  UE5 에셋 / 설정 파일
+# ==============================================================
+
+# --------------------------------------------------------------
+# [6] INI 설정 파일
+#     DefaultEngine.ini, DefaultGame.ini, DefaultInput.ini 등
+#     UE5 런타임은 BOM 없는 UTF-8을 선호
+# --------------------------------------------------------------
+[*.ini]
+charset                  = utf-8
+indent_style             = space
+indent_size              = 2
+end_of_line              = crlf
+trim_trailing_whitespace = true
+
+# --------------------------------------------------------------
+# [7] 프로젝트 / 플러그인 디스크립터
+# --------------------------------------------------------------
+[*.{uproject,uplugin}]
+charset      = utf-8
+indent_style = space
+indent_size  = 4
+end_of_line  = crlf
+
+# --------------------------------------------------------------
+# [8] DataTable CSV
+#     Excel 등 외부 툴과 한글 호환을 위해 BOM 사용
+# --------------------------------------------------------------
+[*.csv]
+charset      = utf-8-bom
+end_of_line  = crlf
+
+
+# ==============================================================
+#  스크립트 / 자동화 도구
+# ==============================================================
+
+# --------------------------------------------------------------
+# [9] Python (UE5 Python API, 에디터 자동화)
+# --------------------------------------------------------------
+[*.py]
+charset                  = utf-8
+indent_style             = space
+indent_size              = 4
+end_of_line              = crlf
+trim_trailing_whitespace = true
+
+# --------------------------------------------------------------
+# [10] PowerShell / Batch (빌드 자동화, CI)
+# --------------------------------------------------------------
+[*.{ps1,bat,cmd}]
+charset      = utf-8-bom
+end_of_line  = crlf
+
+# --------------------------------------------------------------
+# [11] Shell Script (Linux 서버 빌드, CI/CD)
+#      LF 필수: CRLF이면 #!/bin/bash 인식 실패
+# --------------------------------------------------------------
+[*.sh]
+charset      = utf-8
+end_of_line  = lf
+
+
+# ==============================================================
+#  문서 / 데이터
+# ==============================================================
+
+# --------------------------------------------------------------
+# [12] 마크다운
+#      trailing space = 마크다운 줄 바꿈 문법이므로 trim 제외
+# --------------------------------------------------------------
+[*.{md,markdown}]
+charset                  = utf-8
+end_of_line              = crlf
+insert_final_newline     = true
+trim_trailing_whitespace = false
+
+# --------------------------------------------------------------
+# [13] JSON / JSONC
+# --------------------------------------------------------------
+[*.{json,jsonc}]
+charset      = utf-8
+indent_style = space
+indent_size  = 2
+end_of_line  = crlf
+
+# --------------------------------------------------------------
+# [14] YAML (GitHub Actions, CI 파이프라인)
+#      Linux CI 환경 호환을 위해 LF 사용
+# --------------------------------------------------------------
+[*.{yml,yaml}]
+charset      = utf-8
+indent_style = space
+indent_size  = 2
+end_of_line  = lf
+
+
+# ==============================================================
+#  생성(Generated) 파일 — 규칙 적용 제외
+#  UE5가 자동 생성하는 폴더는 수동 편집 대상이 아님
+# ==============================================================
+[{Binaries,Intermediate,Saved,DerivedDataCache,Build}/**]
+charset      = unset
+end_of_line  = unset
+indent_style = unset
