@@ -6,18 +6,79 @@
 #include "GameFramework/Character.h"
 #include "EchoPlayerCharacter.generated.h"
 
-UCLASS()
+//클래스 구조체 전방선언
+//1. 스프링암
+//2. 카메라 컴포넌트
+//3. 향상된 입력 액션
+//4. 애니메이션 몽타주
+//입력액션벨류 구조체
+//피격만 구현
+
+class UInputAction;
+struct FInputActionValue;
+class UAnimMontage;
+
+UCLASS(Abstract)
 class ECHOOFME_API AEchoPlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDead);
+
+
 public:
 	// Sets default values for this character's properties
 	AEchoPlayerCharacter();
+	//이동 입력 처리 관련 메소드들
+
+	// 이동 수행 메소드
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* MoveAction;
+	// 이동 입력 바인딩 메소드
+	void Move(const FInputActionValue& Value);
+
+	// 시점 변경 수행 메소드
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* LookAction;
+	//  시선 변경 입력 바인딩 메소드
+	void Look(const FInputActionValue& Value);
+
+	//이동 모드 변경 호출 메소드 선언
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;
+
+	// 플레이어 컨트롤러 빙의시 입력 바인딩 처리를 수행 하는 메소드
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// 점프 관련 메소드
+	UPROPERTY(EditAnywhere, Category = "Input")
+
+	UInputAction* JumpAction;
+	// 시작
+	void DoJumpStart(); 
+	// 점프 관련 정보리셋
+	void ResetWallJump();
+	// 종료
+	void DoJumpEnd();
+
+	// 착지 메소드
+	virtual void Landed(const FHitResult& Hit) override;
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	// 이동 입력 액션 속성들
+
+	// 이동 입력 액션
+	// 마우스 시점 입력 액션
+
+	// 카메라 관련 속성들
+	// 기본 캐릭터와 카메라의 거리
+
+	//히트판정 메소드
+	//공격의 충돌 판정 수행 메소드
+	//블루프린트 정의용 이펙트 출력 메소드
+
 
 public:	
 	// Called every frame
