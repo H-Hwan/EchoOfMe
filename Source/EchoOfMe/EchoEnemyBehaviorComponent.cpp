@@ -26,8 +26,7 @@ UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 	SearchStateComp = CreateDefaultSubobject<USearchStateComponent>(TEXT("SearchState"));
 	LostStateComp = CreateDefaultSubobject<ULostStateComponent>(TEXT("LostState"));
 
-
-
+	CurrentState = EFSMState::Suspect;
 }
 
 
@@ -43,6 +42,12 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 	ChaseStateComp->Startreference(Echo, this);
 	SearchStateComp->Startreference(Echo, this);
 	LostStateComp->Startreference(Echo, this);
+
+	CurrentStateComp = GetStateComponent(CurrentState);
+	if (CurrentStateComp)
+	{
+		CurrentStateComp->OnStateEnter();
+	}
 
 }
 
@@ -153,6 +158,7 @@ void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 		}
 		CachedFlags.Add(A);
 	}
+
 	if (CachedFlags.Num() <= 0) return;
 
 	int32 Random = FMath::RandRange(0, CachedFlags.Num() - 1);
