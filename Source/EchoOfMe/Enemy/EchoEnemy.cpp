@@ -4,6 +4,9 @@
 #include "Enemy/EchoEnemy.h"
 #include "EchoEnemyAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "EchoEnemyBehaviorComponent.h"
+
+
 
 // Sets default values
 AEchoEnemy::AEchoEnemy()
@@ -19,7 +22,15 @@ AEchoEnemy::AEchoEnemy()
 	// 캐릭터 이동 컴포넌트가 이동을 위해 회전 시 부드러운 회전을 사용함
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 
+	GetCharacterMovement()->MaxWalkSpeed = 222.0f;
 
+	GetCharacterMovement()->MaxAcceleration = 1500.0f;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true; // 캐릭터 이동 방향으로 자동 회전
+
+	GetCharacterMovement()->bUseRVOAvoidance = true; // AI 캐릭터들끼리 겹쳐지지 않도록 설정
+
+	EnemyBrain = CreateDefaultSubobject<UEchoEnemyBehaviorComponent>(TEXT("Brain"));
 
 }
 
@@ -27,6 +38,8 @@ AEchoEnemy::AEchoEnemy()
 void AEchoEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+
 
 
 	
@@ -37,7 +50,24 @@ void AEchoEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 
+
+
+}
+// 플레이어 추격시작함?
+void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
+{
+	if(bLockOn)
+	{
+		GetCharacterMovement()->MaxAcceleration = 500.0f;
+		GetCharacterMovement()->MaxWalkSpeed = 340.0f;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 222.0f;
+		GetCharacterMovement()->MaxAcceleration = 1500.0f;
+	}
 
 }
 

@@ -8,7 +8,11 @@
 #include "SearchStateComponent.h"
 #include "LostStateComponent.h"
 #include "EchoOfMe/Enemy/EchoEnemy.h"
+#include "Kismet/GameplayStatics.h"
+#include "EchoEnemyAIController.h"
 
+// 경로 추적시 이벤트를 받아 처리하고 싶을 때 모듈 포함
+#include "Navigation/PathFollowingComponent.h"
 // Sets default values for this component's properties
 UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 {
@@ -31,6 +35,8 @@ UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 void UEchoEnemyBehaviorComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Echo = Cast<AEchoEnemy>(GetOwner());
 
 	PatrolStateComp->Startreference(Echo, this);
 	SuspectStateComp->Startreference(Echo, this);
@@ -89,5 +95,72 @@ void UEchoEnemyBehaviorComponent::ChangeState(EFSMState NewState)
 	}
 
 }
+
+bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, float InAcceptanceRadius)
+{
+	AAIController* AIController = Cast<AAIController>(Echo->GetController());
+
+	if (!AIController) return false;
+
+	const float Radius = (InAcceptanceRadius > 0.0f) ? InAcceptanceRadius : AcceptanceRadius;
+
+	FAIMoveRequest Moveq;
+
+	Moveq.SetGoalLocation(Destination);
+	Moveq.SetAcceptanceRadius(Radius);
+	Moveq.SetAllowPartialPath(true);
+	Moveq.SetUsePathfinding(true);
+	Moveq.SetProjectGoalLocation(true);
+
+	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
+
+
+
+	return Result.Code != EPathFollowingRequestResult::Failed;
+}
+
+APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
+{
+	return UGameplayStatics::GetPlayerPawn(GetWorld(),0);
+}
+
+FVector UEchoEnemyBehaviorComponent::GetDistanceToPlayer()
+{
+	FVector PlayerLoc = GetPlayerInfo()->GetActorLocation();
+	FVector Loc = Echo->GetActorLocation();
+	FVector DistanceToPlayer = PlayerLoc - Loc;
+
+	UE_LOG(LogTemp, Log, TEXT("[UEchoEnemyBehaviorComponent] %f , %f"),DistanceToPlayer.X, DistanceToPlayer.Y);
+
+	return DistanceToPlayer;
+}
+FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
+{
+	return GetPlayerInfo()->GetActorLocation();
+}
+// 깃발 배열돌려야됨
+void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
+{
+	TArray<AActor*> Flags;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), SelectTag, Flags);
+
+	CachedFlags.Reset();
+	for (AActor* A : Flags)
+	{
+		if (FVector::Dist(A->GetActorLocation(), GetPlayerLocation()) <= OutRange)
+		{
+			continue;
+		}
+		CachedFlags.Add(A);
+	}
+	if (CachedFlags.Num() <= 0) return;
+
+	int32 Random = FMath::RandRange(0, CachedFlags.Num() - 1);
+
+	AActor* ACT = CachedFlags[Random];
+
+	Echo->SetActorLocation(ACT->GetActorLocation());
+}
+
 
 

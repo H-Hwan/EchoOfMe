@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "EchoEnemy.generated.h"
 
+class UEchoEnemyBehaviorComponent;
+
 UCLASS()
 class ECHOOFME_API AEchoEnemy : public ACharacter
 {
@@ -19,8 +21,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category = "EnemyBrain")
+	TObjectPtr<UEchoEnemyBehaviorComponent> EnemyBrain;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// RInterp RotationSpeed 
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	float RotationSpeed = 300.0f;
+
+	UFUNCTION()
+	void IsLockOnToTarget(bool bLockOn);
+
 
 };

@@ -73,5 +73,33 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void ChangeState(EFSMState NewState);
 
+	UFUNCTION(BlueprintCallable, Category = "State|Movement")
+	bool RequestMoveTo(const FVector& Destination, float InAcceptanceRadius = -1.f);
+
+	UFUNCTION(BlueprintCallable, Category = "Search")
+	APawn* GetPlayerInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	FVector GetDistanceToPlayer() ;
+
+	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	FVector GetPlayerLocation() ;
+
+
+	UPROPERTY(EditAnywhere, Category = "Search | Location")
+	float AcceptanceRadius = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Search")
+	FName SelectTag;
+
+	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
+	void PickTeleportToNewPoint();
+
+	UPROPERTY()
+	TArray<TObjectPtr<AActor>> CachedFlags;
+
+
+	UPROPERTY(EditAnywhere, Category = "State")
+	float OutRange = 1500.0f;
 
 };
