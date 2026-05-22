@@ -36,12 +36,18 @@ public:
 	UInputAction* MoveAction;
 	// 이동 입력 바인딩 메소드
 	void Move(const FInputActionValue& Value);
+	// 이동 수행 메소드
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void DoMove(float Right, float Forward);
 
 	// 시점 변경 수행 메소드
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* LookAction;
 	//  시선 변경 입력 바인딩 메소드
 	void Look(const FInputActionValue& Value);
+	// 시점 변경 수행 메소드
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void DoLook(float Yaw, float Pitch);
 
 	//이동 모드 변경 호출 메소드 선언
 	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;
@@ -53,15 +59,38 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Input")
 
 	UInputAction* JumpAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* RunningAction;
 	// 시작
 	void DoJumpStart(); 
 	// 점프 관련 정보리셋
-	void ResetWallJump();
+
 	// 종료
 	void DoJumpEnd();
 
 	// 착지 메소드
 	virtual void Landed(const FHitResult& Hit) override;
+
+	UPROPERTY(EditAnywhere, Category = "status")
+	float MaxSpeed = 500;
+
+
+	UPROPERTY(EditAnywhere, Category = "status")
+	float CurrentSpeed = 320;
+
+	UPROPERTY(EditAnywhere, Category = "status")
+	float Stamina = 20;
+
+	bool bRunning = false;
+
+	UFUNCTION()
+	void DoRunning();
+
+	UFUNCTION()
+	void StopRunning();
+
+	
 
 
 protected:
@@ -84,7 +113,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
