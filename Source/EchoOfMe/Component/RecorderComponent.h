@@ -46,9 +46,9 @@ public:
 	bool IsPlaying() const;
 
 	UPROPERTY(BlueprintAssignable, Category = "Recorder")
-	FOnRecorderFinished OnRecorderFinished;
+	FOnRecorderFinished OnPlaybackFinished;
 	UPROPERTY(BlueprintAssignable, Category = "Recorder")
-	FOnRecorderStagePlayed OnRecorderStagePlayed;
+	FOnRecorderStagePlayed OnStagePlayed;
 protected:
 	virtual void BeginPlay() override;
 

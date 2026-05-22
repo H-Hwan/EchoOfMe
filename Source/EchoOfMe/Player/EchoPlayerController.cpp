@@ -3,3 +3,6 @@
 
 #include "Player/EchoPlayerController.h"
 
+AEchoPlayerController::AEchoPlayerController() {
+	
+}

@@ -14,5 +14,5 @@ class ECHOOFME_API URecorderItemDefinition : public UInventoryItemDefinition {
 public:
 	// 4단계 재생음 등록을 위한 배열
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Recorder")
-	TArray<TObjectPtr<USoundBase>> StageSound;	
+	TArray<TObjectPtr<USoundBase>> StageSounds;	
 };
