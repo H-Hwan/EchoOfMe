@@ -2,7 +2,7 @@
 
 
 #include "PatrolStateComponent.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 
 
 void UPatrolStateComponent::OnStateEnter()

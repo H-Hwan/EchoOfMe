@@ -2,14 +2,14 @@
 
 
 #include "EchoEnemyBehaviorComponent.h"
-#include "PatrolStateComponent.h"
-#include "SuspectStateComponent.h"
-#include "ChaseStateComponent.h"
-#include "SearchStateComponent.h"
-#include "LostStateComponent.h"
+#include "EchoOfMe/Enemy/PatrolStateComponent.h"
+#include "EchoOfMe/Enemy/SuspectStateComponent.h"
+#include "EchoOfMe/Enemy/ChaseStateComponent.h"
+#include "EchoOfMe/Enemy/SearchStateComponent.h"
+#include "EchoOfMe/Enemy/LostStateComponent.h"
 #include "EchoOfMe/Enemy/EchoEnemy.h"
 #include "Kismet/GameplayStatics.h"
-#include "EchoEnemyAIController.h"
+#include "EchoOfMe/Enemy/EchoEnemyAIController.h"
 
 // 경로 추적시 이벤트를 받아 처리하고 싶을 때 모듈 포함
 #include "Navigation/PathFollowingComponent.h"

@@ -2,9 +2,9 @@
 
 
 #include "Enemy/EchoEnemy.h"
-#include "EchoEnemyAIController.h"
+#include "EchoOfMe/Enemy/EchoEnemyAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 
 
 

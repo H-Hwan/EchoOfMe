@@ -2,12 +2,16 @@
 
 
 #include "SuspectStateComponent.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 
 
 void USuspectStateComponent::OnStateEnter()
 {
 	Super::OnStateEnter();
+
+
+
+
 }
 
 void USuspectStateComponent::OnStateUpdate(float Delta)

@@ -2,7 +2,7 @@
 
 
 #include "FSMStateBase.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 
 // Sets default values for this component's properties
 UFSMStateBase::UFSMStateBase()

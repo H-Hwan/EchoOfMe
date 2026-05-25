@@ -2,7 +2,7 @@
 
 
 #include "ChaseStateComponent.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 
 void UChaseStateComponent::OnStateEnter()
 {
