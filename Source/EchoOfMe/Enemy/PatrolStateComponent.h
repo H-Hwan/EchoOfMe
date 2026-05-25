@@ -16,6 +16,11 @@ class ECHOOFME_API UPatrolStateComponent : public UFSMStateBase
 
 public:
 
+	bool PickRandomNavMovePoint(FVector& OutLocation) const;
+
+	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "cm"))
+	float PatrolRadius = 500.0f;
+
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
 	virtual void OnStateExit() override;

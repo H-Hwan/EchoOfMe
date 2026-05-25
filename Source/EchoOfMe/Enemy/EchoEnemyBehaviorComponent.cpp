@@ -77,6 +77,8 @@ UFSMStateBase* UEchoEnemyBehaviorComponent::GetStateComponent(EFSMState NewState
 		return SearchStateComp;
 	case EFSMState::Lost:
 		return LostStateComp;
+	case EFSMState::Ambush:
+		return nullptr;
 	default:
 		return nullptr;
 	}

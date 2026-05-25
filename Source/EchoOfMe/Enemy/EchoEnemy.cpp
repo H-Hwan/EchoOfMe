@@ -55,7 +55,7 @@ void AEchoEnemy::Tick(float DeltaTime)
 
 
 }
-// 플레이어 추격시작함?
+// 플레이어 추격시작 시 변경 스텟
 void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
 {
 	if(bLockOn)
@@ -68,6 +68,21 @@ void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
 		GetCharacterMovement()->MaxWalkSpeed = 222.0f;
 		GetCharacterMovement()->MaxAcceleration = 1500.0f;
 	}
+
+}
+// 빛감지
+void AEchoEnemy::LightDetect(float DeltaTime)
+{
+
+	if (!IsDetect) return;
+
+	DetectCount += DeltaTime;
+
+
+
+
+
+
 
 }
 

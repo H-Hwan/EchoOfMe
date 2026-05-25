@@ -35,5 +35,17 @@ public:
 	UFUNCTION()
 	void IsLockOnToTarget(bool bLockOn);
 
+	// 감지 게이지
+	UPROPERTY()
+	float DetectCount = 0.0f;
+
+	// 감지 여부 게이지
+	UPROPERTY()
+	bool IsDetect = false;
+
+	// 빛감지 처리 메소드
+	UFUNCTION()
+	void LightDetect(float Delta);
+
 
 };

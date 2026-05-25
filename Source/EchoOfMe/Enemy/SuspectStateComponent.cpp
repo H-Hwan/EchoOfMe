@@ -26,4 +26,8 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 void USuspectStateComponent::OnStateExit()
 {
 	Super::OnStateExit();
+
+
+
+
 }

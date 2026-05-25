@@ -3,6 +3,7 @@
 
 #include "FSMStateBase.h"
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
+#include "Enemy/EchoEnemy.h"
 
 // Sets default values for this component's properties
 UFSMStateBase::UFSMStateBase()
@@ -24,7 +25,7 @@ void UFSMStateBase::Startreference(ACharacter* Echo, UEchoEnemyBehaviorComponent
 {
 	EnemyBrain = BeHavior;
 
-
+	EchoEnemy = Echo;
 
 }
 

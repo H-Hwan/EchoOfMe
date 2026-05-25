@@ -21,7 +21,8 @@ enum class EFSMState : uint8
 	Suspect	UMETA(DisplayName = "Suspect"),
 	Chase	UMETA(DisplayName = "Chase"),
 	Search	UMETA(DisplayName = "Search"),
-	Lost	UMETA(DisplayName = "Lost")
+	Lost	UMETA(DisplayName = "Lost"),
+	Ambush	UMETA(DisplayName = "Ambush")
 };
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ECHOOFME_API UEchoEnemyBehaviorComponent : public UActorComponent
