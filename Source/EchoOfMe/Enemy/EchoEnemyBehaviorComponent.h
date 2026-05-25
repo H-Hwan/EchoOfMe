@@ -89,7 +89,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Search | Location")
 	float AcceptanceRadius = 0.0f;
-
+	// 타겟 태그 지정
 	UPROPERTY(EditAnywhere, Category = "Search")
 	FName SelectTag;
 
@@ -102,5 +102,12 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "State")
 	float OutRange = 1500.0f;
+
+	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "cm" ))
+	float AttackRadius = 3000.0f;
+
+	UFUNCTION()
+	bool IsNavMoving()const;
+
 
 };

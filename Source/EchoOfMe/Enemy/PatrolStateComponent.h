@@ -16,9 +16,18 @@ class ECHOOFME_API UPatrolStateComponent : public UFSMStateBase
 
 public:
 
+	float StuckTime = 0.0f;
+
+
+	float MaxStuckTime = 8.0f;
+
 	bool PickRandomNavMovePoint(FVector& OutLocation) const;
 
-	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "cm"))
+	FVector RandomPickTarget = FVector::ZeroVector;
+
+	bool bHasTarget = false;
+
+	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "m"))
 	float PatrolRadius = 500.0f;
 
 	virtual void OnStateEnter() override;

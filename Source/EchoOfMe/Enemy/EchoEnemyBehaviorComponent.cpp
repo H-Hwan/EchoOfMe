@@ -128,7 +128,7 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 
 APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
 {
-	return UGameplayStatics::GetPlayerPawn(GetWorld(),0);
+	return UGameplayStatics::GetPlayerPawn(GetWorld(),0); 
 }
 
 FVector UEchoEnemyBehaviorComponent::GetDistanceToPlayer()
@@ -143,9 +143,13 @@ FVector UEchoEnemyBehaviorComponent::GetDistanceToPlayer()
 }
 FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 {
+
 	return GetPlayerInfo()->GetActorLocation();
+
+
 }
-// 깃발 배열돌려야됨
+
+// 깃발 배열돌려야됨 깃발 위치로 순간이동
 void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 {
 	TArray<AActor*> Flags;
@@ -171,4 +175,7 @@ void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 }
 
 
-
+bool UEchoEnemyBehaviorComponent::IsNavMoving() const
+{
+	return false;
+}

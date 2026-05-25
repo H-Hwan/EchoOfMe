@@ -21,7 +21,7 @@ void UFSMStateBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UFSMStateBase::Startreference(ACharacter* Echo, UEchoEnemyBehaviorComponent* BeHavior)
+void UFSMStateBase::Startreference(AEchoEnemy* Echo, UEchoEnemyBehaviorComponent* BeHavior)
 {
 	EnemyBrain = BeHavior;
 

@@ -25,7 +25,7 @@ protected:
 	TObjectPtr<UEchoEnemyBehaviorComponent> EnemyBrain;
 
 	UPROPERTY()
-	TObjectPtr<ACharacter> EchoEnemy;
+	TObjectPtr<AEchoEnemy> EchoEnemy;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "State")
@@ -37,7 +37,7 @@ public:
 
 
 	UFUNCTION()
-	virtual void Startreference(ACharacter* Echo, UEchoEnemyBehaviorComponent* BeHavior);
+	virtual void Startreference(AEchoEnemy* Echo, UEchoEnemyBehaviorComponent* BeHavior);
 
 		
 };
