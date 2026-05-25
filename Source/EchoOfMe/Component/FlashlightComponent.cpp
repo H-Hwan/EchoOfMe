@@ -18,6 +18,9 @@ void UFlashlightComponent::BeginPlay() {
 	Super::BeginPlay();
 
 	SetAttenuationRadius(MaxAttenuationRadius);
+
+	bIsOn = false;
+	SetVisibility(false);
 }
 
 
@@ -52,6 +55,12 @@ float UFlashlightComponent::CalculateTargetRadius() const {
 }
 
 
+void UFlashlightComponent::ToggleFlashLight() {
+	SetFlashLightOn(!bIsOn);
+}
+
+
 void UFlashlightComponent::SetFlashLightOn(bool bOn) {
+	bIsOn = bOn;
 	SetVisibility(bOn);
 }

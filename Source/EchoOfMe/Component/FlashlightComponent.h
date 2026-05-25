@@ -37,4 +37,14 @@ protected:
 
 private:
 	float CalculateTargetRadius() const;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Flash Light")
+	void ToggleFlashLight();
+
+	UFUNCTION(BlueprintPure, Category = "Flash Light")
+	bool IsFlashLightOn() const { return bIsOn; }
+
+private:
+	bool bIsOn = false;
 };
