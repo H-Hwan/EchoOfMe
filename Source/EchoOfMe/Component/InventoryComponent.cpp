@@ -19,7 +19,9 @@ bool UInventoryComponent::AddItem(UInventoryItemDefinition* Item) {
 	if (!Item || HasItem(Item->ItemID)) return false;
 
 	Items.Add(Item);
+	UE_LOG(LogTemp, Warning, TEXT("[Inventory] AddItem 성공, 총 %d"), Items.Num());
 	OnInventoryChanged.Broadcast();
+	UE_LOG(LogTemp, Warning, TEXT("[Inventory] AddItem 방송, this=%p"), this);
 
 	return true;
 }

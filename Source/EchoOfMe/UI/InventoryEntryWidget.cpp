@@ -7,10 +7,12 @@
 
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/SizeBox.h"
 
 
 void UInventoryEntryWidget::SetItem(UInventoryItemDefinition* InItem) {
 	Item = InItem;
+
 	if (!Item) return;
 
 	if (Text_Name) {
@@ -28,6 +30,16 @@ void UInventoryEntryWidget::SetItem(UInventoryItemDefinition* InItem) {
 	}
 }
 
+void UInventoryEntryWidget::NativeConstruct() {
+	Super::NativeConstruct();
+
+	UWidget* Root = GetRootWidget();
+
+	if (USizeBox* RootBox = Cast<USizeBox>(GetRootWidget())) {
+		RootBox->SetWidthOverride(900.f);
+		RootBox->SetHeightOverride(150.f);
+	}
+}
 
 FReply UInventoryEntryWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) {
 	if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) && Item) {

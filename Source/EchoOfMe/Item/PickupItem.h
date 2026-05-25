@@ -22,7 +22,7 @@ public:
 	// Sets default values for this actor's properties
 	APickupItem();
 
-	void Insteract_Implementation(AActor* Interactor) override;
+	void Interact_Implementation(AActor* Interactor) override;
 	FText GetInteractionPrompt_Implementation() const;
 
 protected:

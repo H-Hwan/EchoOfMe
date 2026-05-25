@@ -22,12 +22,14 @@ APickupItem::APickupItem() {
 	MeshComp->SetCollisionResponseToAllChannels(ECR_Block);
 }
 
-void APickupItem::Insteract_Implementation(AActor* Interactor) {
-	if (ItemDefinition) return;
+void APickupItem::Interact_Implementation(AActor* Interactor) {
+	if (!ItemDefinition) return;
 
 	UInventoryComponent* InventoryComp = ResolveInventory(Interactor);
 	if (InventoryComp && InventoryComp->AddItem(ItemDefinition)) {
 		// 회수 연출
+
+		UE_LOG(LogTemp, Log, TEXT("[PickupItem] 아이템 회수"))
 
 		Destroy();
 	}
@@ -35,7 +37,7 @@ void APickupItem::Insteract_Implementation(AActor* Interactor) {
 
 
 FText APickupItem::GetInteractionPrompt_Implementation() const {
-	return NSLOCTEXT("Pickup", "Inestigate", "회수하기");
+	return NSLOCTEXT("Pickup", "Investigate", "회수하기");
 }
 
 

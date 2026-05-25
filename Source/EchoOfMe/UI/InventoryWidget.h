@@ -19,7 +19,8 @@ class ECHOOFME_API UInventoryWidget : public UUserWidget {
 
 public:
 	// 컨트롤러에서 호출
-	void BindInventory(UInventoryComponent* Inventory);
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void BindInventory(UInventoryComponent* InInventory);
 
 protected:
 	virtual void NativeDestruct() override;
@@ -31,6 +32,7 @@ protected:
 	void HandleEntryClicked(UInventoryItemDefinition* Item);
 
 	// 엔트리가 채워질 컨테이너
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UPanelWidget> ItemList;
 
 	// 엔트리 위젯 클래스
