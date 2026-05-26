@@ -6,7 +6,7 @@
 #include "Engine/World.h"                            //UWorld.(타이머, 트레이스, 시간) 객체 모듈포함
 #include "GameFramework/CharacterMovementComponent.h"// CMC (캐릭터 이동 컴포넌트) 객체 모듈 포함
 #include "Components/SkeletalMeshComponent.h"		 // 스켈레탈 메시 컴포넌트 모듈 포함
-
+#include "GameFramework/SpringArmComponent.h" // 필수 포함!
 #include "EnhancedInputSubsystems.h"				 // Enhanced Input 서브시스템 모듈 포함
 #include "EnhancedInputComponent.h"					 // Enhanced Input 바인딩 컴포넌트 모듈 포함
 #include "TimerManager.h"							 // FTimerManager (벽 점프 쿨다운) 타이머 모듈 포함
@@ -35,6 +35,12 @@ AEchoPlayerCharacter::AEchoPlayerCharacter()
 	GetCharacterMovement()->MaxAcceleration = 1500.0f;
 	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
 	GetCharacterMovement()->JumpZVelocity = 380.f;
+	// .cpp 생성자 부분
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+
+	// 이 설정이 반드시 true여야 마우스 입력으로 카메라를 회전시킬 수 있습니다!
+	CameraBoom->bUsePawnControlRotation = true;
 
 }
 // Called to bind functionality to input
@@ -106,6 +112,7 @@ void AEchoPlayerCharacter::Look(const FInputActionValue& Value)
 // 시점 변경 수행 메소드
 void AEchoPlayerCharacter::DoLook(float Yaw, float Pitch)
 {
+
 	if (GetController() != nullptr)
 	{
 		// 각 회전 축별 카메라 및 캐릭터 회전을 수행함
