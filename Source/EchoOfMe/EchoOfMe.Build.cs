@@ -11,10 +11,12 @@ public class EchoOfMe : ModuleRules
 		PublicIncludePaths.Add(ModuleDirectory);
 
 		PublicDependencyModuleNames.AddRange(new string[] {
-			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "NavigationSystem", "AIModule", "GameplayTags"
+			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "NavigationSystem", "AIModule", "GameplayTags", "UMG"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] {
+			"Slate", "SlateCore"
+		});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
