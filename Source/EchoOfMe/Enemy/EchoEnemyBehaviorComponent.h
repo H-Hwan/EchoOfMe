@@ -98,7 +98,7 @@ public:
 	FName SelectTag;
 
 	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
-	void PickTeleportToNewPoint();
+	FVector PickTeleportToNewPoint();
 
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> CachedFlags;

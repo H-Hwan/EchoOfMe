@@ -9,7 +9,9 @@ void USuspectStateComponent::OnStateEnter()
 {
 	Super::OnStateEnter();
 
-
+	bLooking = false;
+	LookingTime = 8.0f;
+	LookingForwardTime = 2.0f;
 
 
 }
@@ -24,6 +26,29 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 		return;
 	}
 
+	if (LookingTime > 0.0f)
+	{
+		LookingTime -= Delta;
+	}
+	else
+	{
+		EnemyBrain->ChangeState(EFSMState::Patrol);
+		return;
+	}
+
+	if (LookingForwardTime >= 0.0f)
+	{
+		LookingForwardTime -= Delta;
+	}
+	else
+	{
+		FVector Forward = EchoEnemy->GetActorForwardVector();
+
+
+
+		LookingForwardTime = 2.0f;
+	}
+
 
 }
 
@@ -31,7 +56,10 @@ void USuspectStateComponent::OnStateExit()
 {
 	Super::OnStateExit();
 
+	LookingTime = 8.0f;
 
+	LookingForwardTime = 2.0f;
 
+	bLooking = false;
 
 }

@@ -16,6 +16,14 @@ class ECHOOFME_API USuspectStateComponent : public UFSMStateBase
 
 public:
 
+	UPROPERTY()
+	bool bLooking;
+
+	float LookingTime;
+
+	float LookingForwardTime;
+
+	
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
 	virtual void OnStateExit() override;
