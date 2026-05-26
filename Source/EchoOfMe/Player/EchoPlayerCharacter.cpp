@@ -6,7 +6,8 @@
 #include "Engine/World.h"                            //UWorld.(타이머, 트레이스, 시간) 객체 모듈포함
 #include "GameFramework/CharacterMovementComponent.h"// CMC (캐릭터 이동 컴포넌트) 객체 모듈 포함
 #include "Components/SkeletalMeshComponent.h"		 // 스켈레탈 메시 컴포넌트 모듈 포함
-#include "GameFramework/SpringArmComponent.h" // 필수 포함!
+#include "GameFramework/SpringArmComponent.h"// 필수 포함!
+#include "Camera/CameraComponent.h"					 //
 #include "EnhancedInputSubsystems.h"				 // Enhanced Input 서브시스템 모듈 포함
 #include "EnhancedInputComponent.h"					 // Enhanced Input 바인딩 컴포넌트 모듈 포함
 #include "TimerManager.h"							 // FTimerManager (벽 점프 쿨다운) 타이머 모듈 포함
@@ -19,16 +20,19 @@
 AEchoPlayerCharacter::AEchoPlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	// 캡슐 콜리전 크기 설정
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
 
-	bUseControllerRotationPitch = false;
+	/*bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
+	bUseControllerRotationRoll = false;*/
 	// * 이동 키 입력 방향으로 캐릭터를 회전
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	// 2. 컨트롤러(카메라)의 Yaw 회전값을 캐릭터(몸)에 적용합니다.
+	bUseControllerRotationYaw = true;
 	// * 중력 크기 설정
 	GetCharacterMovement()->GravityScale = 1.0f;
 	// * 이동 시작/변경 시 가속 및 제동력
@@ -38,10 +42,20 @@ AEchoPlayerCharacter::AEchoPlayerCharacter()
 	// .cpp 생성자 부분
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-
+	CameraBoom->TargetArmLength = 0.0f; //
 	// 이 설정이 반드시 true여야 마우스 입력으로 카메라를 회전시킬 수 있습니다!
 	CameraBoom->bUsePawnControlRotation = true;
+	// 카메라 레그 활성화: 카메라가 캐릭터를 부드럽게 추적함
+	CameraBoom->bEnableCameraLag = true;
+	// 카메라 회전 레그 활성화: 카메라가 캐릭터 회전을 부드럽게 추적함
+	CameraBoom->bEnableCameraRotationLag = true;
 
+	// 카메라 컴포넌트 추가
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FollowCamera->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f)); // 눈 높이만큼 위로 이동
+	// 카메라는 캐릭터 추적 회전을 사용하지 않음
+	FollowCamera->bUsePawnControlRotation = false;
 }
 // Called to bind functionality to input
 void AEchoPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -140,7 +154,14 @@ void AEchoPlayerCharacter::StopRunning()
 void AEchoPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	//{
+	//	// 상하(Pitch) 회전 제한 (-80도 ~ +80도 정도로 설정하면 적당합니다)
+	//	PC->PlayerCameraManager->ViewPitchMin = -80.0f;
+	//	PC->PlayerCameraManager->ViewPitchMax = 80.0f;
+	//}
+	//
 }
 
 // Called every frame
