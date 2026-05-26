@@ -19,16 +19,6 @@ AEchoPlayerController::AEchoPlayerController() {
 
 void AEchoPlayerController::BeginPlay() {
 	Super::BeginPlay();
-
-	//if (InventoryWidgetClass) {
-	//	InventoryWidget = CreateWidget<UInventoryWidget>(this, InventoryWidgetClass);
-	//	if (InventoryWidget) {
-	//		InventoryWidget->BindInventory(Inventory);   // ★ 생성자에서 만든 그 멤버
-	//		InventoryWidget->AddToViewport();
-	//		InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
-	//		UE_LOG(LogTemp, Warning, TEXT("[Controller] AddToViewport + Bind 완료"));
-	//	}
-	//}
 }
 
 void AEchoPlayerController::SetupInputComponent() {

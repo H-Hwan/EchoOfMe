@@ -48,7 +48,7 @@ float UFlashlightComponent::CalculateTargetRadius() const {
 	QueryParams.AddIgnoredActor(GetOwner());
 
 	FHitResult Hit;
-	const bool bHit = World->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, QueryParams);
+	const bool bHit = World->LineTraceSingleByChannel(Hit, Start, End, ECC_Camera, QueryParams);
 	if (!bHit) return MaxAttenuationRadius;
 
 	return FMath::Clamp(Hit.Distance, MinAttenuationRadius, MaxAttenuationRadius);
