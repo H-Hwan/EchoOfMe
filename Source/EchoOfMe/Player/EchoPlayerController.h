@@ -6,13 +6,23 @@
 #include "GameFramework/PlayerController.h"
 #include "EchoPlayerController.generated.h"
 
+
 class UInputMappingContext;
 class AEchoPlayerCharacter;
+
+class UInventoryComponent;
+class URecorderComponent;
+class UInputAction;
+class UInventoryWidget;
+
 
 UCLASS(Abstract)
 class ECHOOFME_API AEchoPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	AEchoPlayerController();
 
 protected:
 	// 기본 입력 매핑 컨텍스트 배열
@@ -23,6 +33,8 @@ protected:
 	TSubclassOf<AEchoPlayerCharacter> CharacterClass;
 	//다시 스폰 할 때 속성
 	FTransform RespawnTransform;
+
+
 public:
 	// 게임 시작 이벤트 메소드
 	virtual void BeginPlay() override;
@@ -36,5 +48,26 @@ public:
 	UFUNCTION()
 	void OnPawnDestroyed(AActor* DestroyActor);
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	TObjectPtr<UInventoryComponent> Inventory;
 
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	TObjectPtr<URecorderComponent> Recorder;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Interaction")
+	TObjectPtr<UInputAction> InteractAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Interaction")
+	TObjectPtr<UInventoryWidget> InventoryWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float InteractDistance = 250.f;
+
+	// 확인용 임시 함수
+	void HandleInteract();
 };

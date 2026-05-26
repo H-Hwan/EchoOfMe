@@ -2,6 +2,12 @@
 
 
 #include "Player/EchoPlayerController.h"
+
+#include "Interface/Interactable.h"
+#include "Component/InventoryComponent.h"
+#include "Component/RecorderComponent.h"
+#include "UI/InventoryWidget.h"
+
 #include "EnhancedInputSubsystems.h"     // Enhanced Input 서브시스템
 #include "InputMappingContext.h"         // IMC 클래스
 #include "Kismet/GameplayStatics.h"      // UGameplayStatics (범용 게임플레이 유틸리티)
@@ -9,6 +15,16 @@
 #include "EchoPlayerCharacter.h"             // 전투 캐릭터 클래스
 #include "Engine/LocalPlayer.h"          // 로컬 플레이어
 #include "Engine/World.h"                // UWorld (월드 접근)
+
+#include "EnhancedInputComponent.h"
+#include "Camera/PlayerCameraManager.h"
+
+
+
+AEchoPlayerController::AEchoPlayerController() {
+	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	Recorder = CreateDefaultSubobject<URecorderComponent>(TEXT("Recorder"));
+}
 
 void AEchoPlayerController::BeginPlay()
 {
@@ -31,6 +47,12 @@ void AEchoPlayerController::SetupInputComponent()
 			{
 				Subsystem->AddMappingContext(CurrentContext, 0);
 			}
+		}
+	}
+
+	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent)) {
+		if (InteractAction) {
+			EIC->BindAction(InteractAction, ETriggerEvent::Started, this, &AEchoPlayerController::HandleInteract);
 		}
 	}
 }
@@ -61,6 +83,25 @@ void AEchoPlayerController::OnPawnDestroyed(AActor* DestroyActor)
 		if (PlayerCameraManager)
 		{
 			PlayerCameraManager->SetViewTarget(RespawnedCharacter);
+		}
+	}
+}
+
+
+void AEchoPlayerController::HandleInteract() {
+	if (!PlayerCameraManager) return;
+
+	const FVector Start = PlayerCameraManager->GetCameraLocation();
+	const FVector End = Start + PlayerCameraManager->GetCameraRotation().Vector() * InteractDistance;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(GetPawn());
+
+	FHitResult Hit;
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params)) {
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor && HitActor->Implements<UInteractable>()) {
+			IInteractable::Execute_Interact(HitActor, GetPawn());
 		}
 	}
 }
