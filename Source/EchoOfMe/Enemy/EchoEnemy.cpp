@@ -50,7 +50,22 @@ void AEchoEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
+	FVector RawVelocity = GetVelocity();
+	RawVelocity.Z = 0.0f;
+
+
+	SmoothedVelocity = FMath::VInterpTo(SmoothedVelocity, RawVelocity, DeltaTime, 6.0f);
+
+	if (SmoothedVelocity.SizeSquared() > 100.0f)
+	{
+		FRotator TargetRotator = SmoothedVelocity.Rotation();
+
+		TargetRotator.Pitch = 0.0f;
+		TargetRotator.Roll = 0.0f;
+
+		FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotator, DeltaTime, RotationSpeed);
+		SetActorRotation(NewRotation);
+	}
 
 
 

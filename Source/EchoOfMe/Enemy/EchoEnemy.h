@@ -50,6 +50,6 @@ public:
 	UFUNCTION()
 	void LightDetect(float Delta);
 
-
-
+	UPROPERTY()
+	FVector SmoothedVelocity = FVector::ZeroVector;
 };
