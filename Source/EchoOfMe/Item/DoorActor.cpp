@@ -55,13 +55,22 @@ void ADoorActor::OnProximityBegin(UPrimitiveComponent* Comp, AActor* Other, UPri
 	if (!Cast<APawn>(Other)) return;
 
 	OverlapCount++;
-	// 잠기지 않았으면
-	if (!bIsLocked)	{
-		// 다가오는 것만으로 열림
-		TargetAngle = OpenAngle;
+	if (bIsLocked) return;
 
-		/*	TODO(사운드)
-			문 열림 시작음 ex) 삐걱이는 경첩	*/ 
+	// 문 정면 기준, 플레이어가 앞쪽인지 뒤쪽인지
+	const FVector ToOther = Other->GetActorLocation() - GetActorLocation();
+	const float Side = FVector::DotProduct(GetActorForwardVector(), ToOther);
+
+	// 플레이어가 앞(Side>0)이면 뒤로 밀리고, 뒤면 앞으로 밀림
+	const float Direction = (Side >= 0.f) ? 1.f : -1.f;
+
+	// 거의 닫힌 상태에서만 방향 결정
+	if (FMath::Abs(CurrentAngle) < 5.f) {
+		TargetAngle = OpenAngle * Direction;
+	}
+	// 열리는 중이면 그 방향 유지
+	else {
+		TargetAngle = OpenAngle * FMath::Sign(CurrentAngle);
 	}
 }
 
