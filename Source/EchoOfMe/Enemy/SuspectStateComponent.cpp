@@ -12,7 +12,7 @@ void USuspectStateComponent::OnStateEnter()
 	bLooking = false;
 	LookingTime = 8.0f;
 	LookingForwardTime = 2.0f;
-
+	RotationToTarget = FRotator::ZeroRotator;
 
 }
 
@@ -42,9 +42,15 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 	}
 	else
 	{
-		FVector Forward = EchoEnemy->GetActorForwardVector();
+		FRotator CurrentRot = EchoEnemy->GetActorRotation();
 
+		float Random = FMath::RandRange(-45.0, 45.0);
 
+		RotationToTarget = CurrentRot;
+
+		RotationToTarget.Yaw = Random;
+	
+		EchoEnemy->SetActorRotation(FMath::RInterpTo(EchoEnemy->GetActorRotation(), RotationToTarget, Delta, 5.0f));
 
 		LookingForwardTime = 2.0f;
 	}
@@ -62,4 +68,5 @@ void USuspectStateComponent::OnStateExit()
 
 	bLooking = false;
 
+	RotationToTarget = FRotator::ZeroRotator;
 }

@@ -50,4 +50,6 @@ public:
 	UFUNCTION()
 	void LightDetect(float Delta);
 
+
+
 };

@@ -26,14 +26,13 @@ public:
 
 	float TargetRetryTimer = 0.0f;
 
-	bool PickRandomNavMovePoint(FVector& OutLocation) const;
+
 
 	FVector RandomPickTarget = FVector::ZeroVector;
 
 	bool bHasTarget = false;
 
-	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "m"))
-	float PatrolRadius = 500.0f;
+
 
 	virtual void OnStateEnter() override;
 

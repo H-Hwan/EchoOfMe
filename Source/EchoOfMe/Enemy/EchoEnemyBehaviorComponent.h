@@ -125,5 +125,8 @@ public:
 	UFUNCTION()
 	bool IsNavMoving()const;
 
+	bool PickRandomNavMovePoint(FVector& OutLocation) const;
 
+	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "m"))
+	float PatrolRadius = 500.0f;
 };

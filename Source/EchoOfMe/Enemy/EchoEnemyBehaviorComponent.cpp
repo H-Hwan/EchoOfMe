@@ -10,9 +10,11 @@
 #include "EchoOfMe/Enemy/EchoEnemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "EchoOfMe/Enemy/EchoEnemyAIController.h"
-
-// 경로 추적시 이벤트를 받아 처리하고 싶을 때 모듈 포함
+#include "NavigationSystem.h"
+#include "ResonanceSensorComponent.h" /// 감지 센서
 #include "Navigation/PathFollowingComponent.h"
+
+
 // Sets default values for this component's properties
 UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 {
@@ -203,7 +205,9 @@ FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 
 bool UEchoEnemyBehaviorComponent::IsNavMoving() const
 {
+
 	return false;
+
 }
 
 float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
@@ -218,4 +222,24 @@ float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
 	// TNumericLimits<float>::Max() : 실수에서 가장 큰(무한대)값을 반환
 
 	return TNumericLimits<float>::Max();
+}
+
+bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) const
+{
+
+	if (!Echo) return false;
+
+	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(Echo->GetWorld());
+	if (!NavSystem) return false;
+
+	FNavLocation NavLocation;
+
+	const bool bNavFount = NavSystem->GetRandomReachablePointInRadius(Echo->GetActorLocation(), PatrolRadius, NavLocation);
+
+	if (bNavFount) {
+		OutLocation = NavLocation;
+		return true;
+	}
+
+	return false;
 }

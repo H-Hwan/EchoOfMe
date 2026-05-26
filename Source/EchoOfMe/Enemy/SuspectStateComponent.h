@@ -23,6 +23,8 @@ public:
 
 	float LookingForwardTime;
 
+	FRotator RotationToTarget;
+
 	
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
