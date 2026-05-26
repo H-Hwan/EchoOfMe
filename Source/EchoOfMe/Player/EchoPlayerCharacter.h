@@ -17,6 +17,8 @@
 class UInputAction;
 struct FInputActionValue;
 class UAnimMontage;
+// CombatCharacter.h 파일 상단 (전방 선언 부분)
+class USpringArmComponent;
 
 UCLASS(Abstract)
 class ECHOOFME_API AEchoPlayerCharacter : public ACharacter
@@ -107,7 +109,8 @@ protected:
 	//히트판정 메소드
 	//공격의 충돌 판정 수행 메소드
 	//블루프린트 정의용 이펙트 출력 메소드
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USpringArmComponent* CameraBoom;
 
 public:	
 	// Called every frame
