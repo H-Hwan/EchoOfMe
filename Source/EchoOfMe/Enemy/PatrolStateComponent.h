@@ -6,9 +6,8 @@
 #include "FSMStateBase.h"
 #include "PatrolStateComponent.generated.h"
 
-/**
- * 
- */
+
+
 UCLASS(ClassGroup = (FSM), meta = (BlueprintSpawnableComponent))
 class ECHOOFME_API UPatrolStateComponent : public UFSMStateBase
 {
@@ -18,8 +17,13 @@ public:
 
 	float StuckTime = 0.0f;
 
-
 	float MaxStuckTime = 8.0f;
+
+
+	float Suspectmin = 0.0f;
+
+	float Suspectmax = 6.0f;
+
 
 	bool PickRandomNavMovePoint(FVector& OutLocation) const;
 
@@ -31,7 +35,9 @@ public:
 	float PatrolRadius = 500.0f;
 
 	virtual void OnStateEnter() override;
+
 	virtual void OnStateUpdate(float Delta) override;
+
 	virtual void OnStateExit() override;
 
 };

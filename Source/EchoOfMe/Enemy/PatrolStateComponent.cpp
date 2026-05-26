@@ -20,17 +20,13 @@ void UPatrolStateComponent::OnStateEnter()
 
 	if(bHasTarget)
 	{
+
 		const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
-
-
 		if (!bStarted)
 		{
 			bHasTarget = false;
 		}
-
 	}
-
-
 }
 
 void UPatrolStateComponent::OnStateUpdate(float Delta)
@@ -40,41 +36,73 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
 
-	if (EnemyBrain->AttackRadius <= EchoEnemy->GetDistanceToPlayer())
+	if (EnemyBrain->AttackRadius >= EchoEnemy->GetDistanceToPlayer())
 	{
-
-	}
-
-	if (!bHasTarget)
-	{
-		bHasTarget = PickRandomNavMovePoint(RandomPickTarget);
-		const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
+		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
 	}
+	StuckTime += Delta;
+	Suspectmin += Delta;
+	// 2. 새로운 목적지가 필요한 조건들을 '하나의 논리 세트'로 묶기 (else if 활용)
+	bool bNeedNewTarget = false;
 
-	if (!EnemyBrain->IsNavMoving())
+	if (EchoEnemy->DetectCurrentCount >= EchoEnemy->DetectMaxCount)
 	{
-		bHasTarget = PickRandomNavMovePoint(RandomPickTarget);
-		const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
+		EnemyBrain->ChangeState(EFSMState::Search);
+	}
+	else if (!bHasTarget) // 목적지가 아예 없거나
+	{
+		bNeedNewTarget = true;
+	}
+	else if (StuckTime >= MaxStuckTime) // 어딘가 구석에 끼여서 못 움직인 지 오래됐거나
+	{
+		bNeedNewTarget = true;
+	}
+	else if (Suspectmax <= Suspectmin)
+	{
+		EnemyBrain->ChangeState(EFSMState::Suspect);
+		return;
+	}
+	else if (!EnemyBrain->IsNavMoving()) // 목적지는 있는데 발이 멈췄거나
+	{
+		bNeedNewTarget = true;
 	}
 
-	if (StuckTime >= MaxStuckTime)
+	if (bNeedNewTarget)
 	{
+		if (PickRandomNavMovePoint(RandomPickTarget))
+		{
+			const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
+			bHasTarget = bStarted;
 
-		bHasTarget = PickRandomNavMovePoint(RandomPickTarget);
-		const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
+			if (bHasTarget)
+			{
+				StuckTime = 0.0f;
+			}
+
+		}
+		else
+		{
+			bHasTarget = false;
+			UE_LOG(LogTemp, Warning, TEXT("[Echo Patrol] 타겟 찾지 못함"));
+		}
+
 
 	}
-
 
 }
-
+	
 void UPatrolStateComponent::OnStateExit()
 {
 	Super::OnStateExit();
 
+	bHasTarget = false;
 
+	RandomPickTarget = FVector::ZeroVector;
 
+	StuckTime = 0.0f;
+
+	Suspectmin = 0.0f;
 
 
 }
@@ -92,6 +120,7 @@ bool UPatrolStateComponent::PickRandomNavMovePoint(FVector& OutLocation) const
 
 	if (bNavFount) {
 		OutLocation = NavLocation;
+		return true;
 	}
 
 	return false;

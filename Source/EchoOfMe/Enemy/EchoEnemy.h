@@ -37,7 +37,10 @@ public:
 
 	// 감지 게이지
 	UPROPERTY()
-	float DetectCount = 0.0f;
+	float DetectCurrentCount = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "State | Search", meta = (ClampMin = 0.0f, ClampMax = 200.0f))
+	float DetectMaxCount = 100.0f;
 
 	// 감지 여부 게이지
 	UPROPERTY()

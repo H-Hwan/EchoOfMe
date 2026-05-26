@@ -81,10 +81,14 @@ public:
 	APawn* GetPlayerInfo() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
-	FVector GetDistanceToPlayer() ;
+	FVector GetDistanceToPlayer();
 
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
-	FVector GetPlayerLocation() ;
+	FVector GetPlayerLocation();
+
+	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	bool IsPlayerInDetectedSight();
+
 
 
 	UPROPERTY(EditAnywhere, Category = "Search | Location")
@@ -99,12 +103,12 @@ public:
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> CachedFlags;
 
-
-	UPROPERTY(EditAnywhere, Category = "State")
-	float OutRange = 1500.0f;
+	// 플레이어와 Echo의 최소 텔레포트 거리
+	UPROPERTY(EditAnywhere, Category = "State", meta = (Units = "m"))
+	float SpawnMinimumDistance = 50.0f;
 
 	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "cm" ))
-	float AttackRadius = 3000.0f;
+	float DetectedMinimumDistanceRadius = 3000.0f;
 
 	UFUNCTION()
 	bool IsNavMoving()const;

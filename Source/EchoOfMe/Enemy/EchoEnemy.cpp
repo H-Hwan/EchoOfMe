@@ -76,7 +76,7 @@ void AEchoEnemy::LightDetect(float DeltaTime)
 
 	if (!IsDetect) return;
 
-	DetectCount += DeltaTime;
+	DetectCurrentCount += DeltaTime;
 
 
 

@@ -149,6 +149,11 @@ FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 
 }
 
+bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
+{
+	return false;
+}
+
 // 깃발 배열돌려야됨 깃발 위치로 순간이동
 void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 {
@@ -158,7 +163,7 @@ void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 	CachedFlags.Reset();
 	for (AActor* A : Flags)
 	{
-		if (FVector::Dist(A->GetActorLocation(), GetPlayerLocation()) <= OutRange)
+		if (FVector::Dist(A->GetActorLocation(), GetPlayerLocation()) <= SpawnMinimumDistance)
 		{
 			continue;
 		}
@@ -168,7 +173,7 @@ void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 	if (CachedFlags.Num() <= 0) return;
 
 	int32 Random = FMath::RandRange(0, CachedFlags.Num() - 1);
-
+	// 액터
 	AActor* ACT = CachedFlags[Random];
 
 	Echo->SetActorLocation(ACT->GetActorLocation());
