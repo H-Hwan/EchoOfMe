@@ -19,6 +19,7 @@ struct FInputActionValue;
 class UAnimMontage;
 // CombatCharacter.h 파일 상단 (전방 선언 부분)
 class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS(Abstract)
 class ECHOOFME_API AEchoPlayerCharacter : public ACharacter
@@ -32,6 +33,12 @@ public:
 	// Sets default values for this character's properties
 	AEchoPlayerCharacter();
 	//이동 입력 처리 관련 메소드들
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USpringArmComponent* CameraBoom;
+
+	// 추적 카메라 컴포넌트 참조
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCameraComponent* FollowCamera;
 
 	// 이동 수행 메소드
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -109,8 +116,11 @@ protected:
 	//히트판정 메소드
 	//공격의 충돌 판정 수행 메소드
 	//블루프린트 정의용 이펙트 출력 메소드
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USpringArmComponent* CameraBoom;
+	// 
+	// 카메라 감도 조절 변수 (에디터에서 수정 가능)
+	//UPROPERTY(EditAnywhere, Category = "Input")
+	//float LookSensitivity = 0.5f; // 기본값을 0.5 정도로 낮게 설정
+
 
 public:	
 	// Called every frame
