@@ -81,7 +81,7 @@ public:
 	APawn* GetPlayerInfo() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
-	FVector GetDistanceToPlayer();
+	float GetDistanceToPlayer()const;
 
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	FVector GetPlayerLocation();
@@ -109,6 +109,18 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "cm" ))
 	float DetectedMinimumDistanceRadius = 3000.0f;
+
+	//시야 거리
+	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "m" ))
+	float MaxDistance = 50.0f;
+
+	// 시야범위
+	UPROPERTY(EditAnywhere, Category = "State", meta = (Units = "deg"))
+	float MaxDegreeLimit = 125.0f;
+
+	UPROPERTY()
+	float CosAngle = 0.0f;
+	
 
 	UFUNCTION()
 	bool IsNavMoving()const;

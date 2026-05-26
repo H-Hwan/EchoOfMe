@@ -85,17 +85,3 @@ void AEchoEnemy::LightDetect(float DeltaTime)
 
 
 }
-
-float AEchoEnemy::GetDistanceToPlayer() const
-{
-	if (const APawn* Player = EnemyBrain->GetPlayerInfo())
-	{
-		// 두 위치(플레이어, AI캐릭터)간의 거리를 측정함
-		return FVector::Dist(GetActorLocation(), Player->GetActorLocation());
-	}
-
-	// TNumericLimits<float>::Min() : 실수에서 가장 작은(무한대)값을 반환
-	// TNumericLimits<float>::Max() : 실수에서 가장 큰(무한대)값을 반환
-
-	return TNumericLimits<float>::Max();
-}

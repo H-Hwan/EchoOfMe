@@ -131,26 +131,47 @@ APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
 	return UGameplayStatics::GetPlayerPawn(GetWorld(),0); 
 }
 
-FVector UEchoEnemyBehaviorComponent::GetDistanceToPlayer()
-{
-	FVector PlayerLoc = GetPlayerInfo()->GetActorLocation();
-	FVector Loc = Echo->GetActorLocation();
-	FVector DistanceToPlayer = PlayerLoc - Loc;
-
-	UE_LOG(LogTemp, Log, TEXT("[UEchoEnemyBehaviorComponent] %f , %f"),DistanceToPlayer.X, DistanceToPlayer.Y);
-
-	return DistanceToPlayer;
-}
 FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 {
 
 	return GetPlayerInfo()->GetActorLocation();
-
-
 }
 
 bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 {
+	if (!Echo || !GetPlayerInfo()) return false;
+
+	FVector EnemyLocation = Echo->GetActorLocation();
+
+	FVector PlayerLocation = GetPlayerLocation();
+
+	float Distance = FVector::Distance(EnemyLocation, PlayerLocation);
+
+	if (Distance > MaxDistance) return false;
+
+	FVector ForwardV = Echo->GetActorForwardVector();
+
+	FVector TDV = (PlayerLocation - EnemyLocation).GetSafeNormal();
+
+	float DotResult = FVector::DotProduct(PlayerLocation, TDV);
+
+	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
+
+	if (DotResult <= CosAngle) return false;
+
+	FHitResult HitResult;
+
+	FCollisionQueryParams Param;
+
+	Param.AddIgnoredActor(Echo);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), ECC_Visibility, Param);
+	
+	if (bHit && HitResult.GetActor() == GetPlayerInfo())
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -183,4 +204,18 @@ void UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 bool UEchoEnemyBehaviorComponent::IsNavMoving() const
 {
 	return false;
+}
+
+float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
+{
+	if (const APawn* Player = GetPlayerInfo())
+	{
+		// 두 위치(플레이어, AI캐릭터)간의 거리를 측정함
+		return FVector::Dist(Echo->GetActorLocation(), Player->GetActorLocation());
+	}
+
+	// TNumericLimits<float>::Min() : 실수에서 가장 작은(무한대)값을 반환
+	// TNumericLimits<float>::Max() : 실수에서 가장 큰(무한대)값을 반환
+
+	return TNumericLimits<float>::Max();
 }

@@ -36,7 +36,9 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
 
-	if (EnemyBrain->AttackRadius >= EchoEnemy->GetDistanceToPlayer())
+
+
+	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() || EnemyBrain->IsPlayerInDetectedSight())
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
@@ -84,10 +86,9 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 		else
 		{
 			bHasTarget = false;
+			TargetRetryTimer = 2.0f;
 			UE_LOG(LogTemp, Warning, TEXT("[Echo Patrol] 타겟 찾지 못함"));
 		}
-
-
 	}
 
 }
@@ -104,7 +105,7 @@ void UPatrolStateComponent::OnStateExit()
 
 	Suspectmin = 0.0f;
 
-
+	TargetRetryTimer = 0.0f;
 }
 
 bool UPatrolStateComponent::PickRandomNavMovePoint(FVector& OutLocation) const

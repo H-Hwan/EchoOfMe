@@ -24,6 +24,7 @@ public:
 
 	float Suspectmax = 6.0f;
 
+	float TargetRetryTimer = 0.0f;
 
 	bool PickRandomNavMovePoint(FVector& OutLocation) const;
 

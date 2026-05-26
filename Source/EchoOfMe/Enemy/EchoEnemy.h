@@ -49,6 +49,5 @@ public:
 	// 빛감지 처리 메소드
 	UFUNCTION()
 	void LightDetect(float Delta);
-	UFUNCTION()
-	float GetDistanceToPlayer() const;
+
 };
