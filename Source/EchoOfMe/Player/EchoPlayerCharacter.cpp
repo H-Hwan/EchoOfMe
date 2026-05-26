@@ -46,7 +46,7 @@ AEchoPlayerCharacter::AEchoPlayerCharacter()
 	// 이 설정이 반드시 true여야 마우스 입력으로 카메라를 회전시킬 수 있습니다!
 	CameraBoom->bUsePawnControlRotation = true;
 	// 카메라 레그 활성화: 카메라가 캐릭터를 부드럽게 추적함
-	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->bEnableCameraLag = false;
 	// 카메라 회전 레그 활성화: 카메라가 캐릭터 회전을 부드럽게 추적함
 	CameraBoom->bEnableCameraRotationLag = true;
 
