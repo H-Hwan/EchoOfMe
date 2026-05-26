@@ -59,7 +59,11 @@ void AEchoPlayerController::SetupInputComponent()
 
 void AEchoPlayerController::OnPossess(APawn* InPawn)
 {
-	InPawn->OnDestroyed.AddDynamic(this, &AEchoPlayerController::OnPawnDestroyed);
+	Super::OnPossess(InPawn);
+
+	if (InPawn) {
+		InPawn->OnDestroyed.AddDynamic(this, &AEchoPlayerController::OnPawnDestroyed);
+	}
 }
 
 void AEchoPlayerController::SetRespawnTransform(const FTransform& NewRespawn)

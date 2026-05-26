@@ -139,7 +139,7 @@ void AEchoPlayerCharacter::BeginPlay()
 // Called every frame
 void AEchoPlayerCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);x
 
 }
 
