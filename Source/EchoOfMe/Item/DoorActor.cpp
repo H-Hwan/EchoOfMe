@@ -4,6 +4,7 @@
 #include "Item/DoorActor.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
+#include "TimerManager.h"
 
 
 // Sets default values
@@ -39,7 +40,7 @@ void ADoorActor::Tick(float DeltaTime) {
 	if (FMath::IsNearlyEqual(CurrentAngle, TargetAngle)) return;
 
 	// 열림/닫힘 방향에 따라 다른 속도 — 닫힐 때 더 느리게
-	const bool bOpening = TargetAngle > CurrentAngle;
+	const bool bOpening = FMath::Abs(TargetAngle) > FMath::Abs(CurrentAngle);
 	const float Speed = bOpening ? OpenSpeed : CloseSpeed;
 
 	CurrentAngle = FMath::FInterpConstantTo(CurrentAngle, TargetAngle, DeltaTime, Speed);
@@ -79,9 +80,14 @@ void ADoorActor::OnProximityEnd(UPrimitiveComponent* Comp, AActor* Other, UPrimi
 	// 플레이어/잔향 등 폰만 체크
 	if (!Cast<APawn>(Other)) return;
 
+	GetWorld()->GetTimerManager().SetTimer(DoorCloseTimerHandle, this, &ADoorActor::DoorClose, CloseDelay, false);
+}
+
+
+void ADoorActor::DoorClose() {
 	OverlapCount = FMath::Max(0, OverlapCount - 1);
 	// 트리거 안에서 모두 나갔다면
-	if (OverlapCount == 0) 	{
+	if (OverlapCount == 0) {
 		// 아무도 안 밀면 서서히 닫힘
 		TargetAngle = 0.f;
 

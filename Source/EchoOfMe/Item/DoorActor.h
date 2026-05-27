@@ -69,6 +69,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Door")
 	float CloseSpeed = 90.f;
 
+	void DoorClose();
+
 private:
 	// 현재 각도
 	float CurrentAngle = 0.f;
@@ -76,4 +78,9 @@ private:
 	float TargetAngle = 0.f;
 	// 트리거 안에 존재하는 액터 수
 	int32 OverlapCount = 0;
+	// 닫힘 딜레이 시간
+	float CloseDelay = 0.7f;
+
+	// 닫힘 딜레이 매니저
+	FTimerHandle DoorCloseTimerHandle;
 };
