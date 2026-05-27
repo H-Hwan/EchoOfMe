@@ -28,7 +28,7 @@ UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 	SearchStateComp = CreateDefaultSubobject<USearchStateComponent>(TEXT("SearchState"));
 	LostStateComp = CreateDefaultSubobject<ULostStateComponent>(TEXT("LostState"));
 
-	CurrentState = EFSMState::Suspect;
+
 }
 
 
@@ -38,7 +38,7 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Echo = Cast<AEchoEnemy>(GetOwner());
-
+	CurrentState = EFSMState::Patrol;
 	PatrolStateComp->Startreference(Echo, this);
 	SuspectStateComp->Startreference(Echo, this);
 	ChaseStateComp->Startreference(Echo, this);
@@ -58,8 +58,9 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
 	if (CurrentStateComp) {
+	
 		CurrentStateComp->OnStateUpdate(DeltaTime);
 	}
 	
@@ -155,7 +156,7 @@ bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 
 	FVector TDV = (PlayerLocation - EnemyLocation).GetSafeNormal();
 
-	float DotResult = FVector::DotProduct(PlayerLocation, TDV);
+	float DotResult = FVector::DotProduct(ForwardV, TDV);
 
 	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
 
@@ -237,9 +238,8 @@ bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) c
 	const bool bNavFount = NavSystem->GetRandomReachablePointInRadius(Echo->GetActorLocation(), PatrolRadius, NavLocation);
 
 	if (bNavFount) {
-		OutLocation = NavLocation;
-		return true;
+		OutLocation = NavLocation.Location;
 	}
 
-	return false;
+	return bNavFount;
 }

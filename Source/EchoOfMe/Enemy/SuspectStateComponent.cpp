@@ -13,16 +13,17 @@ void USuspectStateComponent::OnStateEnter()
 	LookingTime = 8.0f;
 	LookingForwardTime = 2.0f;
 	RotationToTarget = FRotator::ZeroRotator;
-
+	UE_LOG(LogTemp, Log, TEXT("[의심 시작]"));
 }
 
 void USuspectStateComponent::OnStateUpdate(float Delta)
 {
 	Super::OnStateUpdate(Delta);
 
-	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() || EnemyBrain->IsPlayerInDetectedSight())
+	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() && EnemyBrain->IsPlayerInDetectedSight())
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
+		UE_LOG(LogTemp, Log, TEXT("[의심 시작] 체이스 시작"));
 		return;
 	}
 
@@ -44,7 +45,7 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 	{
 		FRotator CurrentRot = EchoEnemy->GetActorRotation();
 
-		float Random = FMath::RandRange(-45.0, 45.0);
+		int32 Random = FMath::RandRange(-45, 45);
 
 		RotationToTarget = CurrentRot;
 

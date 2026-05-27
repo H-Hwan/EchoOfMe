@@ -8,7 +8,7 @@ void UChaseStateComponent::OnStateEnter()
 {
 	Super::OnStateEnter();
 
-
+	UE_LOG(LogTemp, Warning, TEXT("[추격]나왜여기임"));
 
 }
 

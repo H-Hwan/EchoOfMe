@@ -15,9 +15,9 @@ void UPatrolStateComponent::OnStateEnter()
 	if (!EchoEnemy) return;
 	
 	bHasTarget = EnemyBrain->PickRandomNavMovePoint(RandomPickTarget);
-
+	TargetRetryTimer = 2.0f;
 	StuckTime = 0.0f;
-
+	UE_LOG(LogTemp, Error, TEXT("[UPatrolStateComponent]"));
 	if(bHasTarget)
 	{
 
@@ -36,20 +36,23 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
 
+	UE_LOG(LogTemp, Error, TEXT("[아니왜]"));
 
-
-	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() || EnemyBrain->IsPlayerInDetectedSight())
+	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() && EnemyBrain->IsPlayerInDetectedSight())
 	{
+		UE_LOG(LogTemp, Error, TEXT("[첫비교]"));
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
 	}
+
 	StuckTime += Delta;
 	Suspectmin += Delta;
-	// 2. 새로운 목적지가 필요한 조건들을 '하나의 논리 세트'로 묶기 (else if 활용)
+
 	bool bNeedNewTarget = false;
 
 	if (EchoEnemy->DetectCurrentCount >= EchoEnemy->DetectMaxCount)
 	{
+		UE_LOG(LogTemp, Error, TEXT("[서칭]"));
 		EnemyBrain->ChangeState(EFSMState::Search);
 	}
 	else if (!bHasTarget) // 목적지가 아예 없거나
@@ -69,19 +72,19 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	{
 		bNeedNewTarget = true;
 	}
-
-	if (bNeedNewTarget)
+	TargetRetryTimer -= Delta;
+	if (bNeedNewTarget && TargetRetryTimer <= 0.0f)
 	{
 		if (EnemyBrain->PickRandomNavMovePoint(RandomPickTarget))
 		{
 			const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
 			bHasTarget = bStarted;
-
+			UE_LOG(LogTemp, Warning, TEXT("[Echo Patrol] 타겟 찻았는데 왜 움직이질 못함"));
 			if (bHasTarget)
 			{
 				StuckTime = 0.0f;
 			}
-
+			TargetRetryTimer = 2.0f;
 		}
 		else
 		{
