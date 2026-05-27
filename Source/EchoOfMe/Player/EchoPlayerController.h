@@ -24,15 +24,31 @@ class ECHOOFME_API AEchoPlayerController : public APlayerController
 public:
 	AEchoPlayerController();
 
+
 protected:
 	// 기본 입력 매핑 컨텍스트 배열
 	UPROPERTY(EditAnywhere, Category = "Input|Input Mapping")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
-	// 리스폰할 플레이어 캐릭터
+
+	/*	리스폰할 플레이어 캐릭터
+		비워두면 OnPossess에서 현재 빙의한 캐릭터 클래스를 자동으로 캐싱 */ 
 	UPROPERTY(EditAnywhere, Category = "Respawn")
 	TSubclassOf<AEchoPlayerCharacter> CharacterClass;
-	//다시 스폰 할 때 속성
+
+	// 체크포인트로 돌아가기 전 대기 시간
+	UPROPERTY(EditAnywhere, Category = "Respawn")
+	float RespawnDelay = 1.0f;
+
+	// 다시 스폰할 위치와 방향
 	FTransform RespawnTransform;
+
+	// 체크포인트가 지정되었는지 확인
+	bool bHasRespawnTransform = false;
+
+	// 중복 리스폰 방지용 플래그
+	bool bIsRespawning = false;
+
+	FTimerHandle RespawnTimerHandle;
 
 
 public:
@@ -42,11 +58,30 @@ public:
 	virtual void SetupInputComponent() override;
 
 	virtual void OnPossess(APawn* InPawn) override;
-	// 리스폰 위치 업데이트
+
+	// 체크포인트에서 호출 >> 리스폰 위치 업데이트
+	UFUNCTION(BlueprintCallable, Category = "Respawn")
 	void SetRespawnTransform(const FTransform& NewRespawn);
+
+	// 외부에서 플레이어 사망 처리를 요청할 때 호출
+	UFUNCTION(BlueprintCallable, Category = "Respawn")
+	void KillPlayer();
+
+	// 실제 캐릭터를 다시 생성하고 빙의
+	UFUNCTION(BlueprintCallable, Category = "Respawn")
+	void RespawnPlayer();
+
 
 	UFUNCTION()
 	void OnPawnDestroyed(AActor* DestroyActor);
+
+
+private:
+	void CachePawnClassIfNeeded(APawn* InPawn);
+	void CacheInitialRespawnTransformIfNeeded(APawn* InPawn);
+	void ScheduleRespawn();
+	FTransform GetFallbackRespawnTransform() const;
+
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
@@ -63,6 +98,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
