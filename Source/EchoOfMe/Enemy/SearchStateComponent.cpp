@@ -2,7 +2,7 @@
 
 
 #include "SearchStateComponent.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 
 void USearchStateComponent::OnStateEnter()
 {

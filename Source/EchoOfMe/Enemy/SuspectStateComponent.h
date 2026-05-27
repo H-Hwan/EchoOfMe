@@ -4,20 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "FSMStateBase.h"
-#include "PatrolStateComponent.generated.h"
+#include "SuspectStateComponent.generated.h"
 
-/**
- * 
- */
+
+
+
 UCLASS(ClassGroup = (FSM), meta = (BlueprintSpawnableComponent))
-class ECHOOFME_API UPatrolStateComponent : public UFSMStateBase
+class ECHOOFME_API USuspectStateComponent : public UFSMStateBase
 {
 	GENERATED_BODY()
 
 public:
 
+	UPROPERTY()
+	bool bLooking;
+
+	float LookingTime;
+
+	float LookingForwardTime;
+
+	FRotator RotationToTarget;
+
+	
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
 	virtual void OnStateExit() override;
-
 };

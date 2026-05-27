@@ -2,7 +2,8 @@
 
 
 #include "FSMStateBase.h"
-#include "EchoEnemyBehaviorComponent.h"
+#include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
+#include "Enemy/EchoEnemy.h"
 
 // Sets default values for this component's properties
 UFSMStateBase::UFSMStateBase()
@@ -20,11 +21,11 @@ void UFSMStateBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UFSMStateBase::Startreference(ACharacter* Echo, UEchoEnemyBehaviorComponent* BeHavior)
+void UFSMStateBase::Startreference(AEchoEnemy* Echo, UEchoEnemyBehaviorComponent* BeHavior)
 {
 	EnemyBrain = BeHavior;
 
-
+	EchoEnemy = Echo;
 
 }
 

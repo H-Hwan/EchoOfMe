@@ -4,19 +4,40 @@
 
 #include "CoreMinimal.h"
 #include "FSMStateBase.h"
-#include "SuspectStateComponent.generated.h"
-
+#include "PatrolStateComponent.generated.h"
 
 
 
 UCLASS(ClassGroup = (FSM), meta = (BlueprintSpawnableComponent))
-class ECHOOFME_API USuspectStateComponent : public UFSMStateBase
+class ECHOOFME_API UPatrolStateComponent : public UFSMStateBase
 {
 	GENERATED_BODY()
 
 public:
 
+	float StuckTime = 0.0f;
+
+	float MaxStuckTime = 8.0f;
+
+
+	float Suspectmin = 0.0f;
+
+	float Suspectmax = 6.0f;
+
+	float TargetRetryTimer = 0.0f;
+
+
+
+	FVector RandomPickTarget = FVector::ZeroVector;
+
+	bool bHasTarget = false;
+
+
+
 	virtual void OnStateEnter() override;
+
 	virtual void OnStateUpdate(float Delta) override;
+
 	virtual void OnStateExit() override;
+
 };
