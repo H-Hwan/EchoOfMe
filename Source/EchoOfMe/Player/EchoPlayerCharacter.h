@@ -14,6 +14,7 @@ class UCameraComponent;
 
 class UListeningComponent;
 class UFlashlightComponent;
+class UNoiseMakerComponent;
 
 struct FInputActionValue;
 
@@ -57,6 +58,9 @@ public:
 
 	UFUNCTION()
 	void StopRunning();
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<UNoiseMakerComponent> NoiseMaker;
 
 
 	//---

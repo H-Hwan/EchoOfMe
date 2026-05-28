@@ -54,8 +54,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Door")
 	TObjectPtr<UBoxComponent> ProximityBox;
 
-	TObjectPtr<UNoiseMakerComponent> NoiseComp;
-
 
 	// 잠긴 문 여부
 	UPROPERTY(EditAnywhere, Category = "Door")

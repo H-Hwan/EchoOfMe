@@ -251,7 +251,7 @@ void AEchoPlayerController::HandleInteract() {
 	Params.AddIgnoredActor(GetPawn());
 
 	FHitResult Hit;
-	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params)) {
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_WorldDynamic, Params)) {
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor && HitActor->Implements<UInteractable>()) {
 			IInteractable::Execute_Interact(HitActor, GetPawn());

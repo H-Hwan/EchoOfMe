@@ -17,6 +17,7 @@
 
 #include "Component/ListeningComponent.h"
 #include "Component/FlashlightComponent.h"
+#include "Component/NoiseMakerComponent.h"
 
 
 // Sets default values
@@ -65,6 +66,9 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 	FlashLight->OuterConeAngle = 35.f;
 	FlashLight->InnerConeAngle = 19.f;
 	FlashLight->LightColor = FColor(1.f, 0.7f, 0.37f);
+
+	// 소리 발생 컴포넌트
+	NoiseMaker = CreateDefaultSubobject<UNoiseMakerComponent>(TEXT("NoiseMaker"));
 }
 
 // Called when the game starts or when spawned

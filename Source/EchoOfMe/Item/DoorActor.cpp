@@ -24,8 +24,6 @@ ADoorActor::ADoorActor() {
 	ProximityBox = CreateDefaultSubobject<UBoxComponent>(TEXT("ProximityBox"));
 	ProximityBox->SetupAttachment(DoorRoot);
 	ProximityBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
-	NoiseComp = CreateDefaultSubobject<UNoiseMakerComponent>(TEXT("NoiseComp"));
 }
 
 
@@ -60,7 +58,12 @@ void ADoorActor::OnProximityBegin(UPrimitiveComponent* Comp, AActor* Other, UPri
 	// 플레이어/잔향 등 폰만 체크
 	if (!Cast<APawn>(Other)) return;
 
-	NoiseComp->ReportNoise(1.f);
+	/*	TODO(사운드)
+		문 열리는 소리	*/
+
+	// 문 여는 소리 발생
+	MakeNoise(0.8f, Cast<APawn>(Other), GetActorLocation());
+	UE_LOG(LogTemp, Log, TEXT("문에서 소리!!"))
 
 	OverlapCount++;
 	if (bIsLocked) return;
@@ -98,7 +101,8 @@ void ADoorActor::DoorClose() {
 		// 아무도 안 밀면 서서히 닫힘
 		TargetAngle = 0.f;
 
-		NoiseComp->ReportNoise(1.f);
+		/*	TODO(사운드)
+			문 닫히는 소리	*/
 	}
 }
 
