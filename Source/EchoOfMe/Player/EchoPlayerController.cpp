@@ -40,6 +40,15 @@ void AEchoPlayerController::BeginPlay() {
 		RespawnTransform = GetFallbackRespawnTransform();
 		bHasRespawnTransform = true;
 	}
+
+	if (IsLocalPlayerController() && InventoryWidgetClass) {
+		InventoryWidget = CreateWidget<UInventoryWidget>(this, InventoryWidgetClass);
+		if (InventoryWidget) {
+			InventoryWidget->BindInventory(Inventory);
+			InventoryWidget->AddToViewport();
+			InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
 }
 
 
@@ -65,7 +74,15 @@ void AEchoPlayerController::SetupInputComponent() {
 		if (InteractAction) {
 			EIC->BindAction(InteractAction, ETriggerEvent::Started, this, &AEchoPlayerController::HandleInteract);
 		}
+		if (ToggleInventoryAction) {
+			EIC->BindAction(ToggleInventoryAction, ETriggerEvent::Started, this, &AEchoPlayerController::ToggleInventory);
+		}
 	}
+}
+
+
+void AEchoPlayerController::ToggleInventory() {
+
 }
 
 

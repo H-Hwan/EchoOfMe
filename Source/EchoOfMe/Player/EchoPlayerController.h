@@ -93,11 +93,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input|Interaction")
 	TObjectPtr<UInputAction> InteractAction;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input|Interaction")
+	UPROPERTY()
 	TObjectPtr<UInventoryWidget> InventoryWidget;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Inventory")
+	TObjectPtr<UInputAction> ToggleInventoryAction;
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void ToggleInventory();
 
 
 public:
@@ -106,4 +112,7 @@ public:
 
 	// 확인용 임시 함수
 	void HandleInteract();
+
+private:
+	bool bInventoryOpen = false;
 };
