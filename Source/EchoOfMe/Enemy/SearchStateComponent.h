@@ -22,10 +22,10 @@ public:
 	float CurrentTime = 0.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Wander Time")
-	float WanderHoldTimer = 2.0f;
+	float WanderHoldTimer = 5.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Wander Time")
-	float ChangeStateTimer = 10.0f;
+	float ChangeStateTimer = 30.0f;
 
 
 	virtual void OnStateEnter() override;

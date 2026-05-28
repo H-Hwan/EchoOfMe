@@ -30,7 +30,7 @@ public:
 
 	// RInterp RotationSpeed 
 	UPROPERTY(EditAnywhere, Category = "Rotation")
-	float RotationSpeed = 300.0f;
+	float RotationSpeed = 1.0f;
 
 	UFUNCTION()
 	void IsLockOnToTarget(bool bLockOn);

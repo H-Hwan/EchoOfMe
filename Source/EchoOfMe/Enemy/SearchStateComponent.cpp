@@ -26,13 +26,19 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
 	}
-
-	if (WanderHoldTimer <= 0.0)
+	WanderHoldTimer -= Delta;
+	if (WanderHoldTimer < 0.0f)
 	{
-		EnemyBrain->PickCustomRadiusNavLocation(LastLocation, 3000.0f);
-		WanderHoldTimer
+		EnemyBrain->PickCustomRadiusNavLocation(LastLocation, 600.0f);
+		EnemyBrain->RequestMoveTo(LastLocation);
+		WanderHoldTimer = 5.0f;
 	}
-	
+	ChangeStateTimer -= Delta;
+
+	if (ChangeStateTimer <= 0.0f)
+	{
+		//EnemyBrain->ChangeState(EFSMState::Lost);
+	}
 
 
 }
