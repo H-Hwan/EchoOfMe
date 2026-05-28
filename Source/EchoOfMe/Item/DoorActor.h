@@ -11,6 +11,7 @@
 
 
 class UBoxComponent;
+class UNoiseMakerComponent;
 
 
 UCLASS()
@@ -52,6 +53,9 @@ protected:
 	// 다가감 감지 콜리전
 	UPROPERTY(VisibleAnywhere, Category = "Door")
 	TObjectPtr<UBoxComponent> ProximityBox;
+
+	TObjectPtr<UNoiseMakerComponent> NoiseComp;
+
 
 	// 잠긴 문 여부
 	UPROPERTY(EditAnywhere, Category = "Door")

@@ -2,9 +2,12 @@
 
 
 #include "Item/DoorActor.h"
+
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
 #include "TimerManager.h"
+
+#include "Component/NoiseMakerComponent.h"
 
 
 // Sets default values
@@ -21,6 +24,8 @@ ADoorActor::ADoorActor() {
 	ProximityBox = CreateDefaultSubobject<UBoxComponent>(TEXT("ProximityBox"));
 	ProximityBox->SetupAttachment(DoorRoot);
 	ProximityBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+	NoiseComp = CreateDefaultSubobject<UNoiseMakerComponent>(TEXT("NoiseComp"));
 }
 
 
@@ -54,6 +59,8 @@ void ADoorActor::Tick(float DeltaTime) {
 void ADoorActor::OnProximityBegin(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool bFromSweep, const FHitResult& Sweep) {
 	// 플레이어/잔향 등 폰만 체크
 	if (!Cast<APawn>(Other)) return;
+
+	NoiseComp->ReportNoise(1.f);
 
 	OverlapCount++;
 	if (bIsLocked) return;
@@ -91,8 +98,7 @@ void ADoorActor::DoorClose() {
 		// 아무도 안 밀면 서서히 닫힘
 		TargetAngle = 0.f;
 
-		/*	 TODO(사운드)
-			문 닫힘음 ex) 천천히 닫히는 소리	*/
+		NoiseComp->ReportNoise(1.f);
 	}
 }
 

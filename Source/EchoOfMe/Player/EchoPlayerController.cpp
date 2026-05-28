@@ -82,7 +82,25 @@ void AEchoPlayerController::SetupInputComponent() {
 
 
 void AEchoPlayerController::ToggleInventory() {
+	if (!InventoryWidget) return;
 
+	bInventoryOpen = !bInventoryOpen;
+
+	if (bInventoryOpen) {
+		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+
+		FInputModeGameAndUI Mode;
+		Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		Mode.SetHideCursorDuringCapture(true);
+		SetInputMode(Mode);
+		bShowMouseCursor = true;
+	}
+	else {
+		InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+	}
 }
 
 

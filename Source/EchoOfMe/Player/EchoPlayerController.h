@@ -24,12 +24,34 @@ class ECHOOFME_API AEchoPlayerController : public APlayerController
 public:
 	AEchoPlayerController();
 
+public:
+	// 게임 시작 이벤트 메소드
+	virtual void BeginPlay() override;
 
+	// 입력맵핑 컨텍스트 등록 수행 이벤트 메소드
+	virtual void SetupInputComponent() override;
+
+	// 컨트롤러 빙의 이벤트
+	virtual void OnPossess(APawn* InPawn) override;
+
+
+	//---
+	// 입력
 protected:
 	// 기본 입력 매핑 컨텍스트 배열
 	UPROPERTY(EditAnywhere, Category = "Input|Input Mapping")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Inventory")
+	TObjectPtr<UInputAction> ToggleInventoryAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Interaction")
+	TObjectPtr<UInputAction> InteractAction;
+
+
+	//---
+	// 리스폰
+protected:
 	/*	리스폰할 플레이어 캐릭터
 		비워두면 OnPossess에서 현재 빙의한 캐릭터 클래스를 자동으로 캐싱 */ 
 	UPROPERTY(EditAnywhere, Category = "Respawn")
@@ -50,15 +72,7 @@ protected:
 
 	FTimerHandle RespawnTimerHandle;
 
-
 public:
-	// 게임 시작 이벤트 메소드
-	virtual void BeginPlay() override;
-	// 입력맵핑 컨텍스트 등록 수행 이벤트 메소드
-	virtual void SetupInputComponent() override;
-
-	virtual void OnPossess(APawn* InPawn) override;
-
 	// 체크포인트에서 호출 >> 리스폰 위치 업데이트
 	UFUNCTION(BlueprintCallable, Category = "Respawn")
 	void SetRespawnTransform(const FTransform& NewRespawn);
@@ -71,10 +85,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Respawn")
 	void RespawnPlayer();
 
-
 	UFUNCTION()
 	void OnPawnDestroyed(AActor* DestroyActor);
-
 
 private:
 	void CachePawnClassIfNeeded(APawn* InPawn);
@@ -83,6 +95,8 @@ private:
 	FTransform GetFallbackRespawnTransform() const;
 
 
+	//---
+	// 인벤토리
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> Inventory;
@@ -90,21 +104,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	TObjectPtr<URecorderComponent> Recorder;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input|Interaction")
-	TObjectPtr<UInputAction> InteractAction;
-
 	UPROPERTY()
 	TObjectPtr<UInventoryWidget> InventoryWidget;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input|Inventory")
-	TObjectPtr<UInputAction> ToggleInventoryAction;
-
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void ToggleInventory();
-
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
