@@ -3,7 +3,7 @@
 
 #include "SearchStateComponent.h"
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
-
+#include"Enemy/EchoEnemy.h"
 void USearchStateComponent::OnStateEnter()
 {
 	Super::OnStateEnter();
@@ -26,6 +26,11 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
 	}
+	
+	if (FVector::Distance(LastLocation, EchoEnemy->GetActorLocation()) > 100.0f)
+	{
+		return;
+	}
 	WanderHoldTimer -= Delta;
 	if (WanderHoldTimer < 0.0f)
 	{
@@ -37,8 +42,11 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 
 	if (ChangeStateTimer <= 0.0f)
 	{
-		//EnemyBrain->ChangeState(EFSMState::Lost);
+		EnemyBrain->ChangeState(EFSMState::Lost);
+		return;
 	}
+
+
 
 
 }
@@ -47,7 +55,7 @@ void USearchStateComponent::OnStateExit()
 {
 	Super::OnStateExit();
 
+	WanderHoldTimer = 5.0f;
 
-
-
+	ChangeStateTimer = 10.0f;
 }

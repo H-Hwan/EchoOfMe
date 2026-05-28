@@ -30,7 +30,7 @@ AEchoEnemy::AEchoEnemy()
 
 	GetCharacterMovement()->bUseRVOAvoidance = true; // AI 캐릭터들끼리 겹쳐지지 않도록 설정
 
-	EnemyBrain = CreateDefaultSubobject<UEchoEnemyBehaviorComponent>(TEXT("Brain"));
+
 
 }
 

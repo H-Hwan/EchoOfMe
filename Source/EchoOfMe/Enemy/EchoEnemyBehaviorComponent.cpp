@@ -124,8 +124,6 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 
 	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
 
-
-
 	return Result.Code != EPathFollowingRequestResult::Failed;
 }
 
