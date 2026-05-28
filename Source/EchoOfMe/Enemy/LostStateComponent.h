@@ -15,8 +15,18 @@ class ECHOOFME_API ULostStateComponent : public UFSMStateBase
 
 public:
 
+	FTimerHandle ChangeStateHandle;
+
+	UFUNCTION()
+	void EchosTeleport(FVector Loc);
+
+	UFUNCTION()
+	void TimeToTeleport();
+
+
 	virtual void OnStateEnter()override;
 	virtual void OnStateUpdate(float Delta)override;
+
 	virtual void OnStateExit() override;
 
 	

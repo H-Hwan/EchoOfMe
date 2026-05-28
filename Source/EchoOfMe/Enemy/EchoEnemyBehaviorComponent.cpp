@@ -180,6 +180,8 @@ bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 // 깃발 배열돌려야됨 깃발 위치로 순간이동
 FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 {
+	if (SelectTag == NAME_None) return FVector::ZeroVector;
+
 	TArray<AActor*> Flags;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), SelectTag, Flags);
 

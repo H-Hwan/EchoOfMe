@@ -132,8 +132,6 @@ public:
 
 	bool IsPlayerLoseInSight();
 
-
-
 	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "m"))
 	float LoseDistance = 500.0f;
 
