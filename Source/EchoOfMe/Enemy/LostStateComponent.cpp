@@ -26,9 +26,11 @@ void ULostStateComponent::OnStateEnter()
 
 void ULostStateComponent::OnStateUpdate(float Delta)
 {
+	// 수색을 포기하고 쉬는 중인데 플레이어가 눈앞에 나타나면?
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
-		EnemyBrain->ChangeState(EFSMState::Patrol);
+		// ⭐️ 순찰(Patrol)이 아니라 다시 맹렬하게 추적(Chase)해야 맞습니다!
+		EnemyBrain->ChangeState(EFSMState::Chase);
 	}
 }
 
@@ -45,7 +47,15 @@ void ULostStateComponent::OnStateExit()
 
 void ULostStateComponent::EchosTeleport(FVector Loc)
 {
-	EchoEnemy->TeleportTo(Loc,EchoEnemy->GetActorRotation());
+	if (!EchoEnemy || !EnemyBrain) return;
+	if (Loc == FVector::ZeroVector)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Lost] 갈 깃발이 없어서 제자리에서 순찰을 시작합니다."));
+		EnemyBrain->ChangeState(EFSMState::Patrol);
+		return;
+	}
+	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 50.0f);
+	EchoEnemy->TeleportTo(SafeLoc,EchoEnemy->GetActorRotation());
 	EnemyBrain->ChangeState(EFSMState::Patrol);
 }
 

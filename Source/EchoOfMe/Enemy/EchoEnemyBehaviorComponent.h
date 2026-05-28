@@ -95,7 +95,7 @@ public:
 	float AcceptanceRadius = 0.0f;
 	// 타겟 태그 지정
 	UPROPERTY(EditAnywhere, Category = "Search")
-	FName SelectTag;
+	FName SelectTag = TEXT("");
 
 	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
 	FVector PickTeleportToNewPoint();
@@ -105,7 +105,7 @@ public:
 
 	// 플레이어와 Echo의 최소 텔레포트 거리
 	UPROPERTY(EditAnywhere, Category = "State", meta = (Units = "cm"))
-	float SpawnMinimumDistance = 5000.0f;
+	float SpawnMinimumDistance = 50.0f;
 
 	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "cm" ))
 	float DetectedMinimumDistanceRadius = 3000.0f;
