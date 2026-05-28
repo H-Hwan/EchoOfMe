@@ -16,6 +16,18 @@ class ECHOOFME_API USearchStateComponent : public UFSMStateBase
 
 public:
 
+	UPROPERTY()
+	FVector LastLocation = FVector::ZeroVector;
+
+	float CurrentTime = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Wander Time")
+	float WanderHoldTimer = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Wander Time")
+	float ChangeStateTimer = 10.0f;
+
+
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
 	virtual void OnStateExit() override;

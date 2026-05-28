@@ -5,7 +5,7 @@
 #include "EchoOfMe/Enemy/EchoEnemyAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
-
+#include "Enemy/ChaseStateComponent.h"
 
 
 // Sets default values
@@ -76,7 +76,7 @@ void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
 	if(bLockOn)
 	{
 		GetCharacterMovement()->MaxAcceleration = 500.0f;
-		GetCharacterMovement()->MaxWalkSpeed = 340.0f;
+		GetCharacterMovement()->MaxWalkSpeed = 380.0f;
 	}
 	else
 	{

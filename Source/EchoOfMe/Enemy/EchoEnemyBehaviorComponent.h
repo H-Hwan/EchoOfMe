@@ -104,28 +104,38 @@ public:
 	TArray<TObjectPtr<AActor>> CachedFlags;
 
 	// 플레이어와 Echo의 최소 텔레포트 거리
-	UPROPERTY(EditAnywhere, Category = "State", meta = (Units = "m"))
-	float SpawnMinimumDistance = 50.0f;
+	UPROPERTY(EditAnywhere, Category = "State", meta = (Units = "cm"))
+	float SpawnMinimumDistance = 5000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "cm" ))
 	float DetectedMinimumDistanceRadius = 3000.0f;
 
 	//시야 거리
-	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "m" ))
-	float MaxDistance = 50.0f;
+	UPROPERTY(EditAnywhere, Category = "State", meta = ( Units = "cm" ))
+	float MaxDistance = 5000.0f;
 
 	// 시야범위
 	UPROPERTY(EditAnywhere, Category = "State", meta = (Units = "deg"))
-	float MaxDegreeLimit = 125.0f;
+	float MaxDegreeLimit = 90.0f;
 
 	UPROPERTY()
 	float CosAngle = 0.0f;
-	
+
 
 	UFUNCTION()
 	bool IsNavMoving()const;
 
+	UFUNCTION()
+	bool PickCustomRadiusNavLocation(FVector& OutLocation,float Radius);
+
 	bool PickRandomNavMovePoint(FVector& OutLocation) const;
+
+	bool IsPlayerLoseInSight();
+
+
+	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "m"))
+	float LoseDistance = 500.0f;
+
 
 	UPROPERTY(EditAnywhere, Category = "Move", meta = (ClampMin = 0.0, Units = "m"))
 	float PatrolRadius = 500.0f;

@@ -38,7 +38,7 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 
 	UE_LOG(LogTemp, Error, TEXT("[아니왜]"));
 
-	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() && EnemyBrain->IsPlayerInDetectedSight())
+	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		UE_LOG(LogTemp, Error, TEXT("[첫비교]"));
 		EnemyBrain->ChangeState(EFSMState::Chase);
@@ -50,7 +50,7 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 
 	bool bNeedNewTarget = false;
 
-	if (EchoEnemy->DetectCurrentCount >= EchoEnemy->DetectMaxCount)
+	if (EchoEnemy->DetectCurrentCount > EchoEnemy->DetectMaxCount)
 	{
 		UE_LOG(LogTemp, Error, TEXT("[서칭]"));
 		EnemyBrain->ChangeState(EFSMState::Search);

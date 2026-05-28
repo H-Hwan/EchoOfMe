@@ -20,7 +20,7 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 {
 	Super::OnStateUpdate(Delta);
 
-	if (EnemyBrain->DetectedMinimumDistanceRadius >= EnemyBrain->GetDistanceToPlayer() && EnemyBrain->IsPlayerInDetectedSight())
+	if ( EnemyBrain->IsPlayerInDetectedSight())
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		UE_LOG(LogTemp, Log, TEXT("[의심 시작] 체이스 시작"));
@@ -30,6 +30,25 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 	if (LookingTime > 0.0f)
 	{
 		LookingTime -= Delta;
+
+		if (LookingForwardTime >= 0.0f)
+		{
+			LookingForwardTime -= Delta;
+		}
+		else
+		{
+			FRotator CurrentRot = EchoEnemy->GetActorRotation();
+
+			int32 Random = FMath::RandRange(-45, 45);
+
+			RotationToTarget = CurrentRot;
+
+			RotationToTarget.Yaw = Random;
+
+			EchoEnemy->SetActorRotation(FMath::RInterpTo(EchoEnemy->GetActorRotation(), RotationToTarget, Delta, 5.0f));
+
+			LookingForwardTime = 2.0f;
+		}
 	}
 	else
 	{
@@ -37,24 +56,6 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 		return;
 	}
 
-	if (LookingForwardTime >= 0.0f)
-	{
-		LookingForwardTime -= Delta;
-	}
-	else
-	{
-		FRotator CurrentRot = EchoEnemy->GetActorRotation();
-
-		int32 Random = FMath::RandRange(-45, 45);
-
-		RotationToTarget = CurrentRot;
-
-		RotationToTarget.Yaw = Random;
-	
-		EchoEnemy->SetActorRotation(FMath::RInterpTo(EchoEnemy->GetActorRotation(), RotationToTarget, Delta, 5.0f));
-
-		LookingForwardTime = 2.0f;
-	}
 
 
 }

@@ -7,7 +7,6 @@
 #include "ChaseStateComponent.generated.h"
 
 
-
 UCLASS(ClassGroup = (FSM), meta = (BlueprintSpawnableComponent))
 class ECHOOFME_API UChaseStateComponent : public UFSMStateBase
 {

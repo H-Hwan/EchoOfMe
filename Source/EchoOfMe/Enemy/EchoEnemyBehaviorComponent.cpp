@@ -13,7 +13,7 @@
 #include "NavigationSystem.h"
 #include "ResonanceSensorComponent.h" /// 감지 센서
 #include "Navigation/PathFollowingComponent.h"
-
+#include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
 UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
@@ -168,10 +168,11 @@ bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 
 	Param.AddIgnoredActor(Echo);
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), ECC_Visibility, Param);
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), ECC_Pawn, Param);
 	
 	if (bHit && HitResult.GetActor() == GetPlayerInfo())
 	{
+		DrawDebugLine(GetWorld(), EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), FColor::Purple, false, -1.0f, 0, 2.0f);
 		return true;
 	}
 
@@ -189,6 +190,7 @@ FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 	{
 		if (FVector::Dist(A->GetActorLocation(), GetPlayerLocation()) <= SpawnMinimumDistance)
 		{
+
 			continue;
 		}
 		CachedFlags.Add(A);
@@ -206,9 +208,38 @@ FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 
 bool UEchoEnemyBehaviorComponent::IsNavMoving() const
 {
+	if (!Echo) return false;
 
-	return false;
+	// 주인의 AI 컨트롤러를 가져옵니다.
+	AAIController* AIController = Cast<AAIController>(Echo->GetController());
+	if (!AIController) return false;
 
+	// ⭐️ 완벽한 정답 복구: Idle(대기/멈춤) 상태가 아니라면 이동 중이거나 길을 찾는 중이라는 뜻!
+	return AIController->GetMoveStatus() != EPathFollowingStatus::Idle;
+}
+
+bool UEchoEnemyBehaviorComponent::PickCustomRadiusNavLocation(FVector& OutLocation,float Radius)
+{
+
+	if (!Echo) return false;
+	UE_LOG(LogTemp, Warning, TEXT("[PickCustomRadius] 입력받은 반경: %f, 에너미 위치: %s"), Radius, *Echo->GetActorLocation().ToString());
+
+	// ⭐️ [디버그 2] 에너미 발밑에 Radius 크기만큼의 탐색 범위를 파란색 구체로 그려서 눈으로 확인합니다!
+	DrawDebugSphere(GetWorld(), Echo->GetActorLocation(), Radius, 32, FColor::Blue, false, 2.0f);
+	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(Echo->GetWorld());
+	if (!NavSystem) return false;
+
+	FNavLocation NavLocation;
+
+	const bool bNavFount = NavSystem->GetRandomPointInNavigableRadius(Echo->GetActorLocation(), Radius, NavLocation);
+
+	if (bNavFount) {
+		OutLocation = NavLocation.Location;
+		DrawDebugPoint(GetWorld(), OutLocation, 20.0f, FColor::Red, false, 2.0f);
+		UE_LOG(LogTemp, Log, TEXT("[PickCustomRadius] 성공! 찾은 목적지: %s"), *OutLocation.ToString());
+	}
+
+	return bNavFount;
 }
 
 float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
@@ -235,11 +266,16 @@ bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) c
 
 	FNavLocation NavLocation;
 
-	const bool bNavFount = NavSystem->GetRandomReachablePointInRadius(Echo->GetActorLocation(), PatrolRadius, NavLocation);
+	const bool bNavFount = NavSystem->GetRandomPointInNavigableRadius(Echo->GetActorLocation(), PatrolRadius, NavLocation);
 
 	if (bNavFount) {
 		OutLocation = NavLocation.Location;
 	}
 
 	return bNavFount;
+}
+
+bool UEchoEnemyBehaviorComponent::IsPlayerLoseInSight()
+{
+	return GetDistanceToPlayer() > LoseDistance;
 }
