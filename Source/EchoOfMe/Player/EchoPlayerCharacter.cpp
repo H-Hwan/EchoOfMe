@@ -23,7 +23,7 @@
 // Sets default values
 AEchoPlayerCharacter::AEchoPlayerCharacter() {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	// 캡슐 콜리전 크기 설정
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
@@ -90,6 +90,16 @@ void AEchoPlayerCharacter::BeginPlay() {
 void AEchoPlayerCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	if (!FMath::IsNearlyEqual(CurrentSturation, TargetSturation)) {
+		const float Speed = FMath::Abs(ListenSaturation - 1.f) / SaturationFadeDuration;
+		CurrentSturation = FMath::FInterpConstantTo(CurrentSturation, TargetSturation, DeltaTime, Speed);
+
+		if (FollowCamera) {
+			FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
+			PP.bOverride_ColorSaturation = true;
+			PP.ColorSaturation = FVector4(CurrentSturation, CurrentSturation, CurrentSturation, 1.f);
+		}
+	}
 }
 
 
@@ -198,6 +208,8 @@ void AEchoPlayerCharacter::HandleListeningChanged(bool bIsListening) {
 	if (UCharacterMovementComponent* Move = GetCharacterMovement()) {
 		Move->MaxWalkSpeed = bIsListening ? CurrentSpeed * 0.5 : CurrentSpeed;
 	}
+
+	TargetSturation = bIsListening ? ListenSaturation : 1.f;
 }
 
 void AEchoPlayerCharacter::OnListenStarted() {

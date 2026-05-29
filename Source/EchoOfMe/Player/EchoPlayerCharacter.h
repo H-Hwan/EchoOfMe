@@ -140,6 +140,18 @@ public:
 	void OnListenStarted();
 	void OnListenCompleted();
 
+	// 듣기 중 채도
+	UPROPERTY(EditAnywhere, Category = "Listening|FX")
+	float ListenSaturation = 0.1f;
+
+	UPROPERTY(EditAnywhere, Category = "Listening|FX")
+	float SaturationFadeDuration = 0.4f;
+
+private:
+	float CurrentSturation = 1.f;
+	float TargetSturation = 1.f;
+
+
 
 	//---
 	// 손전등
