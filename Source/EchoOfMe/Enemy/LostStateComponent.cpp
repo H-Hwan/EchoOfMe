@@ -19,7 +19,7 @@ void ULostStateComponent::OnStateEnter()
 		5.0f,
 		false
 	);
-	/// 사운드 오프
+	/// 모든 사운드 오프
 	
 
 }

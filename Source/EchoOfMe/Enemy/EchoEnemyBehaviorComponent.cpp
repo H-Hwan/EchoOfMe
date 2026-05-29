@@ -280,3 +280,4 @@ bool UEchoEnemyBehaviorComponent::IsPlayerLoseInSight()
 {
 	return GetDistanceToPlayer() > LoseDistance;
 }
+
