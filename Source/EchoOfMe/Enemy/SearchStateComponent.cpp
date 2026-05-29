@@ -27,7 +27,7 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 		return;
 	}
 	
-	if (FVector::Distance(LastLocation, EchoEnemy->GetActorLocation()) > 100.0f)
+	if (FVector::Dist2D(LastLocation, EchoEnemy->GetActorLocation()) > 100.0f)
 	{
 		return;
 	}

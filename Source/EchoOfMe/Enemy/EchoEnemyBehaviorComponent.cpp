@@ -28,7 +28,7 @@ UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 	SearchStateComp = CreateDefaultSubobject<USearchStateComponent>(TEXT("SearchState"));
 	LostStateComp = CreateDefaultSubobject<ULostStateComponent>(TEXT("LostState"));
 
-
+	CurrentSensorValue = MaxSensorValue;
 }
 
 
@@ -232,7 +232,7 @@ bool UEchoEnemyBehaviorComponent::PickCustomRadiusNavLocation(FVector& OutLocati
 
 	FNavLocation NavLocation;
 
-	const bool bNavFount = NavSystem->GetRandomPointInNavigableRadius(Echo->GetActorLocation(), Radius, NavLocation);
+	const bool bNavFount = NavSystem->GetRandomReachablePointInRadius(Echo->GetActorLocation(), Radius, NavLocation);
 
 	if (bNavFount) {
 		OutLocation = NavLocation.Location;
@@ -279,5 +279,25 @@ bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) c
 bool UEchoEnemyBehaviorComponent::IsPlayerLoseInSight()
 {
 	return GetDistanceToPlayer() > LoseDistance;
+}
+
+void UEchoEnemyBehaviorComponent::SetSoundSensorValue()
+{
+
+
+}
+
+void UEchoEnemyBehaviorComponent::SetLightSensorValue()
+{
+
+
+
+}
+
+void UEchoEnemyBehaviorComponent::SetResonanceSensorValue()
+{
+
+
+
 }
 

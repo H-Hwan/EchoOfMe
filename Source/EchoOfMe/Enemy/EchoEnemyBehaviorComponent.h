@@ -145,17 +145,18 @@ public:
 	UPROPERTY()
 	int32 CurrentSensorValue = 0;
 	// 센서 값 반환
-	/*UFUNCTION(BlueprintPure, Category = "Sensor")
-	int32 GetSensorValue()const;*/
-	//// 소리 감지게이지 델리게이트 메소드
-	//UFUNCTION(BlueprintCallable, Category = "Sensor")
-	//void SetSoundSensorValue();
-	//// 빛 감지게이지 델리게이트 메소드
-	//UFUNCTION(BlueprintCallable, Category = "Sensor")
-	//void SetLightSensorValue();
-	//// 소리 감지게이지 델리게이트 메소드
-	//UFUNCTION(BlueprintCallable, Category = "Sensor")
-	//void SetResonanceSensorValue();
+	UFUNCTION(BlueprintPure, Category = "Sensor")
+	int32 GetSensorValue()const { return CurrentSensorValue;  }
+
+	// 소리 감지게이지 델리게이트 메소드
+	UFUNCTION(BlueprintCallable, Category = "Sensor")
+	void SetSoundSensorValue();
+	// 빛 감지게이지 델리게이트 메소드
+	UFUNCTION(BlueprintCallable, Category = "Sensor")
+	void SetLightSensorValue();
+	// 소리 감지게이지 델리게이트 메소드
+	UFUNCTION(BlueprintCallable, Category = "Sensor")
+	void SetResonanceSensorValue();
 
 	//블루프린트용
 	//UFUNCTION(BlueprintImplementableEvent, Category = "Dead")

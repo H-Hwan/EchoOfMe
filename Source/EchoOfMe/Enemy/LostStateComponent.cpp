@@ -20,7 +20,7 @@ void ULostStateComponent::OnStateEnter()
 		false
 	);
 	/// 모든 사운드 오프
-	
+	UE_LOG(LogTemp, Log, TEXT("ULostStateComponent"));
 
 }
 
@@ -54,7 +54,7 @@ void ULostStateComponent::EchosTeleport(FVector Loc)
 		EnemyBrain->ChangeState(EFSMState::Patrol);
 		return;
 	}
-	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 50.0f);
+	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 90.0f);
 	EchoEnemy->TeleportTo(SafeLoc,EchoEnemy->GetActorRotation());
 	EnemyBrain->ChangeState(EFSMState::Patrol);
 }
