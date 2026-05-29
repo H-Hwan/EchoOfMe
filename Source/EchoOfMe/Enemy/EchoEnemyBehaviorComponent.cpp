@@ -206,6 +206,30 @@ FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 	return ACT->GetActorLocation();
 }
 
+FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
+{
+
+	TArray<AActor*> PeekPoints;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(),PeekPointName, PeekPoints);
+
+	TArray<AActor*> ValidPoints;
+
+	for (AActor* PP : PeekPoints)
+	{
+		float DistToPlayer = FVector::Dist2D(PP->GetActorLocation(), GetPlayerLocation());
+		if (DistToPlayer >= 1000.0f && DistToPlayer <= 2000.0f)
+		{
+			ValidPoints.Add(PP);
+		}
+
+	}
+
+	if (ValidPoints.Num() <= 0) return FVector::ZeroVector;
+
+	int32 RandomIndex = FMath::RandRange(0, ValidPoints.Num() - 1);
+	return ValidPoints[RandomIndex]->GetActorLocation();
+}
+
 
 bool UEchoEnemyBehaviorComponent::IsNavMoving() const
 {

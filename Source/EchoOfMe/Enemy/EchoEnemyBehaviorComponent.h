@@ -95,10 +95,18 @@ public:
 	float AcceptanceRadius = 0.0f;
 	// 타겟 태그 지정
 	UPROPERTY(EditAnywhere, Category = "Search")
-	FName SelectTag = TEXT("");
+	FName SelectTag = TEXT("Flag_EchosTeleportPoint");
 
 	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
 	FVector PickTeleportToNewPoint();
+
+	// 일정거리유지, 유저감시 위치 지정
+	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
+	FVector FindPeekPoint();
+
+	// 텔레포트 지점 태그지정
+	UPROPERTY(EditAnywhere, Category = "Teleportation | Flag")
+	FName PeekPointName = TEXT("Flag_PeekPoint");
 
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> CachedFlags;
@@ -161,8 +169,6 @@ public:
 	//블루프린트용
 	//UFUNCTION(BlueprintImplementableEvent, Category = "Dead")
 	//void IsPlayerDEAD(bool bIsAlive);
-
-
 
 
 };
