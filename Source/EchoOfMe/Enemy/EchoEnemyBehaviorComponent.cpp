@@ -305,20 +305,20 @@ bool UEchoEnemyBehaviorComponent::IsPlayerLoseInSight()
 	return GetDistanceToPlayer() > LoseDistance;
 }
 
-void UEchoEnemyBehaviorComponent::SetSoundSensorValue()
+void UEchoEnemyBehaviorComponent::SetSoundSensorValue(bool bSound, int32 Value)
 {
 
 
 }
 
-void UEchoEnemyBehaviorComponent::SetLightSensorValue()
+void UEchoEnemyBehaviorComponent::SetLightSensorValue(bool bLight, int32 Value)
 {
 
 
 
 }
 
-void UEchoEnemyBehaviorComponent::SetResonanceSensorValue()
+void UEchoEnemyBehaviorComponent::SetResonanceSensorValue(bool bResonance, int32 Value)
 {
 
 

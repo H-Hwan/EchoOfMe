@@ -158,13 +158,13 @@ public:
 
 	// 소리 감지게이지 델리게이트 메소드
 	UFUNCTION(BlueprintCallable, Category = "Sensor")
-	void SetSoundSensorValue();
+	void SetSoundSensorValue(bool bSound, int32 Value);
 	// 빛 감지게이지 델리게이트 메소드
 	UFUNCTION(BlueprintCallable, Category = "Sensor")
-	void SetLightSensorValue();
+	void SetLightSensorValue(bool bLight, int32 Value);
 	// 소리 감지게이지 델리게이트 메소드
 	UFUNCTION(BlueprintCallable, Category = "Sensor")
-	void SetResonanceSensorValue();
+	void SetResonanceSensorValue(bool bResonance, int32 Value);
 
 	//블루프린트용
 	//UFUNCTION(BlueprintImplementableEvent, Category = "Dead")
