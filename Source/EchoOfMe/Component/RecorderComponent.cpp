@@ -5,6 +5,7 @@
 
 #include "Component/InventoryComponent.h"
 #include "Data/RecorderItemDefinition.h"
+#include "EchoGameManager.h"
 
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -43,13 +44,24 @@ void URecorderComponent::PlayCurrentStage() {
 	// 이미 재생 중이라면 무시
 	if (IsPlaying()) return;
 
-	const int32 Index = FMath::Clamp(PlaybackStage, 0, RecorderDefinition->StageSounds.Num() - 1);
+	int32 Index = 0;
+	if (UEchoGameManager* GM = UEchoGameManager::Get(this)) {
+		Index = GM->GetRecorderPlaybackCount();
+	}
+
+	// 마지막 단계에서 멈춤 >> 더 진행할 수 없다면 그 단계 반복
+	Index = FMath::Clamp(Index, 0, RecorderDefinition->StageSounds.Num() - 1);
+
 	USoundBase* Sound = RecorderDefinition->StageSounds[Index];
 	if (!Sound) return;
 
 	ActiveAudio = UGameplayStatics::SpawnSound2D(this, Sound);
 	if (ActiveAudio) {
 		ActiveAudio->OnAudioFinished.AddDynamic(this, &URecorderComponent::HandleAudioFinished);
+	}
+
+	if (UEchoGameManager* GM = UEchoGameManager::Get(this)) {
+		GM->IncrementRecorderPlayBack();
 	}
 
 	OnStagePlayed.Broadcast(Index);
@@ -59,15 +71,6 @@ void URecorderComponent::PlayCurrentStage() {
 // 재생 중인 음성 중단
 void URecorderComponent::StopPlayBack() {
 	if (ActiveAudio) ActiveAudio->Stop();
-}
-
-
-// 인식 단계 한 칸 진행
-void URecorderComponent::AdvanceStage() {
-	if (!RecorderDefinition) return;
-
-	// 마지막 단계에서 멈춤
-	PlaybackStage = FMath::Min(PlaybackStage + 1, RecorderDefinition->StageSounds.Num() - 1);
 }
 
 

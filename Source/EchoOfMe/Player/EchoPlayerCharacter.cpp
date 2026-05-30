@@ -5,15 +5,10 @@
 
 #include "Components/CapsuleComponent.h"				//캡슐콜리전
 #include "Components/SkeletalMeshComponent.h"			// 스켈레탈 메시 컴포넌트 모듈 포함
-#include "Engine/LocalPlayer.h"							// 로컬 플레이어 모듈 포함
-#include "Engine/World.h"								//UWorld.(타이머, 트레이스, 시간) 객체 모듈포함
-#include "GameFramework/CharacterMovementComponent.h"	// CMC (캐릭터 이동 컴포넌트) 객체 모듈 포함
-#include "GameFramework/SpringArmComponent.h"			// 필수 포함!
-#include "Camera/CameraComponent.h"						//
-#include "EnhancedInputSubsystems.h"					// Enhanced Input 서브시스템 모듈 포함
+#include "GameFramework/CharacterMovementComponent.h"	// 캐릭터 이동 컴포넌트 모듈 포함
+#include "GameFramework/SpringArmComponent.h"			// 스프링암
+#include "Camera/CameraComponent.h"						// 카메라
 #include "EnhancedInputComponent.h"						// Enhanced Input 바인딩 컴포넌트 모듈 포함
-#include "TimerManager.h"								// FTimerManager (벽 점프 쿨다운) 타이머 모듈 포함
-#include "DrawDebugHelpers.h"							// DrawDebugSphere, DrawDebugLine 디버깅 관련 모듈 포함
 
 #include "Component/ListeningComponent.h"
 #include "Component/FlashlightComponent.h"

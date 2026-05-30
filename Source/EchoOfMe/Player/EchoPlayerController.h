@@ -14,6 +14,7 @@ class UInventoryComponent;
 class URecorderComponent;
 class UInputAction;
 class UInventoryWidget;
+class UMemoryComponent;
 
 
 UCLASS(Abstract)
@@ -122,4 +123,8 @@ public:
 
 private:
 	bool bInventoryOpen = false;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UMemoryComponent> Memory;
 };

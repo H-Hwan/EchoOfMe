@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> Text_Name;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTextBlock> Text_Sub;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UInventoryItemDefinition> Item;

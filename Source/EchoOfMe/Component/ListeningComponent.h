@@ -57,9 +57,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Listening")
 	EListeningCue GetCurrentCue() const { return CurrentCue; }
 
-	UFUNCTION(BlueprintPure, Category = "Listening")
-	float GetResonance() const { return Resonance; }
-
 
 	//---
 	// 방송
@@ -90,7 +87,6 @@ protected:
 private:
 	bool bIsListening = false;
 
-	float Resonance = 0.f;
 	EListeningCue  CurrentCue = EListeningCue ::None;
 
 	// 듣기 시작 시간

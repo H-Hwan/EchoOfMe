@@ -6,18 +6,18 @@
 #include "Interface/Interactable.h"
 #include "Component/InventoryComponent.h"
 #include "Component/RecorderComponent.h"
+#include "Component/MemoryComponent.h"
 #include "UI/InventoryWidget.h"
+#include "EchoPlayerCharacter.h"
 
 #include "EnhancedInputSubsystems.h"	// Enhanced Input 서브시스템
+#include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"		// IMC 클래스
 #include "Kismet/GameplayStatics.h"		// UGameplayStatics (범용 게임플레이 유틸리티)
 #include "GameFramework/PlayerStart.h"	// 플레이어 스타트 액터
-#include "EchoPlayerCharacter.h"		// 전투 캐릭터 클래스
 #include "Engine/LocalPlayer.h"			// 로컬 플레이어
 #include "Engine/World.h"				// UWorld (월드 접근)
 #include "TimerManager.h"
-
-#include "EnhancedInputComponent.h"
 #include "Camera/PlayerCameraManager.h"
 
 
@@ -25,6 +25,7 @@
 AEchoPlayerController::AEchoPlayerController() {
 	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 	Recorder = CreateDefaultSubobject<URecorderComponent>(TEXT("Recorder"));
+	Memory = CreateDefaultSubobject<UMemoryComponent>(TEXT("Memory"));
 }
 
 

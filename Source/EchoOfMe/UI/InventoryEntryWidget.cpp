@@ -19,6 +19,10 @@ void UInventoryEntryWidget::SetItem(UInventoryItemDefinition* InItem) {
 		Text_Name->SetText(Item->DisplayName);
 	}
 
+	if (Text_Sub) {
+		Text_Sub->SetText(Item->Description);
+	}
+
 	if (Img_Icon) {
 		if (Item->Icon) {
 			Img_Icon->SetBrushFromTexture(Item->Icon);

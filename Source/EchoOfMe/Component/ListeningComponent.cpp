@@ -3,6 +3,8 @@
 
 #include "Component/ListeningComponent.h"
 
+#include "EchoGameManager.h"
+
 #include "TimerManager.h"
 #include "Engine/World.h"
 
@@ -20,18 +22,28 @@ void UListeningComponent::BeginPlay() {
 	Super::BeginPlay();
 
 	bIsListening = false;
-	Resonance = 0.f;
 }
 
 
 void UListeningComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// GameManager에서 현재 값 읽기
+	UEchoGameManager* GM = UEchoGameManager::Get(this);
+	if (!GM) return;
+
+	float CurrentResonance = GM->GetResonance();
+	float NewResonance = CurrentResonance;
+
 	if (bIsListening) {
-		Resonance = FMath::Min(Resonance + ResonanceGainPerSec * DeltaTime, ResonanceMax);
+		NewResonance = FMath::Min(CurrentResonance + ResonanceGainPerSec * DeltaTime, ResonanceMax);
 	}
-	else if (Resonance > 0.f) {
-		Resonance = FMath::Max(Resonance - ResonanceDecayPerSec * DeltaTime, 0.f);
+	else if (CurrentResonance > 0.f) {
+		NewResonance = FMath::Max(CurrentResonance - ResonanceDecayPerSec * DeltaTime, 0.f);
+	}
+
+	if (!FMath::IsNearlyEqual(NewResonance, CurrentResonance)) {
+		GM->SetResonance(NewResonance);
 	}
 }
 
@@ -84,7 +96,8 @@ void UListeningComponent::PerformStop() {
 
 	bIsListening = false;
 
-	UE_LOG(LogTemp, Log, TEXT("[Listening] 종료 (공명 %.1f)"), Resonance);
+	const float CurResonance = UEchoGameManager::Get(this) ? UEchoGameManager::Get(this)->GetResonance() : 0.f;
+	UE_LOG(LogTemp, Log, TEXT("[Listening] 종료 (공명 %.1f)"), CurResonance);
 
 	/*	[ToDo] 듣기 종료 처리
 		- 환경음 필터링 복원
