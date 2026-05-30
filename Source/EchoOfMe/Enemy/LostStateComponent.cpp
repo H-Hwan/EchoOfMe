@@ -26,10 +26,9 @@ void ULostStateComponent::OnStateEnter()
 
 void ULostStateComponent::OnStateUpdate(float Delta)
 {
-	// 수색을 포기하고 쉬는 중인데 플레이어가 눈앞에 나타나면?
+
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
-		// ⭐️ 순찰(Patrol)이 아니라 다시 맹렬하게 추적(Chase)해야 맞습니다!
 		EnemyBrain->ChangeState(EFSMState::Chase);
 	}
 }

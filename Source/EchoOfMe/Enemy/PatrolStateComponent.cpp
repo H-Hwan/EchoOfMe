@@ -72,6 +72,13 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	{
 		bNeedNewTarget = true;
 	}
+
+	if (!EnemyBrain->IsNavMoving() && EnemyBrain->GetDistanceToPlayer() >= 30.0f && bNeedNewTarget == false)
+	{
+		EnemyBrain->PickRandomNavMovePoint(RandomPickTarget);
+		EnemyBrain->RequestMoveTo(RandomPickTarget);
+	}
+
 	TargetRetryTimer -= Delta;
 	if (bNeedNewTarget && TargetRetryTimer <= 0.0f)
 	{
