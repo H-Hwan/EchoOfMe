@@ -34,14 +34,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Recorder")
 	void StopPlayBack();
 
-	// 인식 단계 한 칸 진행 >> 스토리 트리거 호출
-	UFUNCTION(BlueprintCallable, Category = "Recorder")
-	void AdvanceStage();
-
-	// 인식 단계 반환
-	UFUNCTION(BlueprintPure, Category = "Recorder")
-	int32 GetPlaybackStage() const { return PlaybackStage; }
-
 	// 재생 중 여부 반환
 	bool IsPlaying() const;
 
@@ -65,9 +57,6 @@ protected:
 	TObjectPtr<URecorderItemDefinition> RecorderDefinition;
 
 private:
-	// 현재 인식 단계 >> 추후 GameManager의 RecorderPlaybackCount로 이전 예정
-	int32 PlaybackStage = 0;
-
 	// 현재 재생 중인 음성 >> 중복 재생 방지 및 중단에 사용
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> ActiveAudio;
