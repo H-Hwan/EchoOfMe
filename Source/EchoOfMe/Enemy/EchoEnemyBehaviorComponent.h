@@ -12,6 +12,7 @@ class USuspectStateComponent;
 class UChaseStateComponent;
 class USearchStateComponent;
 class ULostStateComponent;
+class UAmbushStateComponent;
 class AEchoEnemy;
 
 UENUM(BlueprintType)
@@ -48,6 +49,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "State")
 	TObjectPtr<ULostStateComponent> LostStateComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "State")
+	TObjectPtr<UAmbushStateComponent> AmbushStateComp;
 
 	UPROPERTY()
 	TObjectPtr<UFSMStateBase> CurrentStateComp;

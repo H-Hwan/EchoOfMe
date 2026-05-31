@@ -14,6 +14,7 @@
 #include "ResonanceSensorComponent.h" /// 감지 센서
 #include "Navigation/PathFollowingComponent.h"
 #include "DrawDebugHelpers.h"
+#include "AmbushStateComponent.h"
 
 // Sets default values for this component's properties
 UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
@@ -27,6 +28,7 @@ UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
 	ChaseStateComp = CreateDefaultSubobject<UChaseStateComponent>(TEXT("ChaseState"));
 	SearchStateComp = CreateDefaultSubobject<USearchStateComponent>(TEXT("SearchState"));
 	LostStateComp = CreateDefaultSubobject<ULostStateComponent>(TEXT("LostState"));
+	AmbushStateComp = CreateDefaultSubobject<UAmbushStateComponent>(TEXT("AmbushState"));
 
 	CurrentSensorValue = MaxSensorValue;
 }
@@ -44,6 +46,7 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 	ChaseStateComp->Startreference(Echo, this);
 	SearchStateComp->Startreference(Echo, this);
 	LostStateComp->Startreference(Echo, this);
+	AmbushStateComp->Startreference(Echo, this);
 
 	CurrentStateComp = GetStateComponent(CurrentState);
 	if (CurrentStateComp)
@@ -81,7 +84,7 @@ UFSMStateBase* UEchoEnemyBehaviorComponent::GetStateComponent(EFSMState NewState
 	case EFSMState::Lost:
 		return LostStateComp;
 	case EFSMState::Ambush:
-		return nullptr;
+		return AmbushStateComp;
 	default:
 		return nullptr;
 	}
