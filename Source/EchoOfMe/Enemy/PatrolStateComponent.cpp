@@ -36,8 +36,6 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
 
-	UE_LOG(LogTemp, Error, TEXT("[아니왜]"));
-
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		UE_LOG(LogTemp, Error, TEXT("[첫비교]"));
@@ -86,7 +84,7 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 		{
 			const bool bStarted = EnemyBrain->RequestMoveTo(RandomPickTarget);
 			bHasTarget = bStarted;
-			UE_LOG(LogTemp, Warning, TEXT("[Echo Patrol] 타겟 찻았는데 왜 움직이질 못함"));
+			UE_LOG(LogTemp, Warning, TEXT("[Echo Patro] 움직임 "));
 			if (bHasTarget)
 			{
 				StuckTime = 0.0f;

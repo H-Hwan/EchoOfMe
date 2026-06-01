@@ -54,6 +54,7 @@ void ULostStateComponent::EchosTeleport(FVector Loc)
 		return;
 	}
 	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 90.0f);
+	UE_LOG(LogTemp, Error, TEXT("[수색중 적발견] 텔레포트 지점"), SafeLoc.X, SafeLoc.Y, SafeLoc.Z);
 	EchoEnemy->TeleportTo(SafeLoc,EchoEnemy->GetActorRotation());
 	EnemyBrain->ChangeState(EFSMState::Patrol);
 }

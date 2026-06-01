@@ -11,7 +11,7 @@ void USearchStateComponent::OnStateEnter()
 	LastLocation = EnemyBrain->GetPlayerLocation();
 	EnemyBrain->RequestMoveTo(LastLocation);
 
-
+	UE_LOG(LogTemp, Error, TEXT("[수색 시작] 마지막 추격 지점으로 이동"));
 
 }
 
@@ -54,6 +54,8 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 void USearchStateComponent::OnStateExit()
 {
 	Super::OnStateExit();
+
+	UE_LOG(LogTemp, Error, TEXT("[수색지역 이탈] 텔레포팅"));
 
 	WanderHoldTimer = 5.0f;
 

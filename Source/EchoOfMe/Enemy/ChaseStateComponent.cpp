@@ -9,7 +9,7 @@ void UChaseStateComponent::OnStateEnter()
 {
 	Super::OnStateEnter();
 
-	UE_LOG(LogTemp, Warning, TEXT("[추격]나왜여기임"));
+	UE_LOG(LogTemp, Warning, TEXT("[추격]"));
 
 
 	EchoEnemy->IsLockOnToTarget(true);
@@ -37,7 +37,7 @@ void UChaseStateComponent::OnStateExit()
 
 	EchoEnemy->IsLockOnToTarget(false);
 
-
+	UE_LOG(LogTemp, Warning, TEXT("[추격] 끝 "));
 
 
 }
