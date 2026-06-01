@@ -26,7 +26,6 @@ void ULostStateComponent::OnStateEnter()
 
 void ULostStateComponent::OnStateUpdate(float Delta)
 {
-
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
