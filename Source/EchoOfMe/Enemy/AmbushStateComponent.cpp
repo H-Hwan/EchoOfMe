@@ -12,7 +12,6 @@ void UAmbushStateComponent::OnStateEnter()
 
 	CurrentTime = MaxStayTime;
 
-
 	FVector PeekPoint = EnemyBrain->FindPeekPoint();
 
 	EnemyBrain->RequestMoveTo(PeekPoint);
@@ -30,12 +29,10 @@ void UAmbushStateComponent::OnStateUpdate(float Delta)
 		EnemyBrain->ChangeState(EFSMState::Lost);
 	}
 
-
 	if (MinimumDistance >= EnemyBrain->GetDistanceToPlayer())
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
 	}
-
 }
 
 void UAmbushStateComponent::OnStateExit()
