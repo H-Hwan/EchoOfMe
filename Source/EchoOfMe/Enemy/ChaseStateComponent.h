@@ -17,7 +17,7 @@ public:
 	float CurrentTime = 0.0f;
 
 	UPROPERTY(EditAnywhere, Category = "ChaseTimer")
-	float MaxTime = 5.0f;
+	float MaxLoseTime = 7.0f;
 
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;

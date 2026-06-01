@@ -13,7 +13,7 @@ void UChaseStateComponent::OnStateEnter()
 
 
 	EchoEnemy->IsLockOnToTarget(true);
-	CurrentTime = MaxTime;
+	CurrentTime = MaxLoseTime;
 }
 
 void UChaseStateComponent::OnStateUpdate(float Delta)
@@ -21,12 +21,12 @@ void UChaseStateComponent::OnStateUpdate(float Delta)
 	Super::OnStateUpdate(Delta);
 	EnemyBrain->IsPlayerInDetectedSight();
 
+
 	if (EnemyBrain->IsPlayerLoseInSight() && !EnemyBrain->IsPlayerInDetectedSight())
 	{
 		CurrentTime -= Delta;
 	}
-
-
+	
 	if (EnemyBrain->IsPlayerLoseInSight() && !EnemyBrain->IsPlayerInDetectedSight() && CurrentTime <= 0.0f)
 	{
 	
@@ -46,5 +46,5 @@ void UChaseStateComponent::OnStateExit()
 
 	UE_LOG(LogTemp, Warning, TEXT("[추격] 끝 "));
 
-	CurrentTime = MaxTime;
+	CurrentTime = MaxLoseTime;
 }
