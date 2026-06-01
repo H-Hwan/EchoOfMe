@@ -13,7 +13,7 @@ void UPatrolStateComponent::OnStateEnter()
 	Super::OnStateEnter();
 
 	if (!EchoEnemy) return;
-	
+
 	bHasTarget = EnemyBrain->PickRandomNavMovePoint(RandomPickTarget);
 	TargetRetryTimer = 2.0f;
 	StuckTime = 0.0f;
@@ -35,8 +35,6 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
-
-	UE_LOG(LogTemp, Error, TEXT("[아니왜]"));
 
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
@@ -102,7 +100,7 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	}
 
 }
-	
+
 void UPatrolStateComponent::OnStateExit()
 {
 	Super::OnStateExit();

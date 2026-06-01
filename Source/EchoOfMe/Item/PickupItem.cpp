@@ -4,8 +4,11 @@
 #include "Item/PickupItem.h"
 
 #include "Component/InventoryComponent.h"
+#include "Component/RecorderComponent.h"
 #include "Data/InventoryItemDefinition.h"
+#include "Data/RecorderItemDefinition.h"
 
+#include "GameFramework/Controller.h"
 #include "GameFramework/Pawn.h"
 
 
@@ -29,7 +32,17 @@ void APickupItem::Interact_Implementation(AActor* Interactor) {
 	if (InventoryComp && InventoryComp->AddItem(ItemDefinition)) {
 		// 회수 연출
 
-		UE_LOG(LogTemp, Log, TEXT("[PickupItem] 아이템 회수"))
+		UE_LOG(LogTemp, Log, TEXT("[PickupItem] 아이템 회수"));
+
+		if (URecorderItemDefinition* RecorderDefinition = Cast<URecorderItemDefinition>(ItemDefinition)) {
+			if (const APawn* Pawn = Cast<APawn>(Interactor)) {
+				if (AController* Controller = Pawn->GetController()) {
+					if (URecorderComponent* Recorder = Controller->FindComponentByClass<URecorderComponent>()) {
+						Recorder->HandleRecorderCollected(RecorderDefinition);
+					}
+				}
+			}
+		}
 
 		Destroy();
 	}

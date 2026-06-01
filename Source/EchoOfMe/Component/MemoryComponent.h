@@ -18,7 +18,7 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ECHOOFME_API UMemoryComponent : public UActorComponent {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMemoryComponent();
 
@@ -43,5 +43,6 @@ private:
 	TObjectPtr<UAudioComponent> ActiveFlashback;
 
 	// 사운드 종료 바인딩 메소드
+	UFUNCTION()
 	void HandleFlashbackFinished();
 };

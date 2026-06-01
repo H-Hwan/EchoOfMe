@@ -33,6 +33,20 @@ void UFlashlightComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	const float NewRadius = FMath::FInterpTo(AttenuationRadius, TargetRadius, DeltaTime, RadiusInterpSpeed);
 
 	SetAttenuationRadius(NewRadius);
+
+	// 의심 게이지: ON일 때 누적, OFF일 때 감쇠
+	if (bIsOn) {
+		Suspicion = FMath::Min(Suspicion + SuspicionGainPerSec * DeltaTime, SuspicionThreshold);
+
+		if (Suspicion >= SuspicionThreshold && !bIsLocked) {
+			TriggerLightFailure();
+		}
+	}
+	else if (Suspicion > 0.f) {
+		Suspicion = FMath::Max(Suspicion - SuspicionDecayPerSec * DeltaTime, 0.f);
+	}
+
+	UE_LOG(LogTemp, Verbose, TEXT("[Flashlight] Suspicion=%.1f"), Suspicion);
 }
 
 
@@ -56,6 +70,7 @@ float UFlashlightComponent::CalculateTargetRadius() const {
 
 
 void UFlashlightComponent::ToggleFlashLight() {
+	if (bIsLocked) return; // 빛의 실패 중엔 입력 무시
 	SetFlashLightOn(!bIsOn);
 }
 
@@ -63,4 +78,29 @@ void UFlashlightComponent::ToggleFlashLight() {
 void UFlashlightComponent::SetFlashLightOn(bool bOn) {
 	bIsOn = bOn;
 	SetVisibility(bOn);
+}
+
+
+void UFlashlightComponent::TriggerLightFailure() {
+	if (bIsLocked) return;
+
+	bIsLocked = true;
+	Suspicion = 0.f;   // 발동 후 게이지 리셋
+	SetFlashLightOn(false);
+
+	UE_LOG(LogTemp, Log, TEXT("[Flashlight] 빛의 실패 발동"));
+
+	if (UWorld* World = GetWorld()) {
+		World->GetTimerManager().SetTimer(ForcedOffTimerHandle,
+			this, &UFlashlightComponent::EndLightFailure, ForcedOffDuration, false);
+	}
+}
+
+
+void UFlashlightComponent::EndLightFailure() {
+	bIsLocked = false;
+
+	// TODO(사운드): 빛의 실패 효과음 — 지직거림, 전구 깜빡임 직전 소리
+
+	UE_LOG(LogTemp, Log, TEXT("[Flashlight] 빛의 실패 해제"));
 }

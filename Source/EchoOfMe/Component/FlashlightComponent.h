@@ -35,6 +35,22 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Flash Light")
 	float RadiusInterpSpeed = 50.f;
 
+	// 의심 게이지 누적 속도 (/sec)
+	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	float SuspicionGainPerSec = 20.f;
+
+	// ON 상태가 아닐 때 의심 게이지 감쇠 속도 (/sec)
+	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	float SuspicionDecayPerSec = 8.f;
+
+	// 빛의 실패 발동 임계치
+	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	float SuspicionThreshold = 100.f;
+
+	// 강제 OFF 지속 시간
+	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	float ForcedOffDuration = 1.0f;
+
 private:
 	float CalculateTargetRadius() const;
 
@@ -45,6 +61,14 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Flash Light")
 	bool IsFlashLightOn() const { return bIsOn; }
 
+	// 빛의 실패 1초간 강제 OFF
+	void TriggerLightFailure();
+
 private:
 	bool bIsOn = false;
+	float Suspicion = 0.f;
+	bool bIsLocked = false; // 빛의 실패 중 ON 입력 차단
+	FTimerHandle ForcedOffTimerHandle;
+
+	void EndLightFailure();
 };
