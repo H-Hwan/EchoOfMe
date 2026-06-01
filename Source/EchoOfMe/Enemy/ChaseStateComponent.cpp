@@ -21,7 +21,6 @@ void UChaseStateComponent::OnStateUpdate(float Delta)
 	Super::OnStateUpdate(Delta);
 	EnemyBrain->IsPlayerInDetectedSight();
 
-
 	if (EnemyBrain->IsPlayerLoseInSight() && !EnemyBrain->IsPlayerInDetectedSight())
 	{
 		CurrentTime -= Delta;
