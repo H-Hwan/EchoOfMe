@@ -15,6 +15,9 @@ class ULostStateComponent;
 class UAmbushStateComponent;
 class AEchoEnemy;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLightNoise,bool,bIsShock);
+
+
 UENUM(BlueprintType)
 enum class EFSMState : uint8
 {
