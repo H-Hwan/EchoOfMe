@@ -21,7 +21,46 @@
   <component name="ChangeListManager">
     <list default="true" id="1af77992-614a-474b-84bb-aacf01ed39a3" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EchoOfMe/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EchoOfMe/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Enermy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Enermy/BP_Enemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Data/DA_Recorder.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Data/DA_Recorder.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_LevelDesign.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_LevelDesign.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_LevelDesign_New.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_LevelDesign_New.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_00D224C6.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_04C697A2.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_1759A8DA.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_175C02ED.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_175C02ED.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_26DD668A.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_297BF01D.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_297BF01D.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_48A2B084.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_48A2B084.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_4C7F9C98.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_4C7F9C98.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_516D3957.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_59D098F2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_59D098F2.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_7D88D453.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_8E2761FF.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_9890BC3A.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_9890BC3A.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_B6E38ABA.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_B7E30247.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_C3E6AECA.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_CF342B53.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_D7E6FC44.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_F2FF4D55.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_F2FF4D55.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Box_F65ABCFE.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_2C886F56.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_6A8DB338.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_84B1715F.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_A1620702.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_B4333973.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_BBE95037.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_BC8D351E.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_C3E5FB9F.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_D27EBFB7.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_E58F1A95.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/_GENERATED/YONSAI/Trim_EBA3A583.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Material/wgildfbv_tier_2/Materials/MI_wgildfbv.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Material/wgildfbv_tier_2/Materials/MI_wgildfbv.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Sound/Echo_Memory_01.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sound/Echo_Memory_01.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Sound/Echo_Memory_02.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sound/Echo_Memory_02.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Sound/Echo_Memory_03.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sound/Echo_Memory_03.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +71,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="6" />
+    <option name="cachedIndexableFilesCount" value="2" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -276,6 +315,8 @@
       <workItem from="1780358553339" duration="957000" />
       <workItem from="1780375502197" duration="75000" />
       <workItem from="1780375650507" duration="2126000" />
+      <workItem from="1780397408092" duration="869000" />
+      <workItem from="1780449833414" duration="1067000" />
     </task>
     <servers />
   </component>
