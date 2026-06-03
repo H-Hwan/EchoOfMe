@@ -127,10 +127,10 @@ void URecorderComponent::StartRecoverySequence() {
 void URecorderComponent::FinishRecoverySequence() {
 	bRecoverySequencePlaying = false;
 
-	// 혹시 타이머나 입력 상태가 꼬였더라도 반드시 입력을 돌려놓는다.
+	// 꼬임 방지 안전장치
 	LockPlayerInput(false);
 
-	// 이 시점부터 녹음기 기능과 듣기 액션을 사용할 수 있다.
+	// 이 시점부터 녹음기 기능과 듣기 액션을 사용 가능
 	bHasRecorder = true;
 
 	OnRecoverySequenceStep.Broadcast(ERecorderRecoverySequenceStep::Finished);
@@ -176,8 +176,7 @@ void URecorderComponent::PlayAwakeningVoiceCue() {
 
 
 void URecorderComponent::ApplyColdLightingCue() {
-	/*	실제 조명 색온도 변경은 BP / Level Blueprint / Level Sequence에서 처리
-		예) 회수 방 조명 3000K → 5500K, 포스트프로세스 차갑게 전환	*/
+	// 실제 조명 색온도 변경은 BP / Level Blueprint / Level Sequence에서 처리
 	OnRecoverySequenceStep.Broadcast(ERecorderRecoverySequenceStep::ColdLighting);
 }
 

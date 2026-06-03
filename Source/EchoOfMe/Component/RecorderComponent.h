@@ -141,7 +141,7 @@ protected:
 
 	// 입력 제한 시간. 기획상 5.5초.
 	UPROPERTY(EditDefaultsOnly, Category = "Recorder|Recovery Sequence", meta = (ClampMin = "0.0"))
-	float MovementLockDuration = 5.5f;
+	float MovementLockDuration = 1.f;
 
 	// 전체 시퀀스 시간. 기획상 7초.
 	UPROPERTY(EditDefaultsOnly, Category = "Recorder|Recovery Sequence", meta = (ClampMin = "0.0"))
