@@ -14,6 +14,8 @@ void USuspectStateComponent::OnStateEnter()
 	LookingForwardTime = 2.0f;
 	RotationToTarget = FRotator::ZeroRotator;
 	UE_LOG(LogTemp, Log, TEXT("[의심 시작]"));
+
+	CurrentRandomChangeSuspectToAmbush = FMath::RandRange(0, 10);
 }
 
 void USuspectStateComponent::OnStateUpdate(float Delta)
@@ -22,6 +24,13 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 
 	if ( EnemyBrain->IsPlayerInDetectedSight())
 	{
+		if (SuspectToAmbush >= CurrentRandomChangeSuspectToAmbush)// 지금 스토킹 포인트 이동
+		{
+			UE_LOG(LogTemp, Error, TEXT("[스토킹 시작]"));
+			EnemyBrain->ChangeState(EFSMState::Ambush);
+			return;
+		}
+
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		UE_LOG(LogTemp, Log, TEXT("[의심 시작] 체이스 시작"));
 		return;

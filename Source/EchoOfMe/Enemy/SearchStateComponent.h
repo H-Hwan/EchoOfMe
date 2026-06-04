@@ -28,6 +28,11 @@ public:
 	float ChangeStateTimer = 10.0f;
 
 
+	UPROPERTY(EditAnywhere, Category = "Search | RandRangeMax", meta = (ClampMin = "0", ClampMax = "10"))
+	int32 SearchToAmbush = 2;
+
+	int32 CurrentRandomChangeSearchToAmbush = 0.0f;
+
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
 	virtual void OnStateExit() override;

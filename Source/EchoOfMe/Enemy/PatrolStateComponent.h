@@ -27,6 +27,10 @@ public:
 	float TargetRetryTimer = 0.0f;
 
 
+	UPROPERTY(EditAnywhere, Category = "Chase | RandRangeMax", meta = (ClampMin = "0", ClampMax = "10"))
+	int32 ChaseToAmbush = 5;
+
+	int32 CurrentRandomChangeChaseToAmbush = 0.0f;
 
 	FVector RandomPickTarget = FVector::ZeroVector;
 

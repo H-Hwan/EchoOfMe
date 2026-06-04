@@ -90,7 +90,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	float GetDistanceToPlayer()const;
 
-	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	FVector GetPlayerLocation();
 
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")

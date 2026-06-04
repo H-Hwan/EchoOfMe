@@ -13,6 +13,8 @@ void USearchStateComponent::OnStateEnter()
 
 	UE_LOG(LogTemp, Error, TEXT("[수색 시작] 마지막 추격 지점으로 이동"));
 
+	CurrentRandomChangeSearchToAmbush = FMath::RandRange(0, 10);
+
 }
 
 void USearchStateComponent::OnStateUpdate(float Delta)
@@ -22,6 +24,12 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
+		if (SearchToAmbush >= CurrentRandomChangeSearchToAmbush)// 지금 스토킹 포인트 이동
+		{
+			UE_LOG(LogTemp, Error, TEXT("[스토킹 시작]"));
+			EnemyBrain->ChangeState(EFSMState::Ambush);
+			return;
+		}
 		UE_LOG(LogTemp, Error, TEXT("[수색중 적발견]"));
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;

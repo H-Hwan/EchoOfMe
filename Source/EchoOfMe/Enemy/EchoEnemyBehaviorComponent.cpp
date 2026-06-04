@@ -68,7 +68,7 @@ void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	}
 	
 }
-
+// 상태반환메소드
 UFSMStateBase* UEchoEnemyBehaviorComponent::GetStateComponent(EFSMState NewState)
 {
 	switch (NewState)
@@ -89,7 +89,7 @@ UFSMStateBase* UEchoEnemyBehaviorComponent::GetStateComponent(EFSMState NewState
 		return nullptr;
 	}
 }
-
+// 상태 변환 메소드
 void UEchoEnemyBehaviorComponent::ChangeState(EFSMState NewState)
 {
 	if (CurrentState == NewState || CurrentStateComp == nullptr) return;
@@ -108,7 +108,7 @@ void UEchoEnemyBehaviorComponent::ChangeState(EFSMState NewState)
 	}
 
 }
-
+// 지정된 위치로 이동
 bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, float InAcceptanceRadius)
 {
 	AAIController* AIController = Cast<AAIController>(Echo->GetController());
@@ -129,18 +129,18 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 
 	return Result.Code != EPathFollowingRequestResult::Failed;
 }
-
+// 플레이어 정보 반환
 APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
 {
 	return UGameplayStatics::GetPlayerPawn(GetWorld(),0); 
 }
-
+// 플레이어의 위치값 반환
 FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 {
 
 	return GetPlayerInfo()->GetActorLocation();
 }
-
+// 플레이어가 시야 내로 들어섰는가
 bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 {
 	if (!Echo || !GetPlayerInfo()) return false;
@@ -180,7 +180,7 @@ bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 	return false;
 }
 
-// 깃발 배열돌려야됨 깃발 위치로 순간이동
+// 깃발을 배열로 돌린후 플레이어으로부터 일정 거리 초과 범위내 랜덤 텔레포팅
 FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 {
 
@@ -209,7 +209,7 @@ FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 
 	return ACT->GetActorLocation();
 }
-
+// Enemy 신체를 반만 노출할 지점 지정
 FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
 {
 
@@ -221,7 +221,7 @@ FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
 	for (AActor* PP : PeekPoints)
 	{
 		float DistToPlayer = FVector::Dist2D(PP->GetActorLocation(), GetPlayerLocation());
-		if (DistToPlayer >= 1000.0f && DistToPlayer <= 2000.0f)
+		if (DistToPlayer >= 700.0f && DistToPlayer <= 2000.0f)
 		{
 			ValidPoints.Add(PP);
 		}
@@ -234,26 +234,26 @@ FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
 	return ValidPoints[RandomIndex]->GetActorLocation();
 }
 
-
+// 움직임이 있는가
 bool UEchoEnemyBehaviorComponent::IsNavMoving() const
 {
 	if (!Echo) return false;
 
-	// 주인의 AI 컨트롤러를 가져옵니다.
+	
 	AAIController* AIController = Cast<AAIController>(Echo->GetController());
 	if (!AIController) return false;
 
-	// ⭐️ 완벽한 정답 복구: Idle(대기/멈춤) 상태가 아니라면 이동 중이거나 길을 찾는 중이라는 뜻!
+
 	return AIController->GetMoveStatus() != EPathFollowingStatus::Idle;
 }
-
+// 배회 지점 2
 bool UEchoEnemyBehaviorComponent::PickCustomRadiusNavLocation(FVector& OutLocation,float Radius)
 {
 
 	if (!Echo) return false;
 	UE_LOG(LogTemp, Warning, TEXT("[PickCustomRadius] 입력받은 반경: %f, 에너미 위치: %s"), Radius, *Echo->GetActorLocation().ToString());
 
-	// ⭐️ [디버그 2] 에너미 발밑에 Radius 크기만큼의 탐색 범위를 파란색 구체로 그려서 눈으로 확인합니다!
+
 	DrawDebugSphere(GetWorld(), Echo->GetActorLocation(), Radius, 32, FColor::Turquoise , false, 2.0f);
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(Echo->GetWorld());
 	if (!NavSystem) return false;
@@ -270,7 +270,7 @@ bool UEchoEnemyBehaviorComponent::PickCustomRadiusNavLocation(FVector& OutLocati
 
 	return bNavFount;
 }
-
+// 플레이어와의 거리
 float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
 {
 	if (const APawn* Player = GetPlayerInfo())
@@ -284,7 +284,7 @@ float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
 
 	return TNumericLimits<float>::Max();
 }
-
+//랜덤좌표 뽑기
 bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) const
 {
 
@@ -303,7 +303,7 @@ bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) c
 
 	return bNavFount;
 }
-
+// 플레이어를 놓쳤는가
 bool UEchoEnemyBehaviorComponent::IsPlayerLoseInSight()
 {
 	return GetDistanceToPlayer() > LoseDistance;

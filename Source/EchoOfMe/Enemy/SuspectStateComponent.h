@@ -25,7 +25,12 @@ public:
 
 	FRotator RotationToTarget;
 
-	
+
+	UPROPERTY(EditAnywhere, Category = "Suspect | RandRangeMax", meta = (ClampMin = "0", ClampMax = "10"))
+	int32 SuspectToAmbush = 5;
+
+	int32 CurrentRandomChangeSuspectToAmbush = 0.0f;
+
 	virtual void OnStateEnter() override;
 	virtual void OnStateUpdate(float Delta) override;
 	virtual void OnStateExit() override;
