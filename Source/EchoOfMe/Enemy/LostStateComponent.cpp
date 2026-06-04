@@ -26,7 +26,6 @@ void ULostStateComponent::OnStateEnter()
 
 void ULostStateComponent::OnStateUpdate(float Delta)
 {
-
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
@@ -54,13 +53,19 @@ void ULostStateComponent::EchosTeleport(FVector Loc)
 		return;
 	}
 	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 90.0f);
+	UE_LOG(LogTemp, Error, TEXT("[수색중 적발견] 텔레포트 지점"), SafeLoc.X, SafeLoc.Y, SafeLoc.Z);
 	EchoEnemy->TeleportTo(SafeLoc,EchoEnemy->GetActorRotation());
 	EnemyBrain->ChangeState(EFSMState::Patrol);
+
 }
 
 void ULostStateComponent::TimeToTeleport()
 {
+
+
 	// 타이머 5초후 텔레포트
 	EchosTeleport(EnemyBrain->PickTeleportToNewPoint());
+
+
 }
 

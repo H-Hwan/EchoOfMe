@@ -11,10 +11,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "EchoOfMe/Enemy/EchoEnemyAIController.h"
 #include "NavigationSystem.h"
-#include "ResonanceSensorComponent.h" /// 감지 센서
+#include "Enemy/ResonanceSensorComponent.h" /// 감지 센서
 #include "Navigation/PathFollowingComponent.h"
 #include "DrawDebugHelpers.h"
-#include "AmbushStateComponent.h"
+#include "Enemy/AmbushStateComponent.h"
 
 // Sets default values for this component's properties
 UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
@@ -206,6 +206,7 @@ FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 	AActor* ACT = CachedFlags[Random];
 
 	UE_LOG(LogTemp, Log, TEXT("[PickTeleportToNewPoint] 스폰 지점 순간이동"));
+
 	return ACT->GetActorLocation();
 }
 
@@ -253,7 +254,7 @@ bool UEchoEnemyBehaviorComponent::PickCustomRadiusNavLocation(FVector& OutLocati
 	UE_LOG(LogTemp, Warning, TEXT("[PickCustomRadius] 입력받은 반경: %f, 에너미 위치: %s"), Radius, *Echo->GetActorLocation().ToString());
 
 	// ⭐️ [디버그 2] 에너미 발밑에 Radius 크기만큼의 탐색 범위를 파란색 구체로 그려서 눈으로 확인합니다!
-	DrawDebugSphere(GetWorld(), Echo->GetActorLocation(), Radius, 32, FColor::Blue, false, 2.0f);
+	DrawDebugSphere(GetWorld(), Echo->GetActorLocation(), Radius, 32, FColor::Turquoise , false, 2.0f);
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(Echo->GetWorld());
 	if (!NavSystem) return false;
 

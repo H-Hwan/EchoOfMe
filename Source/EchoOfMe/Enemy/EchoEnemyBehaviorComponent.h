@@ -15,6 +15,9 @@ class ULostStateComponent;
 class UAmbushStateComponent;
 class AEchoEnemy;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLightNoise,bool,bIsShock);
+
+
 UENUM(BlueprintType)
 enum class EFSMState : uint8
 {
@@ -98,7 +101,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Search | Location")
 	float AcceptanceRadius = 0.0f;
 	// 타겟 태그 지정
-	UPROPERTY(EditAnywhere, Category = "Search")
+	UPROPERTY(EditAnywhere, Category = "Teleportation | Flag")
 	FName SelectTag = TEXT("Flag_EchosTeleportPoint");
 
 	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
