@@ -101,7 +101,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Search | Location")
 	float AcceptanceRadius = 0.0f;
 	// 타겟 태그 지정
-	UPROPERTY(EditAnywhere, Category = "Search")
+	UPROPERTY(EditAnywhere, Category = "Teleportation | Flag")
 	FName SelectTag = TEXT("Flag_EchosTeleportPoint");
 
 	UFUNCTION(BlueprintCallable, Category = "Teleportation | Flag")
