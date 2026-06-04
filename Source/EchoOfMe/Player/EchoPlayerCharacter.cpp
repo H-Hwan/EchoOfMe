@@ -13,6 +13,7 @@
 #include "Component/ListeningComponent.h"
 #include "Component/FlashlightComponent.h"
 #include "Component/NoiseMakerComponent.h"
+#include "Component/EquipmentComponent.h"
 
 
 // Sets default values
@@ -53,10 +54,25 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 
 	// 듣기 능력 추가
 	Listening = CreateDefaultSubobject<UListeningComponent>(TEXT("Listening"));
+
+	// 장비 관리 컴포넌트
+	Equipment = CreateDefaultSubobject<UEquipmentComponent>(TEXT("Equipment"));
+
+	// 손전등 메시
+	FlashlightMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FlashlightMesh"));
+	FlashlightMesh->SetupAttachment(GetMesh(), EquipSocketName);
+	FlashlightMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FlashlightMesh->SetVisibility(false);
+
+	// 녹음기 메시
+	RecorderMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RecorderMesh"));
+	RecorderMesh->SetupAttachment(GetMesh(), EquipSocketName);
+	RecorderMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RecorderMesh->SetVisibility(false);
+
 	// 손전등 추가
 	FlashLight = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashLight"));
-	FlashLight->SetupAttachment(FollowCamera);
-	FlashLight->SetRelativeLocation(FVector(10.f, 0.f, 0.f));
+	FlashLight->SetupAttachment(FlashlightMesh);
 	FlashLight->Intensity = 5000.f;
 	FlashLight->OuterConeAngle = 35.f;
 	FlashLight->InnerConeAngle = 19.f;
@@ -78,7 +94,11 @@ void AEchoPlayerCharacter::BeginPlay() {
 		PC->PlayerCameraManager->ViewPitchMin = ViewPitchMin;
 		PC->PlayerCameraManager->ViewPitchMax = ViewPitchMax;
 	}
-	
+
+	if (Equipment) {
+		Equipment->SetEquipmentMeshes(FlashlightMesh, RecorderMesh, FlashLight);
+	}
+
 }
 
 // Called every frame
@@ -128,6 +148,10 @@ void AEchoPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			EnhancedInputComponent->BindAction(ListenAction, ETriggerEvent::Completed,
 				this, &AEchoPlayerCharacter::OnListenCompleted);
 		}
+		EnhancedInputComponent->BindAction(EquipFlashlightAction, ETriggerEvent::Started,
+			this, &AEchoPlayerCharacter::StopRunning);
+		EnhancedInputComponent->BindAction(EquipRecorderAction, ETriggerEvent::Started,
+			this, &AEchoPlayerCharacter::StopRunning);
 
 	}
 	else {
@@ -188,7 +212,7 @@ void AEchoPlayerCharacter::StopRunning() {
 }
 
 void AEchoPlayerCharacter::DoJumpStart() {
-	Jump(); 
+	Jump();
 }
 
 void AEchoPlayerCharacter::DoJumpEnd() {
@@ -219,9 +243,18 @@ void AEchoPlayerCharacter::OnListenCompleted() {
 	}
 }
 
+// F 입력은 손전등 들고 있을 때만 토글
 void AEchoPlayerCharacter::OnFlashLightInput() {
-	if (FlashLight) {
-		FlashLight->ToggleFlashLight();
-	}
+	if (!Equipment || Equipment->GetCurrentEquipment() != EEquipmentSlot::Flashlight) return;
+	if (FlashLight) FlashLight->ToggleFlashLight();
 }
 
+void AEchoPlayerCharacter::OnEquipFlashlight()
+{
+	if (Equipment) Equipment->RequestFlashlight();
+}
+
+void AEchoPlayerCharacter::OnEquipRecorder()
+{
+	if (Equipment) Equipment->RequestRecorder();
+}

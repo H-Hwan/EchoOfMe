@@ -11,10 +11,12 @@ class UInputAction;
 class UAnimMontage;
 class USpringArmComponent;
 class UCameraComponent;
+class UStaticMeshComponent;
 
 class UListeningComponent;
 class UFlashlightComponent;
 class UNoiseMakerComponent;
+class UEquipmentComponent;
 
 struct FInputActionValue;
 
@@ -82,11 +84,21 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> RunningAction;
 
+	// 손전등 On/Off 액션
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> FlashlightAction;
 
+	// 듣기 액션
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> ListenAction;
+
+	// 손전등 장착 액션
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> EquipFlashlightAction;
+
+	// 녹음기 장착 액션
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> EquipRecorderAction;
 
 
 	//---
@@ -120,7 +132,7 @@ public:
 public:
 	// 시작
 	void DoJumpStart();
-	
+
 	// 종료
 	void DoJumpEnd();
 
@@ -161,6 +173,23 @@ public:
 
 	void OnFlashLightInput();
 
+
+	//---
+	// 장착
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<UEquipmentComponent> Equipment;
+
+	UPROPERTY(VisibleAnywhere, Category="Components|Equipment")
+	TObjectPtr<UStaticMeshComponent> FlashlightMesh;
+
+	UPROPERTY(VisibleAnywhere, Category="Components|Equipment")
+	TObjectPtr<UStaticMeshComponent> RecorderMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category="Components|Equipment")
+	FName EquipSocketName = TEXT("RightHandSocket");
+
+	void OnEquipFlashlight();
+	void OnEquipRecorder();
 
 	//---
 	// 캐릭터 상태 정보
