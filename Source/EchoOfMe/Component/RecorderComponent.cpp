@@ -4,6 +4,7 @@
 #include "Component/RecorderComponent.h"
 
 #include "Component/InventoryComponent.h"
+#include "Component/EquipmentComponent.h"
 #include "Component/FlashlightComponent.h"
 #include "Data/RecorderItemDefinition.h"
 #include "EchoGameManager.h"
@@ -231,6 +232,15 @@ void URecorderComponent::ForceFlashlight(bool bOn) const {
 
 	APawn* Pawn = PC->GetPawn();
 	if (!Pawn) return;
+
+	if (bOn)
+	{
+		const UEquipmentComponent* Equipment = Pawn->FindComponentByClass<UEquipmentComponent>();
+		if (!Equipment || Equipment->GetCurrentEquipment() != EEquipmentSlot::Flashlight)
+		{
+			return;
+		}
+	}
 
 	if (UFlashlightComponent* Flashlight = Pawn->FindComponentByClass<UFlashlightComponent>()) {
 		Flashlight->SetFlashLightOn(bOn);

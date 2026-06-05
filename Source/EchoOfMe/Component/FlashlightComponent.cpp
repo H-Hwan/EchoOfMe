@@ -45,8 +45,6 @@ void UFlashlightComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	else if (Suspicion > 0.f) {
 		Suspicion = FMath::Max(Suspicion - SuspicionDecayPerSec * DeltaTime, 0.f);
 	}
-
-	UE_LOG(LogTemp, Verbose, TEXT("[Flashlight] Suspicion=%.1f"), Suspicion);
 }
 
 

@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Player/EchoPlayerCharacter.h"
@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"			// 스프링암
 #include "Camera/CameraComponent.h"						// 카메라
 #include "EnhancedInputComponent.h"						// Enhanced Input 바인딩 컴포넌트 모듈 포함
+#include "Engine/World.h"
 
 #include "Component/ListeningComponent.h"
 #include "Component/FlashlightComponent.h"
@@ -23,6 +24,7 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 
 	// 캡슐 콜리전 크기 설정
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
+	ForceCharacterComponentMobility();
 
 	// 이동 키 입력 방향으로 캐릭터를 회전
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -60,26 +62,87 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 
 	// 손전등 메시
 	FlashlightMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FlashlightMesh"));
-	FlashlightMesh->SetupAttachment(GetMesh(), EquipSocketName);
+	FlashlightMesh->SetupAttachment(GetMesh(), FlashlightParentSocket);
 	FlashlightMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FlashlightMesh->SetVisibility(false);
 
 	// 녹음기 메시
 	RecorderMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RecorderMesh"));
-	RecorderMesh->SetupAttachment(GetMesh(), EquipSocketName);
+	RecorderMesh->SetupAttachment(GetMesh(), RecorderParentSocket);
 	RecorderMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RecorderMesh->SetVisibility(false);
 
 	// 손전등 추가
 	FlashLight = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashLight"));
 	FlashLight->SetupAttachment(FlashlightMesh);
+	FlashLight->SetUsingAbsoluteRotation(true);
 	FlashLight->Intensity = 5000.f;
 	FlashLight->OuterConeAngle = 35.f;
 	FlashLight->InnerConeAngle = 19.f;
-	FlashLight->LightColor = FColor(1.f, 0.7f, 0.37f);
+	FlashLight->SetLightColor(FLinearColor(1.f, 0.7f, 0.37f));
+	FlashLight->SetVisibility(false);
 
 	// 소리 발생 컴포넌트
 	NoiseMaker = CreateDefaultSubobject<UNoiseMakerComponent>(TEXT("NoiseMaker"));
+
+	ForceCharacterComponentMobility();
+}
+
+void AEchoPlayerCharacter::ForceCharacterComponentMobility()
+{
+	if (UCapsuleComponent* Capsule = GetCapsuleComponent())
+	{
+		Capsule->SetMobility(EComponentMobility::Movable);
+	}
+
+	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+	{
+		CharacterMesh->SetMobility(EComponentMobility::Movable);
+	}
+
+	if (FlashlightMesh)
+	{
+		FlashlightMesh->SetMobility(EComponentMobility::Movable);
+	}
+
+	if (RecorderMesh)
+	{
+		RecorderMesh->SetMobility(EComponentMobility::Movable);
+	}
+}
+
+void AEchoPlayerCharacter::PreRegisterAllComponents()
+{
+	ForceCharacterComponentMobility();
+	Super::PreRegisterAllComponents();
+}
+
+void AEchoPlayerCharacter::OnConstruction(const FTransform& Transform)
+{
+	ForceCharacterComponentMobility();
+
+	Super::OnConstruction(Transform);
+
+	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+	{
+		if (FlashlightMesh)
+		{
+			FlashlightMesh->AttachToComponent(
+				CharacterMesh,
+				FAttachmentTransformRules::KeepRelativeTransform,
+				FlashlightParentSocket
+			);
+		}
+
+		if (RecorderMesh)
+		{
+			RecorderMesh->AttachToComponent(
+				CharacterMesh,
+				FAttachmentTransformRules::KeepRelativeTransform,
+				RecorderParentSocket
+			);
+		}
+	}
 }
 
 // Called when the game starts or when spawned
@@ -115,6 +178,51 @@ void AEchoPlayerCharacter::Tick(float DeltaTime) {
 			PP.ColorSaturation = FVector4(CurrentSturation, CurrentSturation, CurrentSturation, 1.f);
 		}
 	}
+
+	UpdateFlashlightAim(DeltaTime);
+}
+
+void AEchoPlayerCharacter::UpdateFlashlightAim(float DeltaTime)
+{
+	if (!bAimFlashlightAtCameraTrace || !FollowCamera || !FlashLight || !Equipment)
+	{
+		return;
+	}
+
+	if (Equipment->GetCurrentEquipment() != EEquipmentSlot::Flashlight)
+	{
+		return;
+	}
+
+	const FVector TraceStart = FollowCamera->GetComponentLocation();
+	const FVector TraceEnd = TraceStart + FollowCamera->GetForwardVector() * FlashlightAimTraceDistance;
+
+	FHitResult Hit;
+	FCollisionQueryParams QueryParams(SCENE_QUERY_STAT(FlashlightAimTrace), false, this);
+
+	const bool bHit = GetWorld() && GetWorld()->LineTraceSingleByChannel(
+		Hit,
+		TraceStart,
+		TraceEnd,
+		FlashlightAimTraceChannel,
+		QueryParams
+	);
+
+	const FVector AimTarget = bHit ? Hit.ImpactPoint : TraceEnd;
+	const FVector LightLocation = FlashLight->GetComponentLocation();
+	const FVector AimDirection = AimTarget - LightLocation;
+
+	if (AimDirection.IsNearlyZero())
+	{
+		return;
+	}
+
+	const FRotator DesiredRotation = AimDirection.Rotation() + FlashlightAimRotationOffset;
+	const FRotator NewRotation = FlashlightAimInterpSpeed > 0.f
+		? FMath::RInterpTo(FlashLight->GetComponentRotation(), DesiredRotation, DeltaTime, FlashlightAimInterpSpeed)
+		: DesiredRotation;
+
+	FlashLight->SetWorldRotation(NewRotation);
 }
 
 
@@ -148,11 +256,14 @@ void AEchoPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			EnhancedInputComponent->BindAction(ListenAction, ETriggerEvent::Completed,
 				this, &AEchoPlayerCharacter::OnListenCompleted);
 		}
-		EnhancedInputComponent->BindAction(EquipFlashlightAction, ETriggerEvent::Started,
-			this, &AEchoPlayerCharacter::StopRunning);
-		EnhancedInputComponent->BindAction(EquipRecorderAction, ETriggerEvent::Started,
-			this, &AEchoPlayerCharacter::StopRunning);
-
+		if (EquipFlashlightAction) {
+			EnhancedInputComponent->BindAction(EquipFlashlightAction, ETriggerEvent::Started,
+				this, &AEchoPlayerCharacter::OnEquipFlashlight);
+		}
+		if (EquipRecorderAction) {
+			EnhancedInputComponent->BindAction(EquipRecorderAction, ETriggerEvent::Started,
+				this, &AEchoPlayerCharacter::OnEquipRecorder);
+		}
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("[EnhancedInputComponent] 참조 실패"));
@@ -245,8 +356,29 @@ void AEchoPlayerCharacter::OnListenCompleted() {
 
 // F 입력은 손전등 들고 있을 때만 토글
 void AEchoPlayerCharacter::OnFlashLightInput() {
-	if (!Equipment || Equipment->GetCurrentEquipment() != EEquipmentSlot::Flashlight) return;
-	if (FlashLight) FlashLight->ToggleFlashLight();
+	const EEquipmentSlot CurrentSlot = Equipment ? Equipment->GetCurrentEquipment() : EEquipmentSlot::None;
+
+	if (!Equipment)
+	{
+		return;
+	}
+
+	if (CurrentSlot != EEquipmentSlot::Flashlight)
+	{
+		return;
+	}
+
+	if (!FlashLight)
+	{
+		return;
+	}
+
+	if (Equipment->IsSwitching() && FlashLight->IsFlashLightOn())
+	{
+		return;
+	}
+
+	FlashLight->ToggleFlashLight();
 }
 
 void AEchoPlayerCharacter::OnEquipFlashlight()

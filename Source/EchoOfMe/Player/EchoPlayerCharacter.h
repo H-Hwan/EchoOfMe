@@ -36,6 +36,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PreRegisterAllComponents() override;
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 public:
 	// Called every frame
@@ -171,12 +173,27 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UFlashlightComponent> FlashLight;
 
+	UPROPERTY(EditAnywhere, Category="Flashlight|Aim")
+	bool bAimFlashlightAtCameraTrace = true;
+
+	UPROPERTY(EditAnywhere, Category="Flashlight|Aim", meta=(ClampMin="100.0"))
+	float FlashlightAimTraceDistance = 3000.f;
+
+	UPROPERTY(EditAnywhere, Category="Flashlight|Aim")
+	TEnumAsByte<ECollisionChannel> FlashlightAimTraceChannel = ECC_Visibility;
+
+	UPROPERTY(EditAnywhere, Category="Flashlight|Aim", meta=(ClampMin="0.0"))
+	float FlashlightAimInterpSpeed = 30.f;
+
+	UPROPERTY(EditAnywhere, Category="Flashlight|Aim")
+	FRotator FlashlightAimRotationOffset = FRotator::ZeroRotator;
+
 	void OnFlashLightInput();
 
 
 	//---
 	// 장착
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UEquipmentComponent> Equipment;
 
 	UPROPERTY(VisibleAnywhere, Category="Components|Equipment")
@@ -185,11 +202,18 @@ public:
 	UPROPERTY(VisibleAnywhere, Category="Components|Equipment")
 	TObjectPtr<UStaticMeshComponent> RecorderMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category="Components|Equipment")
-	FName EquipSocketName = TEXT("RightHandSocket");
+	UPROPERTY(EditAnywhere, Category="Components|Equipment|Attachment", meta=(DisplayName="Flashlight Parent Socket"))
+	FName FlashlightParentSocket = TEXT("hand_r_Flashlight");
+
+	UPROPERTY(EditAnywhere, Category="Components|Equipment|Attachment", meta=(DisplayName="Recorder Parent Socket"))
+	FName RecorderParentSocket = TEXT("hand_r_Flashlight");
 
 	void OnEquipFlashlight();
 	void OnEquipRecorder();
+
+private:
+	void ForceCharacterComponentMobility();
+	void UpdateFlashlightAim(float DeltaTime);
 
 	//---
 	// 캐릭터 상태 정보

@@ -26,7 +26,6 @@ void UEquipmentComponent::SetEquipmentMeshes(USceneComponent* InFlashlightMesh, 
     Flashlight = InFlashlight;
 }
 
-
 void UEquipmentComponent::RequestFlashlight()
 {
     if (bIsSwitching) return;
@@ -56,16 +55,19 @@ void UEquipmentComponent::StartSwitch(EEquipmentSlot NewTarget)
     bIsSwitching = true;
     TargetEquipment = NewTarget;
 
-    // 현재 들고 있는 게 있으면 집어넣기부터
+    // 현재 들고 있는 게 있으면 집어넣기부터 처리
     if (CurrentEquipment != EEquipmentSlot::None)
     {
-        // 손전등 집어넣을 때 자동 OFF
-        if (CurrentEquipment == EEquipmentSlot::Flashlight && Flashlight)
+        HolsteringEquipment = CurrentEquipment;
+        CurrentEquipment = EEquipmentSlot::None;
+
+        // 손전등을 집어넣을 때 자동 OFF
+        if (HolsteringEquipment == EEquipmentSlot::Flashlight && Flashlight)
         {
             Flashlight->SetFlashLightOn(false);
         }
 
-        UAnimMontage* HolsterMontage = (CurrentEquipment == EEquipmentSlot::Flashlight)
+        UAnimMontage* HolsterMontage = (HolsteringEquipment == EEquipmentSlot::Flashlight)
             ? FlashlightHolsterMontage
             : RecorderHolsterMontage;
 
@@ -81,11 +83,11 @@ void UEquipmentComponent::StartSwitch(EEquipmentSlot NewTarget)
 
 void UEquipmentComponent::HandleHolsterFinished()
 {
-    // 집어넣기 끝남 — 메시 숨기고 빈손 상태
-    if (CurrentEquipment != EEquipmentSlot::None)
+    // 집어넣기가 끝나면 메시를 숨기고 빈손 상태로 전환
+    if (HolsteringEquipment != EEquipmentSlot::None)
     {
-        ShowMesh(CurrentEquipment, false);
-        CurrentEquipment = EEquipmentSlot::None;
+        ShowMesh(HolsteringEquipment, false);
+        HolsteringEquipment = EEquipmentSlot::None;
     }
 
     // 빈손이 최종 목표면 여기서 끝
@@ -93,7 +95,6 @@ void UEquipmentComponent::HandleHolsterFinished()
     {
         bIsSwitching = false;
         OnEquipmentChanged.Broadcast(EEquipmentSlot::None);
-        UE_LOG(LogTemp, Log, TEXT("[Equipment] 빈손 상태"));
         return;
     }
 
@@ -102,19 +103,18 @@ void UEquipmentComponent::HandleHolsterFinished()
         ? FlashlightDrawMontage
         : RecorderDrawMontage;
 
-    ShowMesh(TargetEquipment, true);   // 꺼내는 동안 손에 보여야 함
+    ShowMesh(TargetEquipment, true);
+    CurrentEquipment = TargetEquipment;
+
     PlayMontage(DrawMontage, &UEquipmentComponent::HandleDrawFinished);
 }
 
 
 void UEquipmentComponent::HandleDrawFinished()
 {
-    CurrentEquipment = TargetEquipment;
     bIsSwitching = false;
 
     OnEquipmentChanged.Broadcast(CurrentEquipment);
-
-    UE_LOG(LogTemp, Log, TEXT("[Equipment] 장비 전환 완료: %d"), (int32)CurrentEquipment);
 }
 
 
@@ -131,14 +131,14 @@ void UEquipmentComponent::ShowMesh(EEquipmentSlot Slot, bool bVisible)
 
     if (Target)
     {
-        Target->SetVisibility(bVisible, true);   // 자식까지 propagate
+        Target->SetVisibility(bVisible, false);
     }
 }
 
 
 void UEquipmentComponent::PlayMontage(UAnimMontage* Montage, void (UEquipmentComponent::*Callback)())
 {
-    // 몽타주 없으면 즉시 콜백 — 1차 빌드 중 몽타주 미할당 상태에서도 흐름은 굴러가게
+    // 몽타주가 없으면 즉시 콜백해서 미할당 상태에서도 흐름은 유지한다.
     if (!Montage)
     {
         (this->*Callback)();

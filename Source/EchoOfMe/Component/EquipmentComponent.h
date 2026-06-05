@@ -50,6 +50,9 @@ public:
 	EEquipmentSlot GetCurrentEquipment() const { return CurrentEquipment; }
 
 	UFUNCTION(BlueprintPure, Category="Equipment")
+	EEquipmentSlot GetAnimEquipment() const { return CurrentEquipment; }
+
+	UFUNCTION(BlueprintPure, Category="Equipment")
 	bool IsSwitching() const { return bIsSwitching; }
 
 
@@ -65,7 +68,6 @@ public:
 	// 장비 전환 완료 시 방송
 	UPROPERTY(BlueprintAssignable, Category="Equipment")
 	FOnEquipmentChanged OnEquipmentChanged;
-
 
 	//---
 	// 몽타주
@@ -94,6 +96,7 @@ private:
 private:
 	EEquipmentSlot CurrentEquipment = EEquipmentSlot::None;
 	EEquipmentSlot TargetEquipment = EEquipmentSlot::None;
+	EEquipmentSlot HolsteringEquipment = EEquipmentSlot::None;
 	bool bIsSwitching = false;
 
 	// 녹음기/손전등 메시 참조
