@@ -21,16 +21,21 @@ void UChaseStateComponent::OnStateUpdate(float Delta)
 	Super::OnStateUpdate(Delta);
 	EnemyBrain->IsPlayerInDetectedSight();
 
+	if (!EnemyBrain->GetPlayerInfo())
+	{
+		EnemyBrain->ChangeState(EFSMState::Patrol);
+		return;
+	}
+
 	if (EnemyBrain->IsPlayerLoseInSight() && !EnemyBrain->IsPlayerInDetectedSight())
 	{
 		CurrentTime -= Delta;
-	}
-	
-	if (EnemyBrain->IsPlayerLoseInSight() && !EnemyBrain->IsPlayerInDetectedSight() && CurrentTime <= 0.0f)
-	{
-	
-		EnemyBrain->ChangeState(EFSMState::Search);
-		return;
+		if (CurrentTime <= 0.0f)
+		{
+
+			EnemyBrain->ChangeState(EFSMState::Search);
+			return;
+		}
 	}
 
 	EnemyBrain->RequestMoveTo(EnemyBrain->GetPlayerLocation());

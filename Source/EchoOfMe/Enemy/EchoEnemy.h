@@ -27,7 +27,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	// 액터가 월드에서 파괴될 때 엔진이 무조건 호출하는 함수입니다.
+	virtual void Destroyed() override;
 	// RInterp RotationSpeed 
 	UPROPERTY(EditAnywhere, Category = "Rotation")
 	float RotationSpeed = 1.0f;
@@ -49,6 +50,10 @@ public:
 	// 빛감지 처리 메소드
 	UFUNCTION()
 	void LightDetect(float Delta);
+
+	// 플레이어를처다봐라 처리 메소드
+	UFUNCTION()
+	void LookPlayer();
 
 	UPROPERTY()
 	FVector SmoothedVelocity = FVector::ZeroVector;

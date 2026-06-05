@@ -27,6 +27,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Wander Time")
 	float ChangeStateTimer = 10.0f;
 
+	float StuckTimer = 0.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Search | RandRangeMax", meta = (ClampMin = "0", ClampMax = "10"))
 	int32 SearchToAmbush = 2;

@@ -70,6 +70,14 @@ void AEchoEnemy::Tick(float DeltaTime)
 
 
 }
+void AEchoEnemy::Destroyed()
+{
+	FVector DeathLocation = GetActorLocation();
+	UE_LOG(LogTemp, Error, TEXT("🚨 [EchoEnemy] 몬스터가 파괴(증발)되었습니다! 마지막 위치: %s"), *DeathLocation.ToString());
+
+	Super::Destroyed(); // 원래 엔진이 하던 파괴 작업 마저 실행
+
+}
 // 플레이어 추격시작 시 변경 스텟
 void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
 {
@@ -93,6 +101,16 @@ void AEchoEnemy::LightDetect(float DeltaTime)
 
 	DetectCurrentCount += DeltaTime;
 
+
+
+
+
+
+
+}
+
+void AEchoEnemy::LookPlayer()
+{
 
 
 
