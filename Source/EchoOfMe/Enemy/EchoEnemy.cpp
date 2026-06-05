@@ -100,13 +100,6 @@ void AEchoEnemy::LightDetect(float DeltaTime)
 	if (!IsDetect) return;
 
 	DetectCurrentCount += DeltaTime;
-
-
-
-
-
-
-
 }
 
 void AEchoEnemy::LookPlayer()

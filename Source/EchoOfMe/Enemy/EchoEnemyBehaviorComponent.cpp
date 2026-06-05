@@ -11,7 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EchoOfMe/Enemy/EchoEnemyAIController.h"
 #include "NavigationSystem.h"
-#include "Enemy/ResonanceSensorComponent.h"
+#include "Enemy/ResonanceSensorComponent.h" /// 감지 센서
 #include "Navigation/PathFollowingComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Enemy/AmbushStateComponent.h"
@@ -65,24 +65,6 @@ void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	if (CurrentStateComp) {
 	
 		CurrentStateComp->OnStateUpdate(DeltaTime);
-	}
-
-	if (Echo)
-	{
-		FString StateName = TEXT("Unknown");
-		switch (CurrentState)
-		{
-		case EFSMState::Patrol: StateName = TEXT("Patrol (순찰중)"); break;
-		case EFSMState::Suspect: StateName = TEXT("Suspect (의심중-파업위험!)"); break;
-		case EFSMState::Chase: StateName = TEXT("Chase (추적중)"); break;
-		case EFSMState::Search: StateName = TEXT("Search (수색중)"); break;
-		case EFSMState::Lost: StateName = TEXT("Lost (놓침)"); break;
-		case EFSMState::Ambush: StateName = TEXT("Ambush (매복중)"); break;
-		}
-
-		// 몬스터 머리 1미터(100cm) 위 허공에 글자를 그립니다.
-		FVector TextLocation = Echo->GetActorLocation() + FVector(0.0f, 0.0f, 100.0f);
-		DrawDebugString(GetWorld(), TextLocation, StateName, nullptr, FColor::Yellow, 0.0f, true);
 	}
 	
 }
@@ -155,20 +137,8 @@ APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
 // 플레이어의 위치값 반환
 FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 {
-	APawn* PlayerPawn = GetPlayerInfo();
 
-	if (PlayerPawn)
-	{
-		return PlayerPawn->GetActorLocation();
-	}
-
-	if (Echo)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[GetPlayerLocation] 플레이어를 찾을 수 없어 에너미 자신의 위치를 반환합니다."));
-		return Echo->GetActorLocation();
-	}
-
-	return FVector::ZeroVector;
+	return GetPlayerInfo()->GetActorLocation();
 }
 // 플레이어가 시야 내로 들어섰는가
 bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()

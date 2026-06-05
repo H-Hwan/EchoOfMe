@@ -64,6 +64,9 @@ public:
 
 	TObjectPtr<AEchoEnemy> Echo;
 
+	UPROPERTY()
+	TSet<AActor*> VisitedPeekPoints;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
