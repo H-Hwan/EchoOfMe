@@ -11,7 +11,7 @@ void USearchStateComponent::OnStateEnter()
 	LastLocation = EnemyBrain->GetPlayerLocation();
 	EnemyBrain->RequestMoveTo(LastLocation);
 
-	UE_LOG(LogTemp, Error, TEXT("[수색 시작] 마지막 추격 지점으로 이동"));
+	UE_LOG(LogTemp, Warning, TEXT("[수색 시작] 마지막 추격 지점으로 이동"));
 
 	CurrentRandomChangeSearchToAmbush = FMath::RandRange(0, 10);
 
@@ -81,7 +81,7 @@ void USearchStateComponent::OnStateExit()
 {
 	Super::OnStateExit();
 
-	UE_LOG(LogTemp, Error, TEXT("[수색지역 이탈] 텔레포팅"));
+	UE_LOG(LogTemp, Log, TEXT("[수색지역 이탈] 텔레포팅"));
 
 	WanderHoldTimer = 5.0f;
 	StuckTimer = 0.0f;

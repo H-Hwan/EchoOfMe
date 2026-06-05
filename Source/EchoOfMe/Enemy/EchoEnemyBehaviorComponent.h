@@ -62,7 +62,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "State")
 	EFSMState CurrentState;
 
-	AEchoEnemy* Echo;
+	TObjectPtr<AEchoEnemy> Echo;
 
 protected:
 	// Called when the game starts

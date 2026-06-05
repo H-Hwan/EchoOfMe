@@ -17,7 +17,7 @@ void UPatrolStateComponent::OnStateEnter()
 	bHasTarget = EnemyBrain->PickRandomNavMovePoint(RandomPickTarget);
 	TargetRetryTimer = 2.0f;
 	StuckTime = 0.0f;
-	UE_LOG(LogTemp, Error, TEXT("[UPatrolStateComponent] GG"));
+	UE_LOG(LogTemp, Error, TEXT("[UPatrolStateComponent] Patrol Starting"));
 
 	CurrentRandomChangePatrolToAmbush = FMath::RandRange(0, 10);
 
