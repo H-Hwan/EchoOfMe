@@ -17,9 +17,9 @@ void UPatrolStateComponent::OnStateEnter()
 	bHasTarget = EnemyBrain->PickRandomNavMovePoint(RandomPickTarget);
 	TargetRetryTimer = 2.0f;
 	StuckTime = 0.0f;
-	UE_LOG(LogTemp, Error, TEXT("[UPatrolStateComponent]"));
+	UE_LOG(LogTemp, Error, TEXT("[UPatrolStateComponent] GG"));
 
-	CurrentRandomChangeChaseToAmbush = FMath::RandRange(0, 10);
+	CurrentRandomChangePatrolToAmbush = FMath::RandRange(0, 10);
 
 	if(bHasTarget)
 	{
@@ -41,7 +41,7 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
-		if (ChaseToAmbush >= CurrentRandomChangeChaseToAmbush)// 지금 스토킹 깃발로 이동
+		if (PatrolToAmbush >= CurrentRandomChangePatrolToAmbush)// 지금 스토킹 깃발로 이동
 		{
 			UE_LOG(LogTemp, Error, TEXT("[스토킹 시작]"));
 
