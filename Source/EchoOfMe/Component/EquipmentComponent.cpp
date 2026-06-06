@@ -1,11 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Component/EquipmentComponent.h"
 
 #include "Component/FlashlightComponent.h"
+#include "Component/ListeningComponent.h"
+#include "Component/RecorderComponent.h"
 
 #include "GameFramework/Character.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/Pawn.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
@@ -41,6 +42,22 @@ void UEquipmentComponent::RequestRecorder()
 {
     if (bIsSwitching) return;
 
+    APawn* OwnerPawn = Cast<APawn>(GetOwner());
+    if (OwnerPawn)
+    {
+        if (AController* Controller = OwnerPawn->GetController())
+        {
+            if (URecorderComponent* Recorder = Controller->FindComponentByClass<URecorderComponent>())
+            {
+                if (!Recorder->HasRecorder())
+                {
+                    UE_LOG(LogTemp, Log, TEXT("[Equipment] 녹음기 미회수 - 장착 차단"));
+                    return;
+                }
+            }
+        }
+    }
+
     const EEquipmentSlot Target = (CurrentEquipment == EEquipmentSlot::Recorder)
         ? EEquipmentSlot::None : EEquipmentSlot::Recorder;
 
@@ -65,6 +82,17 @@ void UEquipmentComponent::StartSwitch(EEquipmentSlot NewTarget)
         if (HolsteringEquipment == EEquipmentSlot::Flashlight && Flashlight)
         {
             Flashlight->SetFlashLightOn(false);
+        }
+
+        if (HolsteringEquipment == EEquipmentSlot::Recorder)
+        {
+            if (UListeningComponent* Listening = GetOwner()->FindComponentByClass<UListeningComponent>())
+            {
+                if (Listening->IsListening())
+                {
+                    Listening->StopListening();
+                }
+            }
         }
 
         UAnimMontage* HolsterMontage = (HolsteringEquipment == EEquipmentSlot::Flashlight)
@@ -138,7 +166,7 @@ void UEquipmentComponent::ShowMesh(EEquipmentSlot Slot, bool bVisible)
 
 void UEquipmentComponent::PlayMontage(UAnimMontage* Montage, void (UEquipmentComponent::*Callback)())
 {
-    // 몽타주가 없으면 즉시 콜백해서 미할당 상태에서도 흐름은 유지한다.
+    // 몽타주 미할당 시 즉시 콜백해 흐름 유지
     if (!Montage)
     {
         (this->*Callback)();

@@ -1,23 +1,18 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "Component/ListeningComponent.h"
 
-
-#include "Component/ListeningComponent.h"
-
+#include "Component/EquipmentComponent.h"
 #include "EchoGameManager.h"
 
 #include "TimerManager.h"
 #include "Engine/World.h"
 
 
-// Sets default values for this component's properties
 UListeningComponent::UListeningComponent() {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
 
-// Called when the game starts
+// 게임 시작 시 호출
 void UListeningComponent::BeginPlay() {
 	Super::BeginPlay();
 
@@ -50,7 +45,14 @@ void UListeningComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 // 듣기 시작
 void UListeningComponent::StartListening() {
-	// 최소 시간 종료 대개중이라면, 새 입력으로 취소 >> 듣기 유지
+	if (UEquipmentComponent* Equipment = GetOwner()->FindComponentByClass<UEquipmentComponent>()) {
+		if (Equipment->GetCurrentEquipment() != EEquipmentSlot::Recorder) {
+			UE_LOG(LogTemp, Log, TEXT("[Listening] 녹음기 미장착 - 듣기 차단"));
+			return;
+		}
+	}
+
+	// 최소 시간 종료 대기 중 새 입력 시 취소 후 듣기 유지
 	if (UWorld* World = GetWorld()) {
 		World->GetTimerManager().ClearTimer(PendingStopHandle);
 	}
@@ -62,7 +64,7 @@ void UListeningComponent::StartListening() {
 
 	UE_LOG(LogTemp, Log, TEXT("[Listening] 듣기 시작"));
 
-	/*	[ToDo] 환경금 증폭 시작
+	/*	[TODO] 환경음 증폭 시작
 		- 저역 강조 EQ
 		- 공명 앰비언스 페이드 인	*/
 

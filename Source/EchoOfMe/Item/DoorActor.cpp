@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Item/DoorActor.h"
+﻿#include "Item/DoorActor.h"
 
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
@@ -10,9 +7,7 @@
 #include "Component/NoiseMakerComponent.h"
 
 
-// Sets default values
 ADoorActor::ADoorActor() {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	DoorRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DoorRoot"));
@@ -27,7 +22,7 @@ ADoorActor::ADoorActor() {
 }
 
 
-// Called when the game starts or when spawned
+// 게임 시작 또는 스폰 시 호출
 void ADoorActor::BeginPlay() {
 	Super::BeginPlay();
 
@@ -36,7 +31,7 @@ void ADoorActor::BeginPlay() {
 }
 
 
-// Called every frame
+// 매 프레임 호출
 void ADoorActor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 

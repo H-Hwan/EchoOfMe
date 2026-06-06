@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Player/EchoPlayerCharacter.h"
 
 #include "Components/CapsuleComponent.h"				//캡슐콜리전
@@ -17,9 +14,7 @@
 #include "Component/EquipmentComponent.h"
 
 
-// Sets default values
 AEchoPlayerCharacter::AEchoPlayerCharacter() {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 캡슐 콜리전 크기 설정
@@ -145,7 +140,7 @@ void AEchoPlayerCharacter::OnConstruction(const FTransform& Transform)
 	}
 }
 
-// Called when the game starts or when spawned
+// 게임 시작 또는 스폰 시 호출
 void AEchoPlayerCharacter::BeginPlay() {
 	Super::BeginPlay();
 
@@ -162,20 +157,58 @@ void AEchoPlayerCharacter::BeginPlay() {
 		Equipment->SetEquipmentMeshes(FlashlightMesh, RecorderMesh, FlashLight);
 	}
 
+	if (FollowCamera) {
+		const FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
+		OriginalColorSaturation = PP.ColorSaturation;
+		OriginalExposureBias = PP.AutoExposureBias;
+		bOriginalColorSaturationOverride = PP.bOverride_ColorSaturation;
+		bOriginalExposureBiasOverride = PP.bOverride_AutoExposureBias;
+
+		CurrentSturation = bOriginalColorSaturationOverride ? OriginalColorSaturation.X : 1.f;
+		TargetSturation = CurrentSturation;
+		CurrentExposureBias = bOriginalExposureBiasOverride ? OriginalExposureBias : 0.f;
+		TargetExposureBias = CurrentExposureBias;
+	}
 }
 
-// Called every frame
+// 매 프레임 호출
 void AEchoPlayerCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if (!FMath::IsNearlyEqual(CurrentSturation, TargetSturation)) {
-		const float Speed = FMath::Abs(ListenSaturation - 1.f) / SaturationFadeDuration;
-		CurrentSturation = FMath::FInterpConstantTo(CurrentSturation, TargetSturation, DeltaTime, Speed);
+	if (bListeningVisualEffectActive && FollowCamera) {
+		const float FadeDuration = FMath::Max(SaturationFadeDuration, UE_SMALL_NUMBER);
+		const float RestoredSaturation = bOriginalColorSaturationOverride ? OriginalColorSaturation.X : 1.f;
+		const float RestoredExposureBias = bOriginalExposureBiasOverride ? OriginalExposureBias : 0.f;
+		const float SaturationSpeed = FMath::Abs(ListenSaturation - RestoredSaturation) / FadeDuration;
+		const float ExposureSpeed = FMath::Abs(ListenExposureBias - RestoredExposureBias) / FadeDuration;
 
-		if (FollowCamera) {
-			FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
-			PP.bOverride_ColorSaturation = true;
-			PP.ColorSaturation = FVector4(CurrentSturation, CurrentSturation, CurrentSturation, 1.f);
+		CurrentSturation = FMath::FInterpConstantTo(
+			CurrentSturation,
+			TargetSturation,
+			DeltaTime,
+			SaturationSpeed
+		);
+		CurrentExposureBias = FMath::FInterpConstantTo(
+			CurrentExposureBias,
+			TargetExposureBias,
+			DeltaTime,
+			ExposureSpeed
+		);
+
+		FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
+		PP.bOverride_ColorSaturation = true;
+		PP.ColorSaturation = FVector4(CurrentSturation, CurrentSturation, CurrentSturation, 1.f);
+		PP.bOverride_AutoExposureBias = true;
+		PP.AutoExposureBias = CurrentExposureBias;
+
+		const bool bSaturationFinished = CurrentSturation == TargetSturation;
+		const bool bExposureFinished = CurrentExposureBias == TargetExposureBias;
+		if (!bListeningVisualEffectEnabled && bSaturationFinished && bExposureFinished) {
+			PP.ColorSaturation = OriginalColorSaturation;
+			PP.AutoExposureBias = OriginalExposureBias;
+			PP.bOverride_ColorSaturation = bOriginalColorSaturationOverride;
+			PP.bOverride_AutoExposureBias = bOriginalExposureBiasOverride;
+			bListeningVisualEffectActive = false;
 		}
 	}
 
@@ -226,7 +259,7 @@ void AEchoPlayerCharacter::UpdateFlashlightAim(float DeltaTime)
 }
 
 
-// Called to bind functionality to input
+// 입력 기능 바인딩
 void AEchoPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
@@ -275,7 +308,7 @@ void AEchoPlayerCharacter::Move(const FInputActionValue& Value) {
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	DoMove(MovementVector.X, MovementVector.Y);
 }
-// 이동 수행 메소드
+// 이동 처리
 void AEchoPlayerCharacter::DoMove(float Right, float Forward) {
 	if (GetController() != nullptr) {
 		// 컨트롤러의 Yaw(좌우 회전)만 추출하여 수평 방향 벡터를 계산
@@ -296,13 +329,13 @@ void AEchoPlayerCharacter::DoMove(float Right, float Forward) {
 	}
 }
 
-// 마우스 입력 [방향]벡터로 시점 변경 수행 메소드 호출
+// 마우스 방향 입력으로 시점 변경
 void AEchoPlayerCharacter::Look(const FInputActionValue& Value) {
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
 }
 
-// 시점 변경 수행 메소드
+// 시점 변경 처리
 void AEchoPlayerCharacter::DoLook(float Yaw, float Pitch) {
 
 	if (GetController() != nullptr) 	{
@@ -339,7 +372,14 @@ void AEchoPlayerCharacter::HandleListeningChanged(bool bIsListening) {
 		Move->MaxWalkSpeed = bIsListening ? CurrentSpeed * 0.5 : CurrentSpeed;
 	}
 
-	TargetSturation = bIsListening ? ListenSaturation : 1.f;
+	bListeningVisualEffectEnabled = bIsListening;
+	bListeningVisualEffectActive = true;
+	TargetSturation = bIsListening
+		? ListenSaturation
+		: (bOriginalColorSaturationOverride ? OriginalColorSaturation.X : 1.f);
+	TargetExposureBias = bIsListening
+		? ListenExposureBias
+		: (bOriginalExposureBiasOverride ? OriginalExposureBias : 0.f);
 }
 
 void AEchoPlayerCharacter::OnListenStarted() {

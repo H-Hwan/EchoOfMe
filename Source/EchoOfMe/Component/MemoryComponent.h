@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -19,8 +17,7 @@ class ECHOOFME_API UMemoryComponent : public UActorComponent {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	UMemoryComponent();
+		UMemoryComponent();
 
 
 public:
@@ -42,7 +39,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> ActiveFlashback;
 
-	// 사운드 종료 바인딩 메소드
+	// 사운드 종료 이벤트 바인딩
 	UFUNCTION()
 	void HandleFlashbackFinished();
 };

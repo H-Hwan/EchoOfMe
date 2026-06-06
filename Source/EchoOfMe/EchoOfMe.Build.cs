@@ -18,12 +18,12 @@ public class EchoOfMe : ModuleRules
 			"Slate", "SlateCore"
 		});
 
-		// Uncomment if you are using Slate UI
+		// Slate UI 사용 시 활성화
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 		
-		// Uncomment if you are using online features
+		// 온라인 기능 사용 시 활성화
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+		// Steam 사용 시 uproject 플러그인 목록에서 OnlineSubsystemSteam 활성화 필요
 	}
 }

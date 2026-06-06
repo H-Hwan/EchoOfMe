@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Component/FlashlightComponent.h"
+﻿#include "Component/FlashlightComponent.h"
 #include "Engine/World.h"
 
 

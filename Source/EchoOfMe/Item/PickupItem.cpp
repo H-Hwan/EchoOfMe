@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Item/PickupItem.h"
+﻿#include "Item/PickupItem.h"
 
 #include "Component/InventoryComponent.h"
 #include "Component/RecorderComponent.h"
@@ -12,9 +9,7 @@
 #include "GameFramework/Pawn.h"
 
 
-// Sets default values
 APickupItem::APickupItem() {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));

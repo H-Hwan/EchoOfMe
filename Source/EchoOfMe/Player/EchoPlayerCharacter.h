@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -30,20 +28,19 @@ class ECHOOFME_API AEchoPlayerCharacter : public ACharacter
 
 
 public:
-	// Sets default values for this character's properties
-	AEchoPlayerCharacter();
+		AEchoPlayerCharacter();
 
 protected:
-	// Called when the game starts or when spawned
+	// 게임 시작 또는 스폰 시 호출
 	virtual void BeginPlay() override;
 	virtual void PreRegisterAllComponents() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 public:
-	// Called every frame
+	// 매 프레임 호출
 	virtual void Tick(float DeltaTime) override;
 
-	// 플레이어 컨트롤러 빙의시 입력 바인딩 처리를 수행 하는 메소드
+	// 플레이어 컨트롤러 빙의 시 입력 바인딩
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
@@ -51,9 +48,9 @@ public:
 	// 이동
 public:
 
-	// 이동 입력 바인딩 메소드
+	// 이동 입력 바인딩
 	void Move(const FInputActionValue& Value);
-	// 이동 수행 메소드
+	// 이동 처리
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoMove(float Right, float Forward);
 
@@ -113,10 +110,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
-	//  시선 변경 입력 바인딩 메소드
+	// 시선 변경 입력 바인딩
 	void Look(const FInputActionValue& Value);
 
-	// 시점 변경 수행 메소드
+	// 시점 변경 처리
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoLook(float Yaw, float Pitch);
 
@@ -138,7 +135,7 @@ public:
 	// 종료
 	void DoJumpEnd();
 
-	// 착지 메소드
+	// 착지 처리
 	virtual void Landed(const FHitResult& Hit) override;
 
 
@@ -161,9 +158,21 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Listening|FX")
 	float SaturationFadeDuration = 0.4f;
 
+	// 듣기 중 노출 보정 (음수 = 어둡게)
+	UPROPERTY(EditAnywhere, Category = "Listening|FX")
+	float ListenExposureBias = -1.5f;
+
 private:
 	float CurrentSturation = 1.f;
 	float TargetSturation = 1.f;
+	float CurrentExposureBias = 0.f;
+	float TargetExposureBias = 0.f;
+	FVector4 OriginalColorSaturation = FVector4(1.f, 1.f, 1.f, 1.f);
+	float OriginalExposureBias = 0.f;
+	bool bOriginalColorSaturationOverride = false;
+	bool bOriginalExposureBiasOverride = false;
+	bool bListeningVisualEffectActive = false;
+	bool bListeningVisualEffectEnabled = false;
 
 
 

@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -19,8 +17,7 @@ class ECHOOFME_API APickupItem : public AActor, public IInteractable {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	APickupItem();
+		APickupItem();
 
 	void Interact_Implementation(AActor* Interactor) override;
 	FText GetInteractionPrompt_Implementation() const;

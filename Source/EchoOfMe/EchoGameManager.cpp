@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "EchoGameManager.h"
+﻿#include "EchoGameManager.h"
 
 #include "Engine/World.h"
 

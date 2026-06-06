@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -26,10 +24,10 @@ public:
 	AEchoPlayerController();
 
 public:
-	// 게임 시작 이벤트 메소드
+	// 게임 시작 시 호출
 	virtual void BeginPlay() override;
 
-	// 입력맵핑 컨텍스트 등록 수행 이벤트 메소드
+	// 입력 매핑 컨텍스트 등록
 	virtual void SetupInputComponent() override;
 
 	// 컨트롤러 빙의 이벤트
