@@ -21,71 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1af77992-614a-474b-84bb-aacf01ed39a3" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EchoOfMe/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EchoOfMe/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Player/BP_EchoPlayer_FPS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Player/BP_EchoPlayer_FPS.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_LevelDesign_New.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_LevelDesign_New.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/EquipmentComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/EquipmentComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/EquipmentComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/EquipmentComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/FlashlightComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/FlashlightComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/FlashlightComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/FlashlightComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/InventoryComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/InventoryComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/InventoryComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/InventoryComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/ListeningComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/ListeningComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/ListeningComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/ListeningComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/MemoryComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/MemoryComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/MemoryComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/MemoryComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/NoiseMakerComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/NoiseMakerComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/NoiseMakerComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/NoiseMakerComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/RecorderComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/RecorderComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Component/RecorderComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Component/RecorderComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Data/InventoryItemDefinition.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Data/InventoryItemDefinition.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Data/MemoryFragmentDefinition.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Data/MemoryFragmentDefinition.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Data/RecorderItemDefinition.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Data/RecorderItemDefinition.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/EchoGameManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/EchoGameManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/EchoGameManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/EchoGameManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/EchoOfMe.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/EchoOfMe.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/AmbushStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/AmbushStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/AmbushStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/AmbushStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ChaseStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ChaseStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ChaseStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ChaseStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyAIController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyAIController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyAIController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyAIController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyBehaviorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyBehaviorComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/FSMStateBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/FSMStateBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/FSMStateBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/FSMStateBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/LostStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/LostStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/LostStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/LostStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/PatrolStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/PatrolStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/PatrolStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/PatrolStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ResonanceSensorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ResonanceSensorComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ResonanceSensorComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/ResonanceSensorComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SearchStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SearchStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SearchStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SearchStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SuspectStateComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SuspectStateComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SuspectStateComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Enemy/SuspectStateComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/EnemyDataAsset.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/EnemyDataAsset.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/EnemyDataAsset.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/EnemyDataAsset.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Interface/Interactable.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Interface/Interactable.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/CheckpointActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/CheckpointActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/CheckpointActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/CheckpointActor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/CueActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/CueActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/CueActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/CueActor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/DoorActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/DoorActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/DoorActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/DoorActor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/MemoryFragmentActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/MemoryFragmentActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/MemoryFragmentActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/MemoryFragmentActor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/PickupItem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/PickupItem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Item/PickupItem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Item/PickupItem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerCharacter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/Player/EchoPlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryEntryWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryEntryWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryEntryWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryEntryWidget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/EchoOfMe/UI/InventoryWidget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/L_EchoOfMe_Test.umap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +33,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="2" />
+    <option name="cachedIndexableFilesCount" value="6" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -196,7 +133,7 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Player&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;H.Hwan&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -345,6 +282,8 @@
       <workItem from="1780501348147" duration="343000" />
       <workItem from="1780713992620" duration="1753000" />
       <workItem from="1780716235081" duration="822000" />
+      <workItem from="1780963590360" duration="722000" />
+      <workItem from="1780964777621" duration="5260000" />
     </task>
     <servers />
   </component>
