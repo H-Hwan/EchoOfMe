@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Item/CheckpointActor.h"
+﻿#include "Item/CheckpointActor.h"
 
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
@@ -10,9 +7,7 @@
 #include "Player/EchoPlayerController.h"
 
 
-// Sets default values
 ACheckpointActor::ACheckpointActor() {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
@@ -28,7 +23,7 @@ ACheckpointActor::ACheckpointActor() {
 }
 
 
-// Called when the game starts or when spawned
+// 게임 시작 또는 스폰 시 호출
 void ACheckpointActor::BeginPlay() {
 	Super::BeginPlay();
 

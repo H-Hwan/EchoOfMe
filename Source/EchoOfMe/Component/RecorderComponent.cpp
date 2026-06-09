@@ -1,9 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// 녹음기 회수 시퀀스와 트랙 재생 관리
 
 
 #include "Component/RecorderComponent.h"
 
 #include "Component/InventoryComponent.h"
+#include "Component/EquipmentComponent.h"
 #include "Component/FlashlightComponent.h"
 #include "Data/RecorderItemDefinition.h"
 #include "EchoGameManager.h"
@@ -25,7 +26,7 @@ URecorderComponent::URecorderComponent() {
 void URecorderComponent::BeginPlay() {
 	Super::BeginPlay();
 
-	// 인벤토리 아이템 사용 메소드 바인딩
+	// 인벤토리 아이템 사용 이벤트 바인딩
 	if (UInventoryComponent* Inventory = GetOwner()->FindComponentByClass<UInventoryComponent>()) {
 		Inventory->OnItemUsed.AddDynamic(this, &URecorderComponent::HandleItemUsed);
 	}
@@ -49,7 +50,7 @@ void URecorderComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 void URecorderComponent::HandleRecorderCollected(URecorderItemDefinition* Definition) {
 	if (!Definition) return;
 
-	// 회수 7초 시퀀스는 한 번만 작동해야 한다.
+	// 회수 시퀀스 중복 실행 방지
 	if (bRecorderCollected) return;
 
 	RecorderDefinition = Definition;
@@ -61,7 +62,7 @@ void URecorderComponent::HandleRecorderCollected(URecorderItemDefinition* Defini
 	OnRecorderCollected.Broadcast(Definition);
 
 	/*	[CP3 갱신]
-		회수 후 잡혔을 때 회수 시퀀스가 반복되지 않도록,
+		회수 후 잡혀도 회수 시퀀스가 반복되지 않도록
 		녹음기 회수 직후의 플레이어 위치를 리스폰 지점으로 저장	*/
 	if (AEchoPlayerController* PC = Cast<AEchoPlayerController>(GetOwner())) {
 		if (APawn* Pawn = PC->GetPawn()) {
@@ -86,7 +87,7 @@ void URecorderComponent::StartRecoverySequence() {
 
 	bRecoverySequencePlaying = true;
 
-	// T+0.0 — 시퀀스 시작과 입력 잠금
+	// T+0.0: 시퀀스 시작 및 입력 잠금
 	LockPlayerInput(true);
 	OnRecoverySequenceStep.Broadcast(ERecorderRecoverySequenceStep::Started);
 
@@ -130,7 +131,7 @@ void URecorderComponent::FinishRecoverySequence() {
 	// 꼬임 방지 안전장치
 	LockPlayerInput(false);
 
-	// 이 시점부터 녹음기 기능과 듣기 액션을 사용 가능
+	// 녹음기 기능 및 듣기 액션 해금
 	bHasRecorder = true;
 
 	OnRecoverySequenceStep.Broadcast(ERecorderRecoverySequenceStep::Finished);
@@ -140,6 +141,14 @@ void URecorderComponent::FinishRecoverySequence() {
 	PlayCurrentStage();
 
 	UE_LOG(LogTemp, Log, TEXT("[Recorder] 회수 7초 시퀀스 완료 / 녹음기 기능 해금"));
+
+	if (APlayerController* PC = Cast<APlayerController>(GetOwner())) {
+		if (APawn* Pawn = PC->GetPawn()) {
+			if (UEquipmentComponent* Equipment = Pawn->FindComponentByClass<UEquipmentComponent>()) {
+				Equipment->RequestRecorder();
+			}
+		}
+	}
 }
 
 
@@ -232,6 +241,15 @@ void URecorderComponent::ForceFlashlight(bool bOn) const {
 	APawn* Pawn = PC->GetPawn();
 	if (!Pawn) return;
 
+	if (bOn)
+	{
+		const UEquipmentComponent* Equipment = Pawn->FindComponentByClass<UEquipmentComponent>();
+		if (!Equipment || Equipment->GetCurrentEquipment() != EEquipmentSlot::Flashlight)
+		{
+			return;
+		}
+	}
+
 	if (UFlashlightComponent* Flashlight = Pawn->FindComponentByClass<UFlashlightComponent>()) {
 		Flashlight->SetFlashLightOn(bOn);
 	}
@@ -250,12 +268,12 @@ void URecorderComponent::ClearRecoverySequenceTimers() {
 }
 
 
-// 인벤토리에서 아이템 사용되면 호출
+// 인벤토리 아이템 사용 시 호출
 void URecorderComponent::HandleItemUsed(UInventoryItemDefinition* Item) {
 	if (!Item) return;
 	if (!RecorderDefinition) return;
 
-	// 사용된 게 녹음기일 때만 재생
+	// 녹음기 사용 시에만 재생
 	if (Item != RecorderDefinition) return;
 
 	// 회수 시퀀스 도중에는 수동 재생 불가
@@ -270,7 +288,7 @@ void URecorderComponent::PlayCurrentStage() {
 	if (!bHasRecorder) return;
 	if (!RecorderDefinition || RecorderDefinition->StageSounds.Num() == 0) return;
 
-	// 이미 재생 중이라면 무시
+	// 중복 재생 방지
 	if (IsPlaying()) return;
 
 	UEchoGameManager* GM = UEchoGameManager::Get(this);
@@ -329,7 +347,7 @@ bool URecorderComponent::IsPlaying() const {
 }
 
 
-// 음성 재생이 끝났을 때 콜백
+// 음성 재생 완료 시 호출
 void URecorderComponent::HandleAudioFinished() {
 	if (ActiveAudio) {
 		ActiveAudio->OnAudioFinished.RemoveAll(this);

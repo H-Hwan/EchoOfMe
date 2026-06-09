@@ -1,18 +1,14 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Item/MemoryFragmentActor.h"
+﻿#include "Item/MemoryFragmentActor.h"
 
 #include "Component/InventoryComponent.h"
 #include "Component/MemoryComponent.h"
+#include "Component/RecorderComponent.h"
 #include "Data/MemoryFragmentDefinition.h"
 
 #include "GameFramework/Pawn.h"
 
 
-// Sets default values
 AMemoryFragmentActor::AMemoryFragmentActor() {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
@@ -27,16 +23,22 @@ AMemoryFragmentActor::AMemoryFragmentActor() {
 void AMemoryFragmentActor::Interact_Implementation(AActor* Interactor) {
 	if (!MemoryDefinition) return;
 
+	const APawn* Pawn = Cast<APawn>(Interactor);
+	AController* Controller = Pawn ? Pawn->GetController() : nullptr;
+	URecorderComponent* Recorder = Controller
+		? Controller->FindComponentByClass<URecorderComponent>()
+		: nullptr;
+	if (!Recorder || !Recorder->IsRecorderCollected()) {
+		UE_LOG(LogTemp, Log, TEXT("[Memory] 녹음기 회수 전 - 기억조각 회수 차단"));
+		return;
+	}
+
 	UInventoryComponent* Inventory = ResolveInventory(Interactor);
 	if (!Inventory || !Inventory->AddItem(MemoryDefinition)) return;
 
 	// 회수 연출 트리거
-	if (const APawn* Pawn = Cast<APawn>(Interactor)) {
-		if (AController* Con = Pawn->GetController()) {
-			if (UMemoryComponent* MemoryComp = Con->FindComponentByClass<UMemoryComponent>()) {
-				MemoryComp->HandleMemoryCollected(MemoryDefinition);
-			}
-		}
+	if (UMemoryComponent* MemoryComp = Controller->FindComponentByClass<UMemoryComponent>()) {
+		MemoryComp->HandleMemoryCollected(MemoryDefinition);
 	}
 
 	Destroy();

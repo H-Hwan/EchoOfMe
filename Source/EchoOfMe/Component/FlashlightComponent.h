@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/SpotLightComponent.h"
@@ -37,11 +35,11 @@ protected:
 
 	// 의심 게이지 누적 속도 (/sec)
 	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
-	float SuspicionGainPerSec = 20.f;
+	float SuspicionGainPerSec = 10.f;
 
 	// ON 상태가 아닐 때 의심 게이지 감쇠 속도 (/sec)
 	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
-	float SuspicionDecayPerSec = 8.f;
+	float SuspicionDecayPerSec = 6.f;
 
 	// 빛의 실패 발동 임계치
 	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")

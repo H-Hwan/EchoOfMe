@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Player/EchoPlayerController.h"
+﻿#include "Player/EchoPlayerController.h"
 
 #include "Interface/Interactable.h"
 #include "Component/InventoryComponent.h"

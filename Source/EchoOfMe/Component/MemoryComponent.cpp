@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Component/MemoryComponent.h"
+﻿#include "Component/MemoryComponent.h"
 
 #include "Data/MemoryFragmentDefinition.h"
 #include "EchoGameManager.h"
@@ -11,10 +8,7 @@
 #include "Engine/World.h"
 
 
-// Sets default values for this component's properties
 UMemoryComponent::UMemoryComponent() {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 }
 

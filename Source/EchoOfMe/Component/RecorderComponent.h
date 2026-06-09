@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -139,11 +137,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Recorder|Recovery Sequence")
 	TObjectPtr<USoundBase> DistantFootstepSound;
 
-	// 입력 제한 시간. 기획상 5.5초.
+	// 입력 제한 시간: 기획 기준 5.5초
 	UPROPERTY(EditDefaultsOnly, Category = "Recorder|Recovery Sequence", meta = (ClampMin = "0.0"))
 	float MovementLockDuration = 1.f;
 
-	// 전체 시퀀스 시간. 기획상 7초.
+	// 전체 시퀀스 시간: 기획 기준 7초
 	UPROPERTY(EditDefaultsOnly, Category = "Recorder|Recovery Sequence", meta = (ClampMin = "0.0"))
 	float SequenceDuration = 7.0f;
 
@@ -179,12 +177,12 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> ActiveAudio;
 
-	// 녹음기 액터를 이미 회수했는지.
-	// 중복 회수 / 중복 시퀀스 방지용.
+	// 녹음기 회수 여부
+	// 중복 회수 및 시퀀스 실행 방지
 	bool bRecorderCollected = false;
 
-	// 실제 플레이 기능이 해금되었는지.
-	// T+7.0 이후 true.
+	// 녹음기 기능 해금 여부
+	// T+7.0 이후 true
 	bool bHasRecorder = false;
 
 	bool bRecoverySequencePlaying = false;

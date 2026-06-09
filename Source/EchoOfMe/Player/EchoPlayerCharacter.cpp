@@ -1,6 +1,3 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Player/EchoPlayerCharacter.h"
 
 #include "Components/CapsuleComponent.h"				//캡슐콜리전
@@ -9,19 +6,20 @@
 #include "GameFramework/SpringArmComponent.h"			// 스프링암
 #include "Camera/CameraComponent.h"						// 카메라
 #include "EnhancedInputComponent.h"						// Enhanced Input 바인딩 컴포넌트 모듈 포함
+#include "Engine/World.h"
 
 #include "Component/ListeningComponent.h"
 #include "Component/FlashlightComponent.h"
 #include "Component/NoiseMakerComponent.h"
+#include "Component/EquipmentComponent.h"
 
 
-// Sets default values
 AEchoPlayerCharacter::AEchoPlayerCharacter() {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 캡슐 콜리전 크기 설정
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
+	ForceCharacterComponentMobility();
 
 	// 이동 키 입력 방향으로 캐릭터를 회전
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -53,20 +51,96 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 
 	// 듣기 능력 추가
 	Listening = CreateDefaultSubobject<UListeningComponent>(TEXT("Listening"));
+
+	// 장비 관리 컴포넌트
+	Equipment = CreateDefaultSubobject<UEquipmentComponent>(TEXT("Equipment"));
+
+	// 손전등 메시
+	FlashlightMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FlashlightMesh"));
+	FlashlightMesh->SetupAttachment(GetMesh(), FlashlightParentSocket);
+	FlashlightMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FlashlightMesh->SetVisibility(false);
+
+	// 녹음기 메시
+	RecorderMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RecorderMesh"));
+	RecorderMesh->SetupAttachment(GetMesh(), RecorderParentSocket);
+	RecorderMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RecorderMesh->SetVisibility(false);
+
 	// 손전등 추가
 	FlashLight = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashLight"));
-	FlashLight->SetupAttachment(FollowCamera);
-	FlashLight->SetRelativeLocation(FVector(10.f, 0.f, 0.f));
+	FlashLight->SetupAttachment(FlashlightMesh);
+	FlashLight->SetUsingAbsoluteRotation(true);
 	FlashLight->Intensity = 5000.f;
 	FlashLight->OuterConeAngle = 35.f;
 	FlashLight->InnerConeAngle = 19.f;
-	FlashLight->LightColor = FColor(1.f, 0.7f, 0.37f);
+	FlashLight->SetLightColor(FLinearColor(1.f, 0.7f, 0.37f));
+	FlashLight->SetVisibility(false);
 
 	// 소리 발생 컴포넌트
 	NoiseMaker = CreateDefaultSubobject<UNoiseMakerComponent>(TEXT("NoiseMaker"));
+
+	ForceCharacterComponentMobility();
 }
 
-// Called when the game starts or when spawned
+void AEchoPlayerCharacter::ForceCharacterComponentMobility()
+{
+	if (UCapsuleComponent* Capsule = GetCapsuleComponent())
+	{
+		Capsule->SetMobility(EComponentMobility::Movable);
+	}
+
+	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+	{
+		CharacterMesh->SetMobility(EComponentMobility::Movable);
+	}
+
+	if (FlashlightMesh)
+	{
+		FlashlightMesh->SetMobility(EComponentMobility::Movable);
+	}
+
+	if (RecorderMesh)
+	{
+		RecorderMesh->SetMobility(EComponentMobility::Movable);
+	}
+}
+
+void AEchoPlayerCharacter::PreRegisterAllComponents()
+{
+	ForceCharacterComponentMobility();
+	Super::PreRegisterAllComponents();
+}
+
+void AEchoPlayerCharacter::OnConstruction(const FTransform& Transform)
+{
+	ForceCharacterComponentMobility();
+
+	Super::OnConstruction(Transform);
+
+	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+	{
+		if (FlashlightMesh)
+		{
+			FlashlightMesh->AttachToComponent(
+				CharacterMesh,
+				FAttachmentTransformRules::KeepRelativeTransform,
+				FlashlightParentSocket
+			);
+		}
+
+		if (RecorderMesh)
+		{
+			RecorderMesh->AttachToComponent(
+				CharacterMesh,
+				FAttachmentTransformRules::KeepRelativeTransform,
+				RecorderParentSocket
+			);
+		}
+	}
+}
+
+// 게임 시작 또는 스폰 시 호출
 void AEchoPlayerCharacter::BeginPlay() {
 	Super::BeginPlay();
 
@@ -78,27 +152,114 @@ void AEchoPlayerCharacter::BeginPlay() {
 		PC->PlayerCameraManager->ViewPitchMin = ViewPitchMin;
 		PC->PlayerCameraManager->ViewPitchMax = ViewPitchMax;
 	}
-	
-}
 
-// Called every frame
-void AEchoPlayerCharacter::Tick(float DeltaTime) {
-	Super::Tick(DeltaTime);
+	if (Equipment) {
+		Equipment->SetEquipmentMeshes(FlashlightMesh, RecorderMesh, FlashLight);
+	}
 
-	if (!FMath::IsNearlyEqual(CurrentSturation, TargetSturation)) {
-		const float Speed = FMath::Abs(ListenSaturation - 1.f) / SaturationFadeDuration;
-		CurrentSturation = FMath::FInterpConstantTo(CurrentSturation, TargetSturation, DeltaTime, Speed);
+	if (FollowCamera) {
+		const FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
+		OriginalColorSaturation = PP.ColorSaturation;
+		OriginalExposureBias = PP.AutoExposureBias;
+		bOriginalColorSaturationOverride = PP.bOverride_ColorSaturation;
+		bOriginalExposureBiasOverride = PP.bOverride_AutoExposureBias;
 
-		if (FollowCamera) {
-			FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
-			PP.bOverride_ColorSaturation = true;
-			PP.ColorSaturation = FVector4(CurrentSturation, CurrentSturation, CurrentSturation, 1.f);
-		}
+		CurrentSturation = bOriginalColorSaturationOverride ? OriginalColorSaturation.X : 1.f;
+		TargetSturation = CurrentSturation;
+		CurrentExposureBias = bOriginalExposureBiasOverride ? OriginalExposureBias : 0.f;
+		TargetExposureBias = CurrentExposureBias;
 	}
 }
 
+// 매 프레임 호출
+void AEchoPlayerCharacter::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
 
-// Called to bind functionality to input
+	if (bListeningVisualEffectActive && FollowCamera) {
+		const float FadeDuration = FMath::Max(SaturationFadeDuration, UE_SMALL_NUMBER);
+		const float RestoredSaturation = bOriginalColorSaturationOverride ? OriginalColorSaturation.X : 1.f;
+		const float RestoredExposureBias = bOriginalExposureBiasOverride ? OriginalExposureBias : 0.f;
+		const float SaturationSpeed = FMath::Abs(ListenSaturation - RestoredSaturation) / FadeDuration;
+		const float ExposureSpeed = FMath::Abs(ListenExposureBias - RestoredExposureBias) / FadeDuration;
+
+		CurrentSturation = FMath::FInterpConstantTo(
+			CurrentSturation,
+			TargetSturation,
+			DeltaTime,
+			SaturationSpeed
+		);
+		CurrentExposureBias = FMath::FInterpConstantTo(
+			CurrentExposureBias,
+			TargetExposureBias,
+			DeltaTime,
+			ExposureSpeed
+		);
+
+		FPostProcessSettings& PP = FollowCamera->PostProcessSettings;
+		PP.bOverride_ColorSaturation = true;
+		PP.ColorSaturation = FVector4(CurrentSturation, CurrentSturation, CurrentSturation, 1.f);
+		PP.bOverride_AutoExposureBias = true;
+		PP.AutoExposureBias = CurrentExposureBias;
+
+		const bool bSaturationFinished = CurrentSturation == TargetSturation;
+		const bool bExposureFinished = CurrentExposureBias == TargetExposureBias;
+		if (!bListeningVisualEffectEnabled && bSaturationFinished && bExposureFinished) {
+			PP.ColorSaturation = OriginalColorSaturation;
+			PP.AutoExposureBias = OriginalExposureBias;
+			PP.bOverride_ColorSaturation = bOriginalColorSaturationOverride;
+			PP.bOverride_AutoExposureBias = bOriginalExposureBiasOverride;
+			bListeningVisualEffectActive = false;
+		}
+	}
+
+	UpdateFlashlightAim(DeltaTime);
+}
+
+void AEchoPlayerCharacter::UpdateFlashlightAim(float DeltaTime)
+{
+	if (!bAimFlashlightAtCameraTrace || !FollowCamera || !FlashLight || !Equipment)
+	{
+		return;
+	}
+
+	if (Equipment->GetCurrentEquipment() != EEquipmentSlot::Flashlight)
+	{
+		return;
+	}
+
+	const FVector TraceStart = FollowCamera->GetComponentLocation();
+	const FVector TraceEnd = TraceStart + FollowCamera->GetForwardVector() * FlashlightAimTraceDistance;
+
+	FHitResult Hit;
+	FCollisionQueryParams QueryParams(SCENE_QUERY_STAT(FlashlightAimTrace), false, this);
+
+	const bool bHit = GetWorld() && GetWorld()->LineTraceSingleByChannel(
+		Hit,
+		TraceStart,
+		TraceEnd,
+		FlashlightAimTraceChannel,
+		QueryParams
+	);
+
+	const FVector AimTarget = bHit ? Hit.ImpactPoint : TraceEnd;
+	const FVector LightLocation = FlashLight->GetComponentLocation();
+	const FVector AimDirection = AimTarget - LightLocation;
+
+	if (AimDirection.IsNearlyZero())
+	{
+		return;
+	}
+
+	const FRotator DesiredRotation = AimDirection.Rotation() + FlashlightAimRotationOffset;
+	const FRotator NewRotation = FlashlightAimInterpSpeed > 0.f
+		? FMath::RInterpTo(FlashLight->GetComponentRotation(), DesiredRotation, DeltaTime, FlashlightAimInterpSpeed)
+		: DesiredRotation;
+
+	FlashLight->SetWorldRotation(NewRotation);
+}
+
+
+// 입력 기능 바인딩
 void AEchoPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
@@ -128,7 +289,14 @@ void AEchoPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			EnhancedInputComponent->BindAction(ListenAction, ETriggerEvent::Completed,
 				this, &AEchoPlayerCharacter::OnListenCompleted);
 		}
-
+		if (EquipFlashlightAction) {
+			EnhancedInputComponent->BindAction(EquipFlashlightAction, ETriggerEvent::Started,
+				this, &AEchoPlayerCharacter::OnEquipFlashlight);
+		}
+		if (EquipRecorderAction) {
+			EnhancedInputComponent->BindAction(EquipRecorderAction, ETriggerEvent::Started,
+				this, &AEchoPlayerCharacter::OnEquipRecorder);
+		}
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("[EnhancedInputComponent] 참조 실패"));
@@ -140,7 +308,7 @@ void AEchoPlayerCharacter::Move(const FInputActionValue& Value) {
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	DoMove(MovementVector.X, MovementVector.Y);
 }
-// 이동 수행 메소드
+// 이동 처리
 void AEchoPlayerCharacter::DoMove(float Right, float Forward) {
 	if (GetController() != nullptr) {
 		// 컨트롤러의 Yaw(좌우 회전)만 추출하여 수평 방향 벡터를 계산
@@ -161,13 +329,13 @@ void AEchoPlayerCharacter::DoMove(float Right, float Forward) {
 	}
 }
 
-// 마우스 입력 [방향]벡터로 시점 변경 수행 메소드 호출
+// 마우스 방향 입력으로 시점 변경
 void AEchoPlayerCharacter::Look(const FInputActionValue& Value) {
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
 }
 
-// 시점 변경 수행 메소드
+// 시점 변경 처리
 void AEchoPlayerCharacter::DoLook(float Yaw, float Pitch) {
 
 	if (GetController() != nullptr) 	{
@@ -188,7 +356,7 @@ void AEchoPlayerCharacter::StopRunning() {
 }
 
 void AEchoPlayerCharacter::DoJumpStart() {
-	Jump(); 
+	Jump();
 }
 
 void AEchoPlayerCharacter::DoJumpEnd() {
@@ -204,7 +372,14 @@ void AEchoPlayerCharacter::HandleListeningChanged(bool bIsListening) {
 		Move->MaxWalkSpeed = bIsListening ? CurrentSpeed * 0.5 : CurrentSpeed;
 	}
 
-	TargetSturation = bIsListening ? ListenSaturation : 1.f;
+	bListeningVisualEffectEnabled = bIsListening;
+	bListeningVisualEffectActive = true;
+	TargetSturation = bIsListening
+		? ListenSaturation
+		: (bOriginalColorSaturationOverride ? OriginalColorSaturation.X : 1.f);
+	TargetExposureBias = bIsListening
+		? ListenExposureBias
+		: (bOriginalExposureBiasOverride ? OriginalExposureBias : 0.f);
 }
 
 void AEchoPlayerCharacter::OnListenStarted() {
@@ -219,9 +394,39 @@ void AEchoPlayerCharacter::OnListenCompleted() {
 	}
 }
 
+// F 입력은 손전등 들고 있을 때만 토글
 void AEchoPlayerCharacter::OnFlashLightInput() {
-	if (FlashLight) {
-		FlashLight->ToggleFlashLight();
+	const EEquipmentSlot CurrentSlot = Equipment ? Equipment->GetCurrentEquipment() : EEquipmentSlot::None;
+
+	if (!Equipment)
+	{
+		return;
 	}
+
+	if (CurrentSlot != EEquipmentSlot::Flashlight)
+	{
+		return;
+	}
+
+	if (!FlashLight)
+	{
+		return;
+	}
+
+	if (Equipment->IsSwitching() && FlashLight->IsFlashLightOn())
+	{
+		return;
+	}
+
+	FlashLight->ToggleFlashLight();
 }
 
+void AEchoPlayerCharacter::OnEquipFlashlight()
+{
+	if (Equipment) Equipment->RequestFlashlight();
+}
+
+void AEchoPlayerCharacter::OnEquipRecorder()
+{
+	if (Equipment) Equipment->RequestRecorder();
+}
