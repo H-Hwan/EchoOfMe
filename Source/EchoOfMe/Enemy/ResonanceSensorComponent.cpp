@@ -57,7 +57,41 @@ void UResonanceSensorComponent::SoundSensorActivate()
 
 void UResonanceSensorComponent::SuperNaturalPhenomenonSensor(FVector FlashLightHitLocation)
 {
+	if (!EchoEnemy || !EnemyBrain->GetPlayerInfo()) return;
 
+	FVector EnemyLocation = EchoEnemy->GetActorLocation();
+
+	FVector PlayerLocation = GetPlayerLocation();
+
+	float Distance = FVector::Distance(EnemyLocation, PlayerLocation);
+
+	if (Distance > MaxDistance) return;
+
+	FVector ForwardV = Echo->GetActorForwardVector();
+
+	FVector TDV = (PlayerLocation - EnemyLocation).GetSafeNormal();
+
+	float DotResult = FVector::DotProduct(ForwardV, TDV);
+
+	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
+
+	if (DotResult <= CosAngle) return;
+
+	FHitResult HitResult;
+
+	FCollisionQueryParams Param;
+
+	Param.AddIgnoredActor(Echo);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), ECC_Pawn, Param);
+
+	if (bHit && HitResult.GetActor() == GetPlayerInfo())
+	{
+		DrawDebugLine(GetWorld(), EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), FColor::Purple, false, -1.0f, 0, 2.0f);
+		return;
+	}
+
+	return;
 	
 }
 

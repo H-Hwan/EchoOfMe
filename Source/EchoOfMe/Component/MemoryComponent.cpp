@@ -11,6 +11,7 @@
 #include "Engine/World.h"
 
 
+
 // Sets default values for this component's properties
 UMemoryComponent::UMemoryComponent() {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -37,7 +38,6 @@ void UMemoryComponent::HandleMemoryCollected(const UMemoryFragmentDefinition* De
 			ActiveFlashback->Stop();
 			ActiveFlashback = nullptr;
 		}
-		
 		ActiveFlashback = UGameplayStatics::SpawnSound2D(this, Definition->FlashbackSound);
 		if (ActiveFlashback) {
 			ActiveFlashback->OnAudioFinished.AddDynamic(this, &UMemoryComponent::HandleFlashbackFinished);
