@@ -30,6 +30,7 @@ public:
 	UPROPERTY()
 	float CurrentResonanceCount;
 
+
 	/// 불빛 감지
 	UFUNCTION(BlueprintCallable, Category = "Resonance")
 	void LightSensorActivate();
@@ -38,8 +39,12 @@ public:
 	void SoundSensorActivate();
 	/// 공명 감지
 	UFUNCTION(BlueprintCallable, Category = "Resonance")
-	void SuperNaturalPhenomenonSensor();
+	void SuperNaturalPhenomenonSensor(FVector FlashLightHitLocation);
 
 
-		
+	UPROPERTY()
+	TObjectPtr<UEchoEnemyBehaviorComponent> EnemyBrain;
+
+	UPROPERTY()
+	TObjectPtr<AEchoEnemy> EchoEnemy;
 };

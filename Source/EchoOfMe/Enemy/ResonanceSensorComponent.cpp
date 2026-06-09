@@ -21,7 +21,14 @@ void UResonanceSensorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	EnemyBrain = GetOwner()->FindComponentByClass<UEchoEnemyBehaviorComponent>();
+	EchoEnemy = Cast<AEchoEnemy>(GetOwner());
+
+	//플레시 쪽에서 넘어온 벽에닿은 빛 위치 델리게이트
+ 
+	//플레이어 쪽에서 넘어온 달리기 여부 델리게이트
+
+	//스킬 쪽에서 넘어온 소리 위치 델리게이트
 	
 }
 
@@ -48,11 +55,9 @@ void UResonanceSensorComponent::SoundSensorActivate()
 
 }
 
-void UResonanceSensorComponent::SuperNaturalPhenomenonSensor()
+void UResonanceSensorComponent::SuperNaturalPhenomenonSensor(FVector FlashLightHitLocation)
 {
 
-
-
-
+	
 }
 
