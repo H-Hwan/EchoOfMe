@@ -64,6 +64,9 @@ public:
 	// 빛의 실패 1초간 강제 OFF
 	void TriggerLightFailure();
 
+	UFUNCTION()
+	FVector LightTrace();
+
 private:
 	bool bIsOn = false;
 	float Suspicion = 0.f;
