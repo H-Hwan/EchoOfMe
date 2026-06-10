@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "ResonanceSensorComponent.generated.h"
 
+class AEchoEnemy;
+class UEchoEnemyBehaviorComponent;
+
 // 감지 관련 컴포넌트
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ECHOOFME_API UResonanceSensorComponent : public UActorComponent
@@ -39,11 +42,21 @@ public:
 	void SoundSensorActivate();
 	/// 공명 감지
 	UFUNCTION(BlueprintCallable, Category = "Resonance")
-	void SuperNaturalPhenomenonSensor(FVector FlashLightHitLocation);
+	void NaturalPhenomenonSensor(FVector FlashLightHitLocation);
 
 
 	UPROPERTY()
 	TObjectPtr<UEchoEnemyBehaviorComponent> EnemyBrain;
+
+	float CosAngle = 0.0f;
+
+	// Echo가 플레이어가 쏜빛의 도달지점을 확인하는 시야각
+	UPROPERTY(EditAnywhere, Category = "Resonance", meta = (Units = "deg"))
+	float MaxLightDetectSight = 45.0f;
+
+	// Echo가 플레이어가 쏜빛의 도달지점을 확인하는 시야거리
+	UPROPERTY(EditAnywhere, Category = "Resonance", meta = (Units = "cm"))
+	float MaxDistanceToReflectedLight = 3000.0f;
 
 	UPROPERTY()
 	TObjectPtr<AEchoEnemy> EchoEnemy;

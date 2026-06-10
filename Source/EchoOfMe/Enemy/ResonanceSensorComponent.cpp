@@ -5,6 +5,7 @@
 #include "Enemy/EchoEnemy.h"
 #include "Enemy/EchoEnemyBehaviorComponent.h"
 
+
 // Sets default values for this component's properties
 UResonanceSensorComponent::UResonanceSensorComponent()
 {
@@ -55,25 +56,25 @@ void UResonanceSensorComponent::SoundSensorActivate()
 
 }
 
-void UResonanceSensorComponent::SuperNaturalPhenomenonSensor(FVector FlashLightHitLocation)
+void UResonanceSensorComponent::NaturalPhenomenonSensor(FVector FlashLightHitLocation)
 {
 	if (!EchoEnemy || !EnemyBrain->GetPlayerInfo()) return;
 
 	FVector EnemyLocation = EchoEnemy->GetActorLocation();
 
-	FVector PlayerLocation = GetPlayerLocation();
+	FVector PlayerLocation = EnemyBrain->GetPlayerLocation();
 
 	float Distance = FVector::Distance(EnemyLocation, PlayerLocation);
 
-	if (Distance > MaxDistance) return;
+	if (Distance > MaxDistanceToReflectedLight) return;
 
-	FVector ForwardV = Echo->GetActorForwardVector();
+	FVector ForwardV = EchoEnemy->GetActorForwardVector();
 
 	FVector TDV = (PlayerLocation - EnemyLocation).GetSafeNormal();
 
 	float DotResult = FVector::DotProduct(ForwardV, TDV);
 
-	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
+	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxLightDetectSight));
 
 	if (DotResult <= CosAngle) return;
 
@@ -81,11 +82,11 @@ void UResonanceSensorComponent::SuperNaturalPhenomenonSensor(FVector FlashLightH
 
 	FCollisionQueryParams Param;
 
-	Param.AddIgnoredActor(Echo);
+	Param.AddIgnoredActor(EchoEnemy);
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), ECC_Pawn, Param);
 
-	if (bHit && HitResult.GetActor() == GetPlayerInfo())
+	if (bHit && HitResult.GetActor() == EnemyBrain->GetPlayerInfo())
 	{
 		DrawDebugLine(GetWorld(), EnemyLocation + FVector(0.0f, 0.0f, 60.0f), PlayerLocation + FVector(0.0f, 0.0f, 60.0f), FColor::Purple, false, -1.0f, 0, 2.0f);
 		return;

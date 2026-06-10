@@ -6,7 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 #include "Enemy/ChaseStateComponent.h"
-
+#include "Enemy/ResonanceSensorComponent.h"
 
 // Sets default values
 AEchoEnemy::AEchoEnemy()

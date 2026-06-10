@@ -16,6 +16,7 @@ void UAmbushStateComponent::OnStateEnter()
 void UAmbushStateComponent::OnStateUpdate(float Delta)
 {
 	Super::OnStateUpdate(Delta);
+
 	CurrentTime -= Delta;
 	if (CurrentTime <= 0.0f)
 	{
@@ -25,6 +26,7 @@ void UAmbushStateComponent::OnStateUpdate(float Delta)
 	{
 		EnemyBrain->ChangeState(EFSMState::Chase);
 	}
+
 }
 
 void UAmbushStateComponent::OnStateExit()
