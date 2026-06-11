@@ -23,6 +23,9 @@ void UMemoryComponent::HandleMemoryCollected(const UMemoryFragmentDefinition* De
 
 	UE_LOG(LogTemp, Log, TEXT("[Memory] 회수: %s"), *Definition->ItemID.ToString());
 
+	// 회수음 종료 후 시작할 스토리 대상 보관
+	PendingStoryDefinition = const_cast<UMemoryFragmentDefinition*>(Definition);
+
 	// 사운드 재생
 	if (Definition->FlashbackSound) {
 		// 이전 재생이 남아있다면 정리 후 새로 시작
@@ -31,16 +34,20 @@ void UMemoryComponent::HandleMemoryCollected(const UMemoryFragmentDefinition* De
 			ActiveFlashback->Stop();
 			ActiveFlashback = nullptr;
 		}
-		
+
 		ActiveFlashback = UGameplayStatics::SpawnSound2D(this, Definition->FlashbackSound);
 		if (ActiveFlashback) {
 			ActiveFlashback->OnAudioFinished.AddDynamic(this, &UMemoryComponent::HandleFlashbackFinished);
 		}
+		else {
+			// 스폰 실패 시에도 스토리는 진행
+			HandleFlashbackFinished();
+		}
 	}
-
-	/*	[ToDo] 자막 표시
-		Definition->FlashbackText
-		>> 사운드가 있으면 사운드 길이 따라가도록	*/
+	else {
+		// 회수음이 없는 조각이면 바로 스토리 시작
+		HandleFlashbackFinished();
+	}
 	UE_LOG(LogTemp, Log, TEXT("[Memory] 자막: %s"), *Definition->FlashbackText.ToString());
 
 	OnMemoryCollected.Broadcast(Definition);
@@ -51,5 +58,12 @@ void UMemoryComponent::HandleFlashbackFinished() {
 	if (ActiveFlashback) {
 		ActiveFlashback->OnAudioFinished.RemoveAll(this);
 		ActiveFlashback = nullptr;
+	}
+
+	// 회수음이 끝났으니 보관해둔 조각의 스토리 컷 시작 신호
+	if (PendingStoryDefinition) {
+		UMemoryFragmentDefinition* Def = PendingStoryDefinition;
+		PendingStoryDefinition = nullptr;
+		OnFlashbackFinished.Broadcast(Def);
 	}
 }

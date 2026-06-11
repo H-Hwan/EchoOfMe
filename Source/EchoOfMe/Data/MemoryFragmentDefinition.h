@@ -5,6 +5,10 @@
 #include "MemoryFragmentDefinition.generated.h"
 
 
+class USoundBase;
+class UStorySequence;
+
+
 UCLASS(BlueprintType)
 class ECHOOFME_API UMemoryFragmentDefinition : public UInventoryItemDefinition {
 	GENERATED_BODY()
@@ -21,4 +25,8 @@ public:
 	// 해당 조각으로 켜지는 플래그 키
 	UPROPERTY(EditDefaultsOnly, Category = "Memory")
 	FName FlagKey;
+
+	// 회수음 종료 후 재생할 스토리 컷
+	UPROPERTY(EditDefaultsOnly, Category = "Memory")
+	TObjectPtr<UStorySequence> Story;
 };
