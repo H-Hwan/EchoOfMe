@@ -72,3 +72,14 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# JetBrains Rider / IntelliJ
+.idea/
+
+# JetBrains AI / IDE AI local data
+.ai/
+
+# User-specific IDE files
+*.sln.DotSettings.user
+*.user
+*.suo
