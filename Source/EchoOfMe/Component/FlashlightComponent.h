@@ -61,11 +61,24 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Flash Light")
 	bool IsFlashLightOn() const { return bIsOn; }
 
+	UPROPERTY()
+	FVector CachedLightHitPoint;
+
+
 	// 빛의 실패 1초간 강제 OFF
 	void TriggerLightFailure();
 
+	// 라이트 엔드포인트 위치 계산
 	UFUNCTION()
-	FVector LightTrace();
+	void LightTrace();
+
+	// 라이트 엔드포인트 위치 계산
+	UFUNCTION(BlueprintCallable, Category = "Flash Light")
+	FVector LightEndPoint();
+
+
+	UPROPERTY()
+	FVector CurrentLight;
 
 private:
 	bool bIsOn = false;

@@ -29,6 +29,7 @@ void UFlashlightComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 	if (!IsVisible()) return;
 
+
 	const float TargetRadius = CalculateTargetRadius();
 	const float NewRadius = FMath::FInterpTo(AttenuationRadius, TargetRadius, DeltaTime, RadiusInterpSpeed);
 
@@ -46,11 +47,16 @@ void UFlashlightComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 		Suspicion = FMath::Max(Suspicion - SuspicionDecayPerSec * DeltaTime, 0.f);
 	}
 
+	if (bIsOn)
+	{
+		LightTrace();
+	}
+
 	UE_LOG(LogTemp, Verbose, TEXT("[Flashlight] Suspicion=%.1f"), Suspicion);
 }
 
-
 float UFlashlightComponent::CalculateTargetRadius() const {
+
 	const UWorld* World = GetWorld();
 	if (!World) return MaxAttenuationRadius;
 
@@ -66,20 +72,20 @@ float UFlashlightComponent::CalculateTargetRadius() const {
 	if (!bHit) return MaxAttenuationRadius;
 
 	return FMath::Clamp(Hit.Distance, MinAttenuationRadius, MaxAttenuationRadius);
+
 }
 
 
 void UFlashlightComponent::ToggleFlashLight() {
 	if (bIsLocked) return; // 빛의 실패 중엔 입력 무시
 	SetFlashLightOn(!bIsOn);
-}
 
+}
 
 void UFlashlightComponent::SetFlashLightOn(bool bOn) {
 	bIsOn = bOn;
 	SetVisibility(bOn);
 }
-
 
 void UFlashlightComponent::TriggerLightFailure() {
 	if (bIsLocked) return;
@@ -96,24 +102,30 @@ void UFlashlightComponent::TriggerLightFailure() {
 	}
 }
 
-FVector UFlashlightComponent::LightTrace()
+void UFlashlightComponent::LightTrace()
 {
 	FHitResult HitResult;
 
-	FVector StartLocation = GetOwner()->GetActorLocation();
-	FVector EndLocation = StartLocation + (GetOwner()->GetActorForwardVector() * 1000.0f);
+	FVector StartLocation = GetComponentLocation();
+	FVector EndLocation = StartLocation + GetForwardVector() * MaxAttenuationRadius;
 
-	FCollisionQueryParams TraceParams(FName(TEXT("MyTrace")), true, GetOwner());
+	FCollisionQueryParams TraceParams(FName(TEXT("FlashLightTrace")), true, GetOwner());
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Camera, TraceParams);
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		ECC_Visibility,
+		TraceParams);
 
-	if (bHit)
-	{
-		return HitResult.ImpactPoint;
-	}
+	CachedLightHitPoint =
+		bHit ? HitResult.ImpactPoint : EndLocation;	
 
-	return EndLocation;
+}
 
+FVector UFlashlightComponent::LightEndPoint()
+{
+	return CachedLightHitPoint;
 }
 
 

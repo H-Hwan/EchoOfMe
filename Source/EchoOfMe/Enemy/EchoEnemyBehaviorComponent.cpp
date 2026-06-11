@@ -15,6 +15,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Enemy/AmbushStateComponent.h"
+#include "Component/FlashlightComponent.h"
 
 // Sets default values for this component's properties
 UEchoEnemyBehaviorComponent::UEchoEnemyBehaviorComponent()
@@ -39,6 +40,12 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CachedPlayer = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	if (CachedPlayer)
+	{
+		FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+	}
 	Echo = Cast<AEchoEnemy>(GetOwner());
 	CurrentState = EFSMState::Patrol;
 	PatrolStateComp->Startreference(Echo, this);
@@ -132,13 +139,15 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 // 플레이어 정보 반환
 APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
 {
-	return UGameplayStatics::GetPlayerPawn(GetWorld(),0); 
+	return CachedPlayer;
 }
 // 플레이어의 위치값 반환
 FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 {
+	if (!CachedPlayer)
+		return FVector::ZeroVector;
 
-	return GetPlayerInfo()->GetActorLocation();
+	return CachedPlayer->GetActorLocation();
 }
 // 플레이어가 시야 내로 들어섰는가
 bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
@@ -180,6 +189,28 @@ bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 	return false;
 }
 
+bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
+{
+	FVector EnemyLocation = Echo->GetActorLocation();
+
+	float Distance = FVector::Distance(EnemyLocation, TargetLocation);
+
+	if (Distance > MaxDistance) return false;
+
+	FVector ForwardV = Echo->GetActorForwardVector();
+
+	FVector ToTarget = (TargetLocation - EnemyLocation).GetSafeNormal();
+
+	float DotPro = FVector::DotProduct(ForwardV, ToTarget);
+
+	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
+
+	return DotPro > CosAngle;
+}
+bool UEchoEnemyBehaviorComponent::IsLightDetected()
+{
+	return IsTargetInSight(FlashlightComponent->LightEndPoint());
+}
 // 깃발을 배열로 돌린후 플레이어으로부터 일정 거리 초과 범위내 랜덤 텔레포팅
 FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 {
@@ -216,22 +247,32 @@ FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
 	TArray<AActor*> PeekPoints;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(),PeekPointName, PeekPoints);
 
-	TArray<AActor*> ValidPoints;
-
+	AActor* ClosestPoint = nullptr;
+	float MinDistanceToEnemySq = MAX_FLT;
+	FVector EnemyLocation = Echo->GetActorLocation();
 	for (AActor* PP : PeekPoints)
 	{
 		float DistToPlayer = FVector::Dist2D(PP->GetActorLocation(), GetPlayerLocation());
 		if (DistToPlayer >= 700.0f && DistToPlayer <= 2000.0f)
 		{
-			ValidPoints.Add(PP);
+			// 2. 적(자신)과의 거리 계산 
+			// (단순 크기 비교용이므로 연산이 무거운 루트계산(Dist) 대신 제곱계산(DistSquared)을 사용하여 최적화)
+			float DistToEnemySq = FVector::DistSquared(PP->GetActorLocation(), EnemyLocation);
+
+			// 3. 지금까지 찾은 포인트보다 더 가깝다면 갱신
+			if (DistToEnemySq < MinDistanceToEnemySq)
+			{
+				MinDistanceToEnemySq = DistToEnemySq;
+				ClosestPoint = PP;
+			}
 		}
 
 	}
-
-	if (ValidPoints.Num() <= 0) return FVector::ZeroVector;
-
-	int32 RandomIndex = FMath::RandRange(0, ValidPoints.Num() - 1);
-	return ValidPoints[RandomIndex]->GetActorLocation();
+	if (ClosestPoint != nullptr)
+	{
+		return ClosestPoint->GetActorLocation();
+	}
+	return FVector::ZeroVector;
 }
 
 // 움직임이 있는가
@@ -284,6 +325,7 @@ float UEchoEnemyBehaviorComponent::GetDistanceToPlayer() const
 
 	return TNumericLimits<float>::Max();
 }
+
 //랜덤좌표 뽑기
 bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) const
 {
