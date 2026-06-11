@@ -3,6 +3,3 @@
 
 #include "StoryWidget.h"
 
-void UStoryWidget::UpdateUI(const FText& InText, UTexture2D* InImage)
-{
-}

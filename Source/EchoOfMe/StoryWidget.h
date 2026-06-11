@@ -15,5 +15,9 @@ UCLASS()
 class ECHOOFME_API UStoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	// 컴포넌트에서 호출용 이벤트
+	UFUNCTION(BlueprintImplementableEvent, Category = "Story")
+	void PlaySequence(UStorySequence* Sequence);
 };

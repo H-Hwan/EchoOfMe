@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Component/StoryPlayerComponent.h"
@@ -6,8 +6,8 @@
 #include "Component/MemoryComponent.h"
 #include "Data/MemoryFragmentDefinition.h"
 #include "Data/StorySequence.h"
+#include "StoryWidget.h"
 
-#include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
 
 
@@ -58,21 +58,9 @@ void UStoryPlayerComponent::HandleFlashbackFinished(const UMemoryFragmentDefinit
 		ActiveStoryWidget->RemoveFromParent();
 	}
 
-	ActiveStoryWidget = CreateWidget<UUserWidget>(PC, StoryWidgetClass);
+	ActiveStoryWidget = CreateWidget<UStoryWidget>(PC, StoryWidgetClass);
 	if (ActiveStoryWidget) {
 		// AddToViewport / Pause / 페이지 진행은 위젯 BP가 자체 처리
-		static const FName PlaySequenceFunctionName(TEXT("PlaySequence"));
-		if (UFunction* PlaySequenceFunction = ActiveStoryWidget->FindFunction(PlaySequenceFunctionName)) {
-			struct FPlaySequenceParameters
-			{
-				UStorySequence* Story;
-			};
-
-			FPlaySequenceParameters Parameters{Definition->Story};
-			ActiveStoryWidget->ProcessEvent(PlaySequenceFunction, &Parameters);
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("[Story] %s does not implement PlaySequence"), *GetNameSafe(ActiveStoryWidget));
-		}
+		ActiveStoryWidget->PlaySequence(Definition->Story);
 	}
 }

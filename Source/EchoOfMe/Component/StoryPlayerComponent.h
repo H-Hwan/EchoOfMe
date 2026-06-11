@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -9,7 +9,8 @@
 
 class UMemoryFragmentDefinition;
 class UMemoryComponent;
-class UUserWidget;
+class UStoryWidget;
+
 
 /*	[스토리 컷 재생기]
 	기억조각 회수음이 끝나면 해당 조각의 스토리 컷을 위젯으로 재생	*/
@@ -33,12 +34,12 @@ protected:
 
 	// 재생할 스토리 위젯 클래스
 	UPROPERTY(EditDefaultsOnly, Category="Story")
-	TSubclassOf<UUserWidget> StoryWidgetClass;
+	TSubclassOf<UStoryWidget> StoryWidgetClass;
 
 private:
 	// 현재 떠 있는 스토리 위젯 >> 중복 방지
 	UPROPERTY()
-	TObjectPtr<UUserWidget> ActiveStoryWidget;
+	TObjectPtr<UStoryWidget> ActiveStoryWidget;
 
 	// 바인딩한 MemoryComponent 참조 >> EndPlay해제
 	UPROPERTY()
