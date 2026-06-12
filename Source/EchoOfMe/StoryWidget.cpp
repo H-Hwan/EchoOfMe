@@ -3,32 +3,29 @@
 
 #include "StoryWidget.h"
 #include "Data/StorySequence.h"
+#include "Components/AudioComponent.h"
 
 
-bool UStoryWidget::GetPage(int32 Index, FStoryPage& OutPage) const
-{
-	if (Pages.IsValidIndex(Index))
-	{
-		OutPage = Pages[Index];
-		return true;
-	}
-
-	// 유효하지 않은 인덱스라면 False 반환
-	return false;
-}
-
-//void UStoryWidget::ShowPage()
-//{
-//}
+// bool UStoryWidget::GetPage(int32 Index, FStoryPage& OutPage) const
+// {
+// 	if (Pages.IsValidIndex(Index))
+// 	{
+// 		OutPage = Pages[Index];
+// 		return true;
+// 	}
 //
-//void UStoryWidget::FinishSequence()
-////{
-////	if (IsValid(CurrentVoiceAudio))
-////	{
-////		CurrentVoiceAudio->Stop();
-////	}
-////
-////}
-//void UStoryWidget::PlaySequence()
-//{
-//}
+// 	// 유효하지 않은 인덱스라면 False 반환
+// 	return false;
+// }
+//
+// void UStoryWidget::ShowPage()
+// {
+// }
+//
+// void UStoryWidget::FinishSequence()
+// {
+// 	if (IsValid(CurrentVoiceAudio))
+// 	{
+// 		CurrentVoiceAudio->Stop();
+// 	}
+// }

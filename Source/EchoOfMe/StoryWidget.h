@@ -23,26 +23,18 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Story")
 	void PlaySequence(UStorySequence* Sequence);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story")
-	TArray<FStoryPage> Pages;
-
-	UFUNCTION(BlueprintCallable, Category = "Story")
-	bool GetPage(int32 Index, FStoryPage& OutPage) const;
-
-	/*UFUNCTION()
-	void ShowPage();
-
-
-
-	UFUNCTION(BlueprintCallable, Category = "Sequence")
-    void FinishSequence();
-
-	UPROPERTY()
-	UAudioComponent* CurrentVoiceAudio;
-
-	UFUNCTION()
-	void PlaySequence();
-*/
-
-
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story")
+	// TArray<FStoryPage> Pages;
+	//
+	// UFUNCTION(BlueprintCallable, Category = "Story")
+	// bool GetPage(int32 Index, FStoryPage& OutPage) const;
+	//
+	// UFUNCTION()
+	// void ShowPage();
+	//
+	// UFUNCTION(BlueprintCallable, Category = "Sequence")
+	// void FinishSequence();
+	//
+	// UPROPERTY()
+	// UAudioComponent* CurrentVoiceAudio;
 };
