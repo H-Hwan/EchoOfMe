@@ -120,7 +120,6 @@ void UFlashlightComponent::LightTrace()
 
 	CachedLightHitPoint =
 		bHit ? HitResult.ImpactPoint : EndLocation;	
-
 }
 
 FVector UFlashlightComponent::LightEndPoint()

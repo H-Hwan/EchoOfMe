@@ -342,7 +342,6 @@ bool UEchoEnemyBehaviorComponent::PickRandomNavMovePoint(FVector& OutLocation) c
 	if (bNavFount) {
 		OutLocation = NavLocation.Location;
 	}
-
 	return bNavFount;
 }
 // 플레이어를 놓쳤는가
