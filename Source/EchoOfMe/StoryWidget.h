@@ -15,5 +15,23 @@ UCLASS()
 class ECHOOFME_API UStoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+
+public:
+	/*UFUNCTION()
+	void ShowPage();
+
 	
+
+	UFUNCTION(BlueprintCallable, Category = "Sequence")
+    void FinishSequence();
+
+	UPROPERTY()
+	UAudioComponent* CurrentVoiceAudio;
+
+	UFUNCTION()
+	void PlaySequence();
+*/
+
+
 };

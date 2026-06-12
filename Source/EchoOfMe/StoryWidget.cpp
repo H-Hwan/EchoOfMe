@@ -3,6 +3,18 @@
 
 #include "StoryWidget.h"
 
-void UStoryWidget::UpdateUI(const FText& InText, UTexture2D* InImage)
-{
-}
+//void UStoryWidget::ShowPage()
+//{
+//}
+//
+//void UStoryWidget::FinishSequence()
+////{
+////	if (IsValid(CurrentVoiceAudio))
+////	{
+////		CurrentVoiceAudio->Stop();
+////	}
+////
+////}
+//void UStoryWidget::PlaySequence()
+//{
+//}
