@@ -10,6 +10,7 @@
 class UTexture2D;
 class USoundBase;
 
+
 /*	[FStoryPage]
 	스토리 시퀀스의 한 페이지.
 	텍스트(자막), 이미지, 음성, 최소 표시 시간을 묶음	*/
