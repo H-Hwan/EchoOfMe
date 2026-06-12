@@ -4,6 +4,7 @@
 #include "Component/InventoryComponent.h"
 #include "Component/RecorderComponent.h"
 #include "Component/MemoryComponent.h"
+#include "Component/StoryPlayerComponent.h"
 #include "UI/InventoryWidget.h"
 #include "EchoPlayerCharacter.h"
 
@@ -18,11 +19,11 @@
 #include "Camera/PlayerCameraManager.h"
 
 
-
 AEchoPlayerController::AEchoPlayerController() {
 	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 	Recorder = CreateDefaultSubobject<URecorderComponent>(TEXT("Recorder"));
 	Memory = CreateDefaultSubobject<UMemoryComponent>(TEXT("Memory"));
+	StoryPlayer = CreateDefaultSubobject<UStoryPlayerComponent>(TEXT("StoryPlayer"));
 }
 
 

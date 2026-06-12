@@ -8,11 +8,13 @@
 class UInputMappingContext;
 class AEchoPlayerCharacter;
 
-class UInventoryComponent;
-class URecorderComponent;
 class UInputAction;
 class UInventoryWidget;
+
+class UInventoryComponent;
+class URecorderComponent;
 class UMemoryComponent;
+class UStoryPlayerComponent;
 
 
 UCLASS(Abstract)
@@ -52,7 +54,7 @@ protected:
 	// 리스폰
 protected:
 	/*	리스폰할 플레이어 캐릭터
-		비워두면 OnPossess에서 현재 빙의한 캐릭터 클래스를 자동으로 캐싱 */ 
+		비워두면 OnPossess에서 현재 빙의한 캐릭터 클래스를 자동으로 캐싱 */
 	UPROPERTY(EditAnywhere, Category = "Respawn")
 	TSubclassOf<AEchoPlayerCharacter> CharacterClass;
 
@@ -125,4 +127,7 @@ private:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UMemoryComponent> Memory;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UStoryPlayerComponent> StoryPlayer;
 };
