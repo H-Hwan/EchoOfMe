@@ -90,6 +90,30 @@ void UFlashlightComponent::TriggerLightFailure() {
 			this, &UFlashlightComponent::EndLightFailure, ForcedOffDuration, false);
 	}
 }
+void UFlashlightComponent::LightTrace()
+{
+	FHitResult HitResult;
+
+	FVector StartLocation = GetComponentLocation();
+	FVector EndLocation = StartLocation + GetForwardVector() * MaxAttenuationRadius;
+
+	FCollisionQueryParams TraceParams(FName(TEXT("FlashLightTrace")), true, GetOwner());
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		ECC_Visibility,
+		TraceParams);
+
+	CachedLightHitPoint =
+		bHit ? HitResult.ImpactPoint : EndLocation;
+}
+
+FVector UFlashlightComponent::LightEndPoint()
+{
+	return CachedLightHitPoint;
+}
 
 
 void UFlashlightComponent::EndLightFailure() {

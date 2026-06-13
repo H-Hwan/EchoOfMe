@@ -190,5 +190,26 @@ public:
 	//UFUNCTION(BlueprintImplementableEvent, Category = "Dead")
 	//void IsPlayerDEAD(bool bIsAlive);
 
+	// 끼면 알아서판정함
+	void CheckIfStuck(float DeltaTime);
+
+
+	// 막힘 감지용
+	UPROPERTY()
+	FVector LastPosition = FVector::ZeroVector;
+
+	UPROPERTY()
+	float StuckTimer = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Move")
+	float StuckCheckInterval = 1.5f;   // 몇 초마다 체크
+
+	UPROPERTY(EditAnywhere, Category = "Move")
+	float StuckThreshold = 50.0f;      // 이 거리 이하면 막힌 것으로 판단
+
+	UPROPERTY()
+	FVector LastDestination = FVector::ZeroVector;  // 마지막 목적지 저장
+
+	bool RequestMoveToInternal(const FVector& Destination); // LastDestination 갱신 안 함
 
 };

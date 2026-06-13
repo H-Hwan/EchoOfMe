@@ -73,7 +73,7 @@ void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	
 		CurrentStateComp->OnStateUpdate(DeltaTime);
 	}
-	
+	CheckIfStuck(DeltaTime);
 }
 // 상태반환메소드
 UFSMStateBase* UEchoEnemyBehaviorComponent::GetStateComponent(EFSMState NewState)
@@ -119,7 +119,7 @@ void UEchoEnemyBehaviorComponent::ChangeState(EFSMState NewState)
 bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, float InAcceptanceRadius)
 {
 	AAIController* AIController = Cast<AAIController>(Echo->GetController());
-
+	LastDestination = Destination;
 	if (!AIController) return false;
 
 	const float Radius = (InAcceptanceRadius > 0.0f) ? InAcceptanceRadius : AcceptanceRadius;
@@ -127,10 +127,10 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 	FAIMoveRequest Moveq;
 
 	Moveq.SetGoalLocation(Destination);
-	Moveq.SetAcceptanceRadius(Radius);
-	Moveq.SetAllowPartialPath(true);
-	Moveq.SetUsePathfinding(true);
-	Moveq.SetProjectGoalLocation(true);
+    Moveq.SetAcceptanceRadius(Radius);
+    Moveq.SetAllowPartialPath(false);  // ✅ false로 변경
+    Moveq.SetUsePathfinding(true);
+    Moveq.SetProjectGoalLocation(true);
 
 	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
 
@@ -370,3 +370,73 @@ void UEchoEnemyBehaviorComponent::SetResonanceSensorValue(bool bResonance, int32
 
 }
 
+void UEchoEnemyBehaviorComponent::CheckIfStuck(float DeltaTime)
+{
+	if (!IsNavMoving())
+	{
+		StuckTimer = 0.0f;
+		LastPosition = Echo->GetActorLocation();
+		return;
+	}
+
+	StuckTimer += DeltaTime;
+
+	if (StuckTimer >= StuckCheckInterval)
+	{
+		StuckTimer = 0.0f;
+		float MovedDistance = FVector::Dist(Echo->GetActorLocation(), LastPosition);
+
+		if (MovedDistance < StuckThreshold)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[CheckIfStuck] 막힘 감지 → 우회 시도"));
+
+			
+			FVector ToDestination = (LastDestination - Echo->GetActorLocation()).GetSafeNormal();
+			FVector RightVector = FVector::CrossProduct(ToDestination, FVector::UpVector);
+
+			float Side = (FMath::RandBool()) ? 1.0f : -1.0f;
+			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 200.0f);
+	
+
+	
+			RequestMoveToInternal(DetourPoint);
+			RequestMoveTo(DetourPoint);  // 우회 지점으로 먼저 이동
+		}
+
+		LastPosition = Echo->GetActorLocation();
+	}
+}
+
+bool UEchoEnemyBehaviorComponent::RequestMoveToInternal(const FVector& Destination)
+{
+	AAIController* AIController = Cast<AAIController>(Echo->GetController());
+	if (!AIController) return false;
+
+	FAIMoveRequest Moveq;
+	Moveq.SetGoalLocation(Destination);
+	Moveq.SetAcceptanceRadius(AcceptanceRadius);
+	Moveq.SetAllowPartialPath(false);
+	Moveq.SetUsePathfinding(true);
+	Moveq.SetProjectGoalLocation(true);
+
+	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
+	return Result.Code != EPathFollowingRequestResult::Failed;
+	//-----------------------------
+	AAIController* AIController = Cast<AAIController>(Echo->GetController());
+	LastDestination = Destination;
+	if (!AIController) return false;
+
+	const float Radius = (InAcceptanceRadius > 0.0f) ? InAcceptanceRadius : AcceptanceRadius;
+
+	FAIMoveRequest Moveq;
+
+	Moveq.SetGoalLocation(Destination);
+	Moveq.SetAcceptanceRadius(Radius);
+	Moveq.SetAllowPartialPath(false);  // ✅ false로 변경
+	Moveq.SetUsePathfinding(true);
+	Moveq.SetProjectGoalLocation(true);
+
+	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
+
+	return Result.Code != EPathFollowingRequestResult::Failed;
+}

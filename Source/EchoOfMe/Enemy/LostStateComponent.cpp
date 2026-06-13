@@ -48,15 +48,19 @@ void ULostStateComponent::EchosTeleport(FVector Loc)
 	if (!EchoEnemy || !EnemyBrain) return;
 	if (Loc == FVector::ZeroVector)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[Lost] 갈 깃발이 없어서 제자리에서 순찰을 시작합니다."));
 		EnemyBrain->ChangeState(EFSMState::Patrol);
 		return;
 	}
-	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 90.0f);
-	UE_LOG(LogTemp, Error, TEXT("[수색중 적발견] 텔레포트 지점"), SafeLoc.X, SafeLoc.Y, SafeLoc.Z);
-	EchoEnemy->TeleportTo(SafeLoc,EchoEnemy->GetActorRotation());
-	EnemyBrain->ChangeState(EFSMState::Patrol);
 
+	FVector SafeLoc = Loc + FVector(0.0f, 0.0f, 90.0f);
+	EchoEnemy->TeleportTo(SafeLoc, EchoEnemy->GetActorRotation());
+
+	// 한 프레임 뒤에 Patrol 전환 (NavMesh 위치 확정 대기)
+	EchoEnemy->GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+		{
+			EnemyBrain->ChangeState(EFSMState::Patrol);
+		}
+	);
 }
 
 void ULostStateComponent::TimeToTeleport()
