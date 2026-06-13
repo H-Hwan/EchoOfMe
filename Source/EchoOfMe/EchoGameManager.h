@@ -89,4 +89,17 @@ public:
 	// 어디서든 GameManager 인스턴스 가져옴
 	UFUNCTION(BlueprintPure, Category = "GameManager", meta = (WorldContext = "WorldContextObject", DisplayName = "Get Echo Game Manager"))
 	static UEchoGameManager* Get(const UObject* WorldContextObject);
+
+
+	//---
+	// 엔딩 / 대면 플래그
+public:
+	/*	대면 엔딩 플래그 집계
+		기억 조각 플래그 수 + (녹음기 N회 이상 재생 시 +1)
+		[주의] CollectedMemoryFlags에는 기억 조각 플래그만 들어간다는 전제 */
+	UFUNCTION(BlueprintPure, Category = "GameManager|Ending")
+	int32 GetFacingFlagCount() const;
+
+	// 녹음기 N회 이상 재생이면 대면 플래그(F4)로 인정
+	static constexpr int32 RecorderFacingThreshold = 3;
 };

@@ -15,8 +15,8 @@ class UNoiseMakerComponent;
 UCLASS()
 class ECHOOFME_API ADoorActor : public AActor, public IInteractable {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 		ADoorActor();
 
 	// 매 프레임 호출
@@ -26,7 +26,7 @@ protected:
 	// 게임 시작 또는 스폰 시 호출
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// [IInteractable] — 잠긴 문을 상호작용으로 열 때 */
 	virtual void Interact_Implementation(AActor* Interactor) override;
 	virtual FText GetInteractionPrompt_Implementation() const override;
@@ -69,6 +69,9 @@ protected:
 	float CloseSpeed = 90.f;
 
 	void DoorClose();
+
+	// 외부 트리거로 즉시 열기
+	void ForceOpen();
 
 private:
 	// 현재 각도

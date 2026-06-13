@@ -6,9 +6,9 @@
 void UEchoGameManager::AddMemoryFlag(FName FlagKey) {
 	if (FlagKey.IsNone()) return;
 
-	/*	[TSet.Add(T, &bool)] 
+	/*	[TSet.Add(T, &bool)]
 		이미 Set 안에 있는 요소라면 매개변수로 넣은 bool변수를 true,
-		새로 들어온 요소라면 false 반환	*/ 
+		새로 들어온 요소라면 false 반환	*/
 	bool bAlreadyHad = false;
 	CollectedMemoryFlags.Add(FlagKey, &bAlreadyHad);
 	if (bAlreadyHad) return;
@@ -46,4 +46,10 @@ UEchoGameManager* UEchoGameManager::Get(const UObject* WorldContextObject) {
 	}
 
 	return nullptr;
+}
+
+
+int32 UEchoGameManager::GetFacingFlagCount() const {
+	const int32 RecorderFlag = (RecorderPlaybackCount >= RecorderFacingThreshold) ? 1 : 0;
+	return CollectedMemoryFlags.Num() + RecorderFlag;
 }

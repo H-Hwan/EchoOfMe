@@ -104,13 +104,13 @@ void ADoorActor::DoorClose() {
 
 void ADoorActor::Interact_Implementation(AActor* Interactor) {
 	// 잠긴 문만 체크
-	if (!bIsLocked) return;            
+	if (!bIsLocked) return;
 
 	// 잠금 해제
-	bIsLocked = false;	
+	bIsLocked = false;
 
 	/*	TODO(사운드)
-		잠금 풀리는 소리 ex) 자물쇠/걸쇠	*/ 
+		잠금 풀리는 소리 ex) 자물쇠/걸쇠	*/
 
 	// 해제 직후 플레이어가 트리거 안에 있으면 바로 열림
 	if (OverlapCount > 0) TargetAngle = OpenAngle;
@@ -119,4 +119,10 @@ void ADoorActor::Interact_Implementation(AActor* Interactor) {
 
 FText ADoorActor::GetInteractionPrompt_Implementation() const {
 	return bIsLocked ? NSLOCTEXT("Door", "Unlock", "문 열기") : FText::GetEmpty();
+}
+
+
+void ADoorActor::ForceOpen() {
+	bIsLocked = false;
+	TargetAngle = OpenAngle;
 }
