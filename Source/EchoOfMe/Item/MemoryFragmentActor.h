@@ -18,7 +18,10 @@ class ECHOOFME_API AMemoryFragmentActor : public AActor, public IInteractable
 	GENERATED_BODY()
 
 public:
-		AMemoryFragmentActor();
+	AMemoryFragmentActor();
+
+	UFUNCTION(BlueprintPure, Category = "Memory")
+	UMemoryFragmentDefinition* GetMemoryDefinition() const { return MemoryDefinition; }
 
 
 	//---

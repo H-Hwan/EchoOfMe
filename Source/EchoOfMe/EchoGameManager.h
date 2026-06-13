@@ -11,6 +11,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryFlagAdded, FName, FlagKey);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecorderPlaybackCountChanged, int32, NewCount);
 // 공명 수치 변화 >> AI가 임계치 판단에 사용
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResonanceChanged, float, NewResonance);
+// 환경 소음 발생 >> 소리 센서가 구독
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNoiseEmitted, float, Amount, FVector, Location);
 
 
 UCLASS()
@@ -47,6 +49,14 @@ public:
 	UFUNCTION(BlueprintPure, Category = "GameManager|Resonance")
 	float GetResonance() { return Resonance; }
 
+
+	//---
+	// 소음
+public:
+	UFUNCTION(BlueprintCallable, Category = "GameManager|Noise")
+	void EmitNoise(float Amount, FVector Location) { OnNoiseEmitted.Broadcast(Amount, Location); }
+
+
 	//---
 	// 방송
 public:
@@ -58,6 +68,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GameManager|Resonance")
 	FOnResonanceChanged OnResonanceChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameManager|Noise")
+    FOnNoiseEmitted OnNoiseEmitted;
 
 private:
 	UPROPERTY()
