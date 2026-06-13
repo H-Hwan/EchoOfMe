@@ -154,16 +154,6 @@ bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 {
 	if (!Echo || !GetPlayerInfo()) return false;
 
-	if (!FlashlightComponent)
-	{
-		FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
-		UE_LOG(LogTemp, Log, TEXT("[아니 플래시좀 갖고 다녀라]"));
-	}
-
-
-	if (!FlashlightComponent->IsFlashLightOn()) {
-		return false;
-	}
 
 	FVector EnemyLocation = Echo->GetActorLocation();
 
@@ -218,8 +208,21 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 
 	return DotPro > CosAngle;
 }
+
+
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
+	if (!FlashlightComponent)
+	{
+		FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+		UE_LOG(LogTemp, Log, TEXT("[아니 플래시좀 갖고 다녀라]"));
+	}
+
+	if (!FlashlightComponent->IsFlashLightOn())
+	{
+		return false;
+	}
+
 	UE_LOG(LogTemp, Log, TEXT("[빛을 찾는중]"));
 	return IsTargetInSight(FlashlightComponent->LightEndPoint());
 }

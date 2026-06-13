@@ -94,7 +94,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	float GetDistanceToPlayer()const;
 
-	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	//빛감지여부
+	UFUNCTION(BlueprintCallable, Category = "Search | Light")
 	bool IsLightDetected();
 
 	FVector GetPlayerLocation();

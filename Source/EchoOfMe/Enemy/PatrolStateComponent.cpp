@@ -36,8 +36,16 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 {
 	Super::OnStateUpdate(Delta);
 
+	
+
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
+
+	if (EnemyBrain->IsLightDetected())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[빛을 봤잖아]"));
+		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+	}
 
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
