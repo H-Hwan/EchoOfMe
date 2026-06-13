@@ -39,7 +39,7 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
 
-	if (EnemyBrain->IsPlayerInDetectedSight() || EnemyBrain->IsLightDetected())
+	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		if (PatrolToAmbush >= CurrentRandomChangePatrolToAmbush)// 지금 스토킹 깃발로 이동
 		{

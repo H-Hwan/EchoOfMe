@@ -115,6 +115,11 @@ FVector UFlashlightComponent::LightEndPoint()
 	return CachedLightHitPoint;
 }
 
+bool UFlashlightComponent::IsLightTurnOn()
+{
+	return bIsOn;
+}
+
 
 void UFlashlightComponent::EndLightFailure() {
 	bIsLocked = false;
