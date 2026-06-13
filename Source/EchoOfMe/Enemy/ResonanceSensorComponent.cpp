@@ -79,7 +79,7 @@ void UResonanceSensorComponent::NaturalPhenomenonSensor(FVector FlashLightHitLoc
 	if (DotResult <= CosAngle) return;
 
 	FHitResult HitResult;
-
+	
 	FCollisionQueryParams Param;
 
 	Param.AddIgnoredActor(EchoEnemy);
