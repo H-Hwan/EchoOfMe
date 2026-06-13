@@ -220,7 +220,7 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 }
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
-	UE_LOG(LogTemp, Log, TEXT("[빛 좀 보고싶다 전부 다 자살하라고 부추기네 개같은거]"));
+	UE_LOG(LogTemp, Log, TEXT("[빛 찾는중]"));
 	return IsTargetInSight(FlashlightComponent->LightEndPoint());
 }
 // 깃발을 배열로 돌린후 플레이어으로부터 일정 거리 초과 범위내 랜덤 텔레포팅
