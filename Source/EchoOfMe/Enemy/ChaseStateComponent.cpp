@@ -11,7 +11,6 @@ void UChaseStateComponent::OnStateEnter()
 
 	UE_LOG(LogTemp, Warning, TEXT("[추격]"));
 
-
 	EchoEnemy->IsLockOnToTarget(true);
 	CurrentTime = MaxLoseTime;
 }

@@ -14,6 +14,7 @@ class USearchStateComponent;
 class ULostStateComponent;
 class UAmbushStateComponent;
 class AEchoEnemy;
+class UFlashlightComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLightNoise,bool,bIsShock);
 
@@ -93,12 +94,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	float GetDistanceToPlayer()const;
 
+	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	bool IsLightDetected();
+
 	FVector GetPlayerLocation();
 
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	bool IsPlayerInDetectedSight();
 
-
+	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	bool IsTargetInSight(const FVector& TargetLocation);
 
 	UPROPERTY(EditAnywhere, Category = "Search | Location")
 	float AcceptanceRadius = 0.0f;
@@ -116,6 +121,12 @@ public:
 	// 텔레포트 지점 태그지정
 	UPROPERTY(EditAnywhere, Category = "Teleportation | Flag")
 	FName PeekPointName = TEXT("Flag_PeekPoint");
+
+	UPROPERTY()
+	TObjectPtr<APawn> CachedPlayer;
+
+	UPROPERTY()
+	TObjectPtr<UFlashlightComponent> FlashlightComponent;
 
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> CachedFlags;

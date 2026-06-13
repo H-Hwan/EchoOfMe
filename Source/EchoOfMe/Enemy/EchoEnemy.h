@@ -7,6 +7,7 @@
 #include "EchoEnemy.generated.h"
 
 class UEchoEnemyBehaviorComponent;
+class UResonanceSensorComponent;
 
 UCLASS()
 class ECHOOFME_API AEchoEnemy : public ACharacter
@@ -57,4 +58,10 @@ public:
 
 	UPROPERTY()
 	FVector SmoothedVelocity = FVector::ZeroVector;
+
+	UPROPERTY(VisibleAnywhere, Category = "Sensor")
+	TObjectPtr<UResonanceSensorComponent> ResonanceComp;
+
+
+
 };
