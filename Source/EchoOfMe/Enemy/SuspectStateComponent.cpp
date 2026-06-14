@@ -22,6 +22,12 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 {
 	Super::OnStateUpdate(Delta);
 
+	if (EnemyBrain->IsLightDetected())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[[Suspect]빛을 봤잖아]"));
+		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+	}
+
 	if ( EnemyBrain->IsPlayerInDetectedSight())
 	{
 		if (SuspectToAmbush >= CurrentRandomChangeSuspectToAmbush)// 지금 스토킹 포인트 이동
