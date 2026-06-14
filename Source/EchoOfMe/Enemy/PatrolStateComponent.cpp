@@ -41,12 +41,6 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (!EnemyBrain) return;
 	if (!EchoEnemy) return;
 
-	if (EnemyBrain->IsLightDetected())
-	{
-		UE_LOG(LogTemp, Error, TEXT("[빛을 봤잖아]"));
-		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
-	}
-
 	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		if (PatrolToAmbush >= CurrentRandomChangePatrolToAmbush)// 지금 스토킹 깃발로 이동
@@ -61,6 +55,13 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
 	}
+
+	if (EnemyBrain->IsLightDetected())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[빛을 봤잖아]"));
+		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+	}
+
 
 	StuckTime += Delta;
 	Suspectmin += Delta;

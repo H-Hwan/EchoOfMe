@@ -22,13 +22,7 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 {
 	Super::OnStateUpdate(Delta);
 
-	if (EnemyBrain->IsLightDetected())
-	{
-		UE_LOG(LogTemp, Error, TEXT("[[Suspect]빛을 봤잖아]"));
-		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
-	}
-
-	if ( EnemyBrain->IsPlayerInDetectedSight())
+	if (EnemyBrain->IsPlayerInDetectedSight())
 	{
 		if (SuspectToAmbush >= CurrentRandomChangeSuspectToAmbush)// 지금 스토킹 포인트 이동
 		{
@@ -41,6 +35,13 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 		UE_LOG(LogTemp, Log, TEXT("[의심 시작] 체이스 시작"));
 		return;
 	}
+	if (EnemyBrain->IsLightDetected())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[[Suspect]빛을 봤잖아]"));
+		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+		return;
+	}
+
 
 	if (LookingTime > 0.0f)
 	{
