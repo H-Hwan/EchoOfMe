@@ -4,7 +4,7 @@
 #include "SuspectStateComponent.h"
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 #include "Enemy/EchoEnemy.h"
-
+#include "NavigationSystem.h"
 void USuspectStateComponent::OnStateEnter()
 {
 	Super::OnStateEnter();
@@ -37,9 +37,34 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 	}
 	if (EnemyBrain->IsLightDetected())
 	{
-		UE_LOG(LogTemp, Error, TEXT("[[Suspect]빛을 봤잖아]"));
-		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
-		return;
+		FVector CurrentLightLoc = EnemyBrain->IsLightLoc();
+
+		// 스팸 방지: 마우스 떨림을 무시하도록 거리를 150.0f로 약간 늘림
+		if (FVector::Dist(EnemyBrain->LastDestination, CurrentLightLoc) > 150.0f)
+		{
+			// ★ 핵심 보정 1: 벽이나 허공에 찍힌 빛의 좌표를 수직 아래 바닥(NavMesh)으로 끌어내립니다.
+			UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+			FNavLocation ProjectedLoc;
+
+			// 반경 500 단위 내에서 가장 가까운 바닥을 찾습니다.
+			if (NavSystem && NavSystem->ProjectPointToNavigation(CurrentLightLoc, ProjectedLoc, FVector(500.0f, 500.0f, 500.0f)))
+			{
+				EnemyBrain->RequestMoveTo(ProjectedLoc.Location);
+			}
+			else
+			{
+				// 바닥을 못 찾았을 경우 일단 원본 좌표로 이동 시도
+				EnemyBrain->RequestMoveTo(CurrentLightLoc);
+			}
+		}
+
+		// ★ 핵심 보정 2: AI가 굳어버리는 현상 해결
+		// 길찾기에 성공해서 AI가 '실제로 이동 중(NavMoving)'일 때만 return으로 하위 로직을 차단합니다.
+		// 만약 길이 없어 멈췄거나, 빛 근처에 도착했다면 return하지 않고 자연스럽게 아래의 '두리번거리기' 로직으로 넘어갑니다.
+		if (EnemyBrain->IsNavMoving())
+		{
+			return;
+		}
 	}
 
 
