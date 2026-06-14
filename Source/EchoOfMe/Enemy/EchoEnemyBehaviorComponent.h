@@ -216,4 +216,7 @@ public:
 
 	FVector IsLightLoc();
 
+	UPROPERTY()
+	FVector LightLocation = FVector::ZeroVector;
+
 };

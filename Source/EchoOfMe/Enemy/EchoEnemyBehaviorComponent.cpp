@@ -221,8 +221,9 @@ bool UEchoEnemyBehaviorComponent::IsLightDetected()
 	if (!FlashlightComponent->IsFlashLightOn())
 	{
 		return false;
-	}
 
+	}
+	LightLocation = FlashlightComponent->LightEndPoint();
 	UE_LOG(LogTemp, Log, TEXT("[빛을 찾는중]"));
 	return IsTargetInSight(FlashlightComponent->LightEndPoint());
 }
@@ -440,5 +441,5 @@ bool UEchoEnemyBehaviorComponent::RequestMoveToInternal(const FVector& Destinati
 
 FVector UEchoEnemyBehaviorComponent::IsLightLoc()
 {
-	return FlashlightComponent->LightEndPoint();
+	return LightLocation;
 }
