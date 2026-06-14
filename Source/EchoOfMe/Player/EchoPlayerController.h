@@ -130,4 +130,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStoryPlayerComponent> StoryPlayer;
+
+	// 잡힘/사망 순간 연출 훅 (암전·"아직은 안 돼."·녹음기 노이즈는 BP에서)
+	UFUNCTION(BlueprintImplementableEvent, Category = "Respawn")
+	void OnPlayerKilled();
 };

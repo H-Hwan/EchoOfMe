@@ -72,6 +72,12 @@ void URecorderComponent::HandleRecorderCollected(URecorderItemDefinition* Defini
 		}
 	}
 
+	/*	[복귀 페이즈 진입]
+		녹음기 회수 = 탐색 종료, 추격 구간 시작 (기획서 bReturnPhaseStarted) */
+	if (UEchoGameManager* GM = UEchoGameManager::Get(this)) {
+		GM->SetLevelPhase(ELevelPhase::Return);
+	}
+
 	StartRecoverySequence();
 }
 

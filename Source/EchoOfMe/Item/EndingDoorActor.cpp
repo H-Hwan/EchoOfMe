@@ -48,10 +48,11 @@ void AEndingDoorActor::TriggerEnding() {
 	// BP 연출 훅
 	OnEndingChosen(EndingType);
 
-	/*	TODO(LevelPhase)
-		- GameManager에 LevelPhase = Ending 설정
-		- 엔딩 오케스트레이터가 OnEndingDoorOpened 구독해서:
-		  추격 정지 / 손전등 OFF / EndingStory 재생 / 3초 정적 / 크레딧 */
+	// 엔딩 페이즈 진입 — 추격 정지/연출은 OnLevelPhaseChanged 구독자가 처리
+	if (UEchoGameManager* GM = UEchoGameManager::Get(this)) {
+		GM->SetLevelPhase(ELevelPhase::Ending);
+	}
+
 	OnEndingDoorOpened.Broadcast(EndingType, EndingStory);
 
 	UE_LOG(LogTemp, Log, TEXT("[EndingDoor] 엔딩 확정: %s"),

@@ -5,6 +5,14 @@
 #include "EchoGameManager.generated.h"
 
 
+// 레벨 진행 단계
+UENUM(BlueprintType)
+enum class ELevelPhase : uint8 {
+	Exploration  UMETA(DisplayName = "탐색"),   // 회수 전
+	Return       UMETA(DisplayName = "복귀"),   // 녹음기 회수 후 추격 구간
+	Ending       UMETA(DisplayName = "엔딩")    // C2 분기 진입 후
+};
+
 // [메모리 플래그] >> 어떤 키가 새로 켜졌는지 알림
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryFlagAdded, FName, FlagKey);
 // 녹음기 재생 횟수 변화
@@ -13,6 +21,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecorderPlaybackCountChanged, int
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResonanceChanged, float, NewResonance);
 // 환경 소음 발생 >> 소리 센서가 구독
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNoiseEmitted, float, Amount, FVector, Location);
+// 레벨 진행 단계 변화 >> 방 상태/추격/연출이 구독
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelPhaseChanged, ELevelPhase, NewPhase);
 
 
 UCLASS()
@@ -72,6 +82,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GameManager|Noise")
     FOnNoiseEmitted OnNoiseEmitted;
 
+	UPROPERTY(BlueprintAssignable, Category = "GameManager|Phase")
+	FOnLevelPhaseChanged OnLevelPhaseChanged;
+
 private:
 	UPROPERTY()
 	TSet<FName> CollectedMemoryFlags;
@@ -81,6 +94,9 @@ private:
 
 	UPROPERTY()
 	float Resonance = 0.f;
+
+	UPROPERTY()
+	ELevelPhase LevelPhase = ELevelPhase::Exploration;
 
 
 	//---
@@ -102,4 +118,18 @@ public:
 
 	// 녹음기 N회 이상 재생이면 대면 플래그(F4)로 인정
 	static constexpr int32 RecorderFacingThreshold = 3;
+
+
+	//---
+	// 레벨 진행 단계
+public:
+	UFUNCTION(BlueprintCallable, Category = "GameManager|Phase")
+	void SetLevelPhase(ELevelPhase NewPhase);
+
+	UFUNCTION(BlueprintPure, Category = "GameManager|Phase")
+	ELevelPhase GetLevelPhase() const { return LevelPhase; }
+
+	// 현재 페이즈가 기준 단계 이상인지 (전진 판정용)
+	UFUNCTION(BlueprintPure, Category = "GameManager|Phase")
+	bool IsAtLeastPhase(ELevelPhase Phase) const { return (uint8)LevelPhase >= (uint8)Phase; }
 };

@@ -144,8 +144,8 @@ void AEchoPlayerController::KillPlayer() {
 
 	bIsRespawning = true;
 
-	/*	TODO
-		실패 연출을 연결	*/
+	// 잡힘 연출
+	OnPlayerKilled();
 
 	APawn* CurrentPawn = GetPawn();
 	if (CurrentPawn) {
