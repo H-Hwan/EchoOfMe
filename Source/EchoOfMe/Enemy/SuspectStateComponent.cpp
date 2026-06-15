@@ -57,7 +57,7 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 
 		// 이전의 '두리번거리기'에서 배운 RInterpTo를 사용하여 부드럽게 째려봅니다.
 		// (마지막 값 4.0f를 키우면 휙! 돌아보고, 줄이면 천천~히 돌아봅니다)
-		FRotator SmoothRot = FMath::RInterpTo(CurrentRotation, TargetRotation, Delta, 4.0f);
+		FRotator SmoothRot = FMath::RInterpTo(CurrentRotation, TargetRotation, Delta, 2.0f);
 		EchoEnemy->SetActorRotation(SmoothRot);
 
 		// --------------------------------------------------
@@ -101,7 +101,6 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 			return;
 		}
 	}
-
 
 	if (LookingTime > 0.0f)
 	{

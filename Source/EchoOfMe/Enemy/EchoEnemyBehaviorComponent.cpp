@@ -290,7 +290,7 @@ FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
 	for (AActor* PP : PeekPoints)
 	{
 		float DistToPlayer = FVector::Dist2D(PP->GetActorLocation(), GetPlayerLocation());
-		if (DistToPlayer >= 700.0f && DistToPlayer <= 2000.0f)
+		if (DistToPlayer >= 400.0f && DistToPlayer <= 2000.0f)
 		{
 			// 2. 적(자신)과의 거리 계산 
 			// (단순 크기 비교용이므로 연산이 무거운 루트계산(Dist) 대신 제곱계산(DistSquared)을 사용하여 최적화)
