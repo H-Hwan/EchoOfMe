@@ -205,8 +205,29 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 	float DotPro = FVector::DotProduct(ForwardV, ToTarget);
 
 	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
+	if (DotPro <= CosAngle) return false; // 시야각 밖이면 감지 불가
 
-	return DotPro > CosAngle;
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(Echo);
+
+	FVector EyesLocation = EnemyLocation + FVector(0.0f, 0.0f, 60.0f);
+
+	bool BHit = GetWorld()->LineTraceSingleByChannel(HitResult, EyesLocation, TargetLocation, ECC_WorldStatic, Params);
+
+	if (BHit)
+	{
+		float HitDistance = FVector::Distance(HitResult.ImpactPoint, TargetLocation);
+		if (HitDistance < 100.0f)
+		{
+			DrawDebugLine(GetWorld(), EyesLocation, HitResult.ImpactPoint, FColor::Yellow, false, -1.0f);
+			return false;
+		}
+	}
+
+
+
+	return true;
 }
 
 

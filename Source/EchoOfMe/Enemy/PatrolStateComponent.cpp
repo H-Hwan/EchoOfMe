@@ -110,6 +110,8 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 				StuckTime = 0.0f;
 			}
 			TargetRetryTimer = 2.0f;
+			// 움직임 여부
+			bIsNowMove = 1;
 		}
 		else
 		{

@@ -42,6 +42,7 @@ void UFlashlightComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	else if (Suspicion > 0.f) {
 		Suspicion = FMath::Max(Suspicion - SuspicionDecayPerSec * DeltaTime, 0.f);
 	}
+	LightTrace();
 }
 
 
@@ -103,7 +104,7 @@ void UFlashlightComponent::LightTrace()
 		HitResult,
 		StartLocation,
 		EndLocation,
-		ECC_Visibility,
+		ECC_WorldStatic,
 		TraceParams);
 
 	CachedLightHitPoint =

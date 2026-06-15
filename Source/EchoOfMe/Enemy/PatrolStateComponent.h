@@ -17,11 +17,14 @@ public:
 
 	float StuckTime = 0.0f;
 
-	float MaxStuckTime = 8.0f;
+	UPROPERTY()
+	float MaxStuckTime = 4.0f;
 
+	uint8 bIsNowMove : 1;
 
 	float Suspectmin = 0.0f;
 
+	UPROPERTY()
 	float Suspectmax = 6.0f;
 
 	float TargetRetryTimer = 0.0f;

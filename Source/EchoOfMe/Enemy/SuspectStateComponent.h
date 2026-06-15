@@ -25,6 +25,8 @@ public:
 
 	FRotator RotationToTarget;
 
+	UPROPERTY(EditAnywhere, Category = "Suspect | Angle")
+	float LookingAngle = 65.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Suspect | RandRangeMax", meta = (ClampMin = "0", ClampMax = "10"))
 	int32 SuspectToAmbush = 5;
