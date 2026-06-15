@@ -214,7 +214,7 @@ public:
 	bool RequestMoveToInternal(const FVector& Destination); // LastDestination 갱신 안 함
 
 
-	FVector IsLightLoc();
+	FVector IsLightLoc() const;
 
 	UPROPERTY()
 	FVector LightLocation = FVector::ZeroVector;

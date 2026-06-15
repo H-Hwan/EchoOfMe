@@ -29,10 +29,16 @@ public:
 
 	float TargetRetryTimer = 0.0f;
 
+	UPROPERTY()
+	bool bLooking;
 
+	float LookingTime;
+	FRotator RotationToTarget;
+	float LookingForwardTime;
 	UPROPERTY(EditAnywhere, Category = "Patrol | RandRangeMax", meta = (ClampMin = "0", ClampMax = "10"))
 	int32 PatrolToAmbush = 5;
-
+	UPROPERTY(EditAnywhere, Category = "Suspect | Angle")
+	float LookingAngle = 65.0f;
 	int32 CurrentRandomChangePatrolToAmbush = 0.0f;
 
 	FVector RandomPickTarget = FVector::ZeroVector;

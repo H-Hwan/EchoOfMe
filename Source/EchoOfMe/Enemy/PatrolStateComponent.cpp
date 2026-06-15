@@ -50,7 +50,6 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 			EnemyBrain->ChangeState(EFSMState::Ambush);
 			return;
 		}
-
 		UE_LOG(LogTemp, Error, TEXT("[추격 시작]"));
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
@@ -59,7 +58,8 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 	if (EnemyBrain->IsLightDetected())
 	{
 		UE_LOG(LogTemp, Error, TEXT("[빛을 봤잖아]"));
-		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+		EnemyBrain->ChangeState(EFSMState::Suspect);
+		return;
 	}
 
 
@@ -119,6 +119,31 @@ void UPatrolStateComponent::OnStateUpdate(float Delta)
 			TargetRetryTimer = 2.0f;
 			UE_LOG(LogTemp, Warning, TEXT("[Echo Patrol] 타겟 찾지 못함"));
 		}
+	}
+
+	if (LookingTime > 0.0f && !EnemyBrain->IsNavMoving())
+	{
+		LookingTime -= Delta;
+		LookingForwardTime -= Delta;
+
+		// 1. 목표 각도(TargetRotation) 갱신: 2초마다 한 번씩 실행
+		if (LookingForwardTime <= 0.0f)
+		{
+			FRotator CurrentRot = EchoEnemy->GetActorRotation();
+
+			// 도리도리 각도
+			float RandomYawOffset = FMath::RandRange(LookingAngle * -1, LookingAngle);
+
+			RotationToTarget = CurrentRot;
+			// 핵심: 기존 각도에 랜덤 오프셋을 '더해줍니다'
+			RotationToTarget.Yaw += RandomYawOffset;
+
+			LookingForwardTime = 2.0f; // 타이머 리셋
+		}
+
+		// 2. 실제 회전 적용: 타이머 안쪽이 아니라 바깥으로 빼서 **매 프레임(틱)마다** 실행되게 합니다.
+		FRotator SmoothRot = FMath::RInterpTo(EchoEnemy->GetActorRotation(), RotationToTarget, Delta, 3.0f);
+		EchoEnemy->SetActorRotation(SmoothRot);
 	}
 
 }

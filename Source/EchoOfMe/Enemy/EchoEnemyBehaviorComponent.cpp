@@ -218,7 +218,7 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 	if (BHit)
 	{
 		float HitDistance = FVector::Distance(HitResult.ImpactPoint, TargetLocation);
-		if (HitDistance < 100.0f)
+		if (HitDistance > 100.0f)
 		{
 			DrawDebugLine(GetWorld(), EyesLocation, HitResult.ImpactPoint, FColor::Yellow, false, -1.0f);
 			return false;
@@ -432,7 +432,7 @@ void UEchoEnemyBehaviorComponent::CheckIfStuck(float DeltaTime)
 			FVector RightVector = FVector::CrossProduct(ToDestination, FVector::UpVector);
 
 			float Side = (FMath::RandBool()) ? 1.0f : -1.0f;
-			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 300.0f);
+			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 1300.0f);
 	
 
 	
@@ -460,7 +460,7 @@ bool UEchoEnemyBehaviorComponent::RequestMoveToInternal(const FVector& Destinati
 	return Result.Code != EPathFollowingRequestResult::Failed;
 }
 
-FVector UEchoEnemyBehaviorComponent::IsLightLoc()
+FVector UEchoEnemyBehaviorComponent::IsLightLoc() const
 {
 	return LightLocation;
 }

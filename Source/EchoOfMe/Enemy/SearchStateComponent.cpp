@@ -58,7 +58,8 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 	if (EnemyBrain->IsLightDetected())
 	{
 		UE_LOG(LogTemp, Error, TEXT("[[Search]빛을 봤잖아]"));
-		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+		EnemyBrain->ChangeState(EFSMState::Suspect);
+		return;
 	}
 	if (FVector::Dist2D(LastLocation, EchoEnemy->GetActorLocation()) > 100.0f)
 	{
