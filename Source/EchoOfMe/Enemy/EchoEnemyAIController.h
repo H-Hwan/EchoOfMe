@@ -27,8 +27,8 @@ public:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
 
-	UPROPERTY()
-	TObjectPtr<UResonanceSensorComponent> CachedSensor;
+	//UPROPERTY()
+	//TObjectPtr<UResonanceSensorComponent> CachedSensor;
 	UFUNCTION()
 	void HandleSenseLevelChanged(ESenseChannel Channel, ESenseLevel Level);
 };

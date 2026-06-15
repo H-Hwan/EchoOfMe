@@ -94,7 +94,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Search | Location")
 	float GetDistanceToPlayer()const;
 
-	UFUNCTION(BlueprintCallable, Category = "Search | Location")
+	//빛감지여부
+	UFUNCTION(BlueprintCallable, Category = "Search | Light")
 	bool IsLightDetected();
 
 	FVector GetPlayerLocation();
@@ -205,11 +206,17 @@ public:
 	float StuckCheckInterval = 1.5f;   // 몇 초마다 체크
 
 	UPROPERTY(EditAnywhere, Category = "Move")
-	float StuckThreshold = 50.0f;      // 이 거리 이하면 막힌 것으로 판단
+	float StuckThreshold = 70.0f;      // 이 거리 이하면 막힌 것으로 판단
 
 	UPROPERTY()
 	FVector LastDestination = FVector::ZeroVector;  // 마지막 목적지 저장
 
 	bool RequestMoveToInternal(const FVector& Destination); // LastDestination 갱신 안 함
+
+
+	FVector IsLightLoc();
+
+	UPROPERTY()
+	FVector LightLocation = FVector::ZeroVector;
 
 };

@@ -23,6 +23,9 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 	// 몬스터의 현재 이동 속도를 구합니다.
 	float CurrentSpeed = EchoEnemy->GetVelocity().Size();
 
+
+
+
 	// 1. 길을 찾는 중(IsNavMoving)인데 속도가 거의 0(멈춤)이라면?
 	if (EnemyBrain->IsNavMoving() && CurrentSpeed < 10.0f)
 	{
@@ -52,7 +55,11 @@ void USearchStateComponent::OnStateUpdate(float Delta)
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		return;
 	}
-	
+	if (EnemyBrain->IsLightDetected())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[[Search]빛을 봤잖아]"));
+		EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+	}
 	if (FVector::Dist2D(LastLocation, EchoEnemy->GetActorLocation()) > 100.0f)
 	{
 		return;

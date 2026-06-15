@@ -74,9 +74,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Flash Light")
 	FVector LightEndPoint();
 
+	// 라이트 켜짐여부 반환
+	UFUNCTION(BlueprintCallable, Category = "Flash Light")
+	bool IsLightTurnOn();
+
 
 	UPROPERTY()
 	FVector CurrentLight;
+
+
 
 private:
 	bool bIsOn = false;

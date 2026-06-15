@@ -128,7 +128,7 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 
 	Moveq.SetGoalLocation(Destination);
     Moveq.SetAcceptanceRadius(Radius);
-    Moveq.SetAllowPartialPath(false);  // ✅ false로 변경
+    Moveq.SetAllowPartialPath(false);  
     Moveq.SetUsePathfinding(true);
     Moveq.SetProjectGoalLocation(true);
 
@@ -153,6 +153,7 @@ FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
 bool UEchoEnemyBehaviorComponent::IsPlayerInDetectedSight()
 {
 	if (!Echo || !GetPlayerInfo()) return false;
+
 
 	FVector EnemyLocation = Echo->GetActorLocation();
 
@@ -207,8 +208,23 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 
 	return DotPro > CosAngle;
 }
+
+
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
+	if (!FlashlightComponent)
+	{
+		FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+		UE_LOG(LogTemp, Log, TEXT("[아니 플래시좀 갖고 다녀라]"));
+	}
+
+	if (!FlashlightComponent->IsFlashLightOn())
+	{
+		return false;
+
+	}
+	LightLocation = FlashlightComponent->LightEndPoint();
+	UE_LOG(LogTemp, Log, TEXT("[빛을 찾는중]"));
 	return IsTargetInSight(FlashlightComponent->LightEndPoint());
 }
 // 깃발을 배열로 돌린후 플레이어으로부터 일정 거리 초과 범위내 랜덤 텔레포팅
@@ -388,14 +404,14 @@ void UEchoEnemyBehaviorComponent::CheckIfStuck(float DeltaTime)
 
 		if (MovedDistance < StuckThreshold)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[CheckIfStuck] 막힘 감지 → 우회 시도"));
+			UE_LOG(LogTemp, Warning, TEXT("[CheckIfStuck] 우회 시도"));
 
 			
 			FVector ToDestination = (LastDestination - Echo->GetActorLocation()).GetSafeNormal();
 			FVector RightVector = FVector::CrossProduct(ToDestination, FVector::UpVector);
 
 			float Side = (FMath::RandBool()) ? 1.0f : -1.0f;
-			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 200.0f);
+			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 300.0f);
 	
 
 	
@@ -421,22 +437,9 @@ bool UEchoEnemyBehaviorComponent::RequestMoveToInternal(const FVector& Destinati
 
 	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
 	return Result.Code != EPathFollowingRequestResult::Failed;
-	//-----------------------------
-	AAIController* AIController = Cast<AAIController>(Echo->GetController());
-	LastDestination = Destination;
-	if (!AIController) return false;
+}
 
-	const float Radius = (InAcceptanceRadius > 0.0f) ? InAcceptanceRadius : AcceptanceRadius;
-
-	FAIMoveRequest Moveq;
-
-	Moveq.SetGoalLocation(Destination);
-	Moveq.SetAcceptanceRadius(Radius);
-	Moveq.SetAllowPartialPath(false);  // ✅ false로 변경
-	Moveq.SetUsePathfinding(true);
-	Moveq.SetProjectGoalLocation(true);
-
-	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
-
-	return Result.Code != EPathFollowingRequestResult::Failed;
+FVector UEchoEnemyBehaviorComponent::IsLightLoc()
+{
+	return LightLocation;
 }

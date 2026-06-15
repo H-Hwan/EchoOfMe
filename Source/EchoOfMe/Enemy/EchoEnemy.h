@@ -59,8 +59,8 @@ public:
 	UPROPERTY()
 	FVector SmoothedVelocity = FVector::ZeroVector;
 
-	UPROPERTY(VisibleAnywhere, Category = "Sensor")
-	TObjectPtr<UResonanceSensorComponent> ResonanceComp;
+	//UPROPERTY(VisibleAnywhere, Category = "Sensor")
+	//TObjectPtr<UResonanceSensorComponent> ResonanceComp;
 
 
 
