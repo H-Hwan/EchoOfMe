@@ -205,8 +205,29 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 	float DotPro = FVector::DotProduct(ForwardV, ToTarget);
 
 	CosAngle = FMath::Cos(FMath::DegreesToRadians(MaxDegreeLimit));
+	if (DotPro <= CosAngle) return false; // 시야각 밖이면 감지 불가
 
-	return DotPro > CosAngle;
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(Echo);
+
+	FVector EyesLocation = EnemyLocation + FVector(0.0f, 0.0f, 60.0f);
+
+	bool BHit = GetWorld()->LineTraceSingleByChannel(HitResult, EyesLocation, TargetLocation, ECC_WorldStatic, Params);
+
+	if (BHit)
+	{
+		float HitDistance = FVector::Distance(HitResult.ImpactPoint, TargetLocation);
+		if (HitDistance > 100.0f)
+		{
+			DrawDebugLine(GetWorld(), EyesLocation, HitResult.ImpactPoint, FColor::Yellow, false, -1.0f);
+			return false;
+		}
+	}
+
+
+
+	return true;
 }
 
 
@@ -269,7 +290,7 @@ FVector UEchoEnemyBehaviorComponent::FindPeekPoint()
 	for (AActor* PP : PeekPoints)
 	{
 		float DistToPlayer = FVector::Dist2D(PP->GetActorLocation(), GetPlayerLocation());
-		if (DistToPlayer >= 700.0f && DistToPlayer <= 2000.0f)
+		if (DistToPlayer >= 400.0f && DistToPlayer <= 2000.0f)
 		{
 			// 2. 적(자신)과의 거리 계산 
 			// (단순 크기 비교용이므로 연산이 무거운 루트계산(Dist) 대신 제곱계산(DistSquared)을 사용하여 최적화)
@@ -411,7 +432,7 @@ void UEchoEnemyBehaviorComponent::CheckIfStuck(float DeltaTime)
 			FVector RightVector = FVector::CrossProduct(ToDestination, FVector::UpVector);
 
 			float Side = (FMath::RandBool()) ? 1.0f : -1.0f;
-			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 300.0f);
+			FVector DetourPoint = Echo->GetActorLocation() + (RightVector * Side * 1300.0f);
 	
 
 	
@@ -439,7 +460,7 @@ bool UEchoEnemyBehaviorComponent::RequestMoveToInternal(const FVector& Destinati
 	return Result.Code != EPathFollowingRequestResult::Failed;
 }
 
-FVector UEchoEnemyBehaviorComponent::IsLightLoc()
+FVector UEchoEnemyBehaviorComponent::IsLightLoc() const
 {
 	return LightLocation;
 }

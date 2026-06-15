@@ -16,6 +16,9 @@ void USuspectStateComponent::OnStateEnter()
 	UE_LOG(LogTemp, Log, TEXT("[의심 시작]"));
 
 	CurrentRandomChangeSuspectToAmbush = FMath::RandRange(0, 10);
+
+	EnemyBrain->RequestMoveTo(EnemyBrain->IsLightLoc());
+
 }
 
 void USuspectStateComponent::OnStateUpdate(float Delta)
@@ -34,6 +37,41 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 		EnemyBrain->ChangeState(EFSMState::Chase);
 		UE_LOG(LogTemp, Log, TEXT("[의심 시작] 체이스 시작"));
 		return;
+	}
+	if (!EnemyBrain->IsNavMoving())
+	{
+		// --- [도착 후: 플레이어 방향을 바라보는 로직] ---
+
+		FVector PlayerLoc = EnemyBrain->GetPlayerLocation();
+		FVector EnemyLoc = EchoEnemy->GetActorLocation();
+
+		// 플레이어를 향하는 방향 벡터 계산 (목적지 - 내 위치)
+		FVector DirectionToPlayer = PlayerLoc - EnemyLoc;
+
+		// ★ 중요: AI의 몸이 위아래로 기울어지는 것을 방지 (Z축 무시)
+		DirectionToPlayer.Z = 0.0f;
+
+		// 방향 벡터를 회전값(Rotator)으로 변환
+		FRotator TargetRotation = DirectionToPlayer.Rotation();
+		FRotator CurrentRotation = EchoEnemy->GetActorRotation();
+
+		// 이전의 '두리번거리기'에서 배운 RInterpTo를 사용하여 부드럽게 째려봅니다.
+		// (마지막 값 4.0f를 키우면 휙! 돌아보고, 줄이면 천천~히 돌아봅니다)
+		FRotator SmoothRot = FMath::RInterpTo(CurrentRotation, TargetRotation, Delta, 2.0f);
+		EchoEnemy->SetActorRotation(SmoothRot);
+
+		// --------------------------------------------------
+
+		// [타이머 추가 권장]
+		// 영원히 플레이어 쪽만 쳐다보고 있으면 AI가 멈춰버리므로,
+		// 헤더에 StareTimer(예: 3.0f)를 선언해두고 3초 뒤에 Search(수색)나 Patrol로 넘기세요.
+		/*
+		StareTimer -= Delta;
+		if (StareTimer <= 0.0f)
+		{
+			EnemyBrain->ChangeState(EFSMState::Search); // 주변을 샅샅이 뒤지기 시작
+		}
+		*/
 	}
 	if (EnemyBrain->IsLightDetected())
 	{
@@ -58,38 +96,35 @@ void USuspectStateComponent::OnStateUpdate(float Delta)
 			}
 		}
 
-		// ★ 핵심 보정 2: AI가 굳어버리는 현상 해결
-		// 길찾기에 성공해서 AI가 '실제로 이동 중(NavMoving)'일 때만 return으로 하위 로직을 차단합니다.
-		// 만약 길이 없어 멈췄거나, 빛 근처에 도착했다면 return하지 않고 자연스럽게 아래의 '두리번거리기' 로직으로 넘어갑니다.
 		if (EnemyBrain->IsNavMoving())
 		{
 			return;
 		}
 	}
 
-
 	if (LookingTime > 0.0f)
 	{
 		LookingTime -= Delta;
+		LookingForwardTime -= Delta;
 
-		if (LookingForwardTime >= 0.0f)
-		{
-			LookingForwardTime -= Delta;
-		}
-		else
+		// 1. 목표 각도(TargetRotation) 갱신: 2초마다 한 번씩 실행
+		if (LookingForwardTime <= 0.0f && !EnemyBrain->IsNavMoving())
 		{
 			FRotator CurrentRot = EchoEnemy->GetActorRotation();
 
-			int32 Random = FMath::RandRange(-45, 45);
+			// 도리도리 각도
+			float RandomYawOffset = FMath::RandRange(LookingAngle * -1, LookingAngle);
 
 			RotationToTarget = CurrentRot;
+			// 핵심: 기존 각도에 랜덤 오프셋을 '더해줍니다'
+			RotationToTarget.Yaw += RandomYawOffset;
 
-			RotationToTarget.Yaw = Random;
-
-			EchoEnemy->SetActorRotation(FMath::RInterpTo(EchoEnemy->GetActorRotation(), RotationToTarget, Delta, 5.0f));
-
-			LookingForwardTime = 2.0f;
+			LookingForwardTime = 2.0f; // 타이머 리셋
 		}
+
+		// 2. 실제 회전 적용: 타이머 안쪽이 아니라 바깥으로 빼서 **매 프레임(틱)마다** 실행되게 합니다.
+		FRotator SmoothRot = FMath::RInterpTo(EchoEnemy->GetActorRotation(), RotationToTarget, Delta, 3.0f);
+		EchoEnemy->SetActorRotation(SmoothRot);
 	}
 	else
 	{
