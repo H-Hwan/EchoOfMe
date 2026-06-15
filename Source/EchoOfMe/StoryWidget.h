@@ -12,6 +12,8 @@
 class UStorySequence;
 struct FStoryPage;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStoryWidgetFinished);
+
 
 UCLASS()
 class ECHOOFME_API UStoryWidget : public UUserWidget
@@ -22,6 +24,13 @@ public:
 	// 컴포넌트가 호출하는 용도
 	UFUNCTION(BlueprintImplementableEvent, Category = "Story")
 	void PlaySequence(UStorySequence* Sequence);
+
+	// 시퀀스 종료 방송
+	UPROPERTY(BlueprintAssignable, Category = "Story")
+	FOnStoryWidgetFinished OnStoryFinished;
+
+	UFUNCTION(BlueprintCallable, Category = "Story")
+	void NotifyStoryFinished();
 
 	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story")
 	// TArray<FStoryPage> Pages;

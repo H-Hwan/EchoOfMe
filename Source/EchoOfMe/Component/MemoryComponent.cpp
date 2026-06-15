@@ -55,6 +55,7 @@ void UMemoryComponent::HandleMemoryCollected(const UMemoryFragmentDefinition* De
 
 
 void UMemoryComponent::HandleFlashbackFinished() {
+	UE_LOG(LogTemp, Warning, TEXT("[진단] 회수음 종료 콜백 진입"));
 	if (ActiveFlashback) {
 		ActiveFlashback->OnAudioFinished.RemoveAll(this);
 		ActiveFlashback = nullptr;
@@ -62,8 +63,13 @@ void UMemoryComponent::HandleFlashbackFinished() {
 
 	// 회수음이 끝났으니 보관해둔 조각의 스토리 컷 시작 신호
 	if (PendingStoryDefinition) {
+		UE_LOG(LogTemp, Warning, TEXT("[진단] 브로드캐스트, Story=%s"),
+			PendingStoryDefinition->Story ? TEXT("있음") : TEXT("NULL"));
 		UMemoryFragmentDefinition* Def = PendingStoryDefinition;
 		PendingStoryDefinition = nullptr;
 		OnFlashbackFinished.Broadcast(Def);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("[진단] PendingStoryDefinition NULL"));
 	}
 }

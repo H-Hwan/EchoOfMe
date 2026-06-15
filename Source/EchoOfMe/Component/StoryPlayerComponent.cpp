@@ -73,6 +73,7 @@ void UStoryPlayerComponent::BindEndingDoors() {
 
 void UStoryPlayerComponent::HandleFlashbackFinished(const UMemoryFragmentDefinition* Definition)
 {
+	UE_LOG(LogTemp, Warning, TEXT("[진단] StoryPlayer 수신"));
 	// 컷이 없는 조각이면 무시
 	if (!Definition || !Definition->Story) return;
 	if (!StoryWidgetClass) return;
@@ -112,7 +113,14 @@ void UStoryPlayerComponent::PlayStory(UStorySequence* Sequence) {
 
 	ActiveStoryWidget = CreateWidget<UStoryWidget>(PC, StoryWidgetClass);
 	if (ActiveStoryWidget) {
-		// AddToViewport / Pause / 페이지 진행 / NextLevelName 라우팅은 위젯 BP가 처리
+		ActiveStoryWidget->OnStoryFinished.AddDynamic(this, &UStoryPlayerComponent::HandleActiveStoryFinished);
 		ActiveStoryWidget->PlaySequence(Sequence);
 	}
+}
+
+void UStoryPlayerComponent::HandleActiveStoryFinished() {
+	if (ActiveStoryWidget) {
+		ActiveStoryWidget->OnStoryFinished.RemoveDynamic(this, &UStoryPlayerComponent::HandleActiveStoryFinished);
+	}
+	OnStoryFinished.Broadcast();
 }

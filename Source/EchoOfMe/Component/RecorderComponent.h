@@ -10,6 +10,7 @@ class UInventoryItemDefinition;
 class URecorderItemDefinition;
 class UAudioComponent;
 class USoundBase;
+class UStorySequence;
 
 /*	[회수 7초 시퀀스의 단계]
 	C++: 시퀀스의 시간표와 상태만 관리
@@ -170,6 +171,12 @@ private:
 	void ForceFlashlight(bool bOn) const;
 	void PlayLockedNoise();
 	void ClearRecoverySequenceTimers();
+
+	void PlayCollectStory();
+	void EquipRecorder();
+
+	UFUNCTION()
+	void HandleCollectStoryFinished();
 
 
 private:

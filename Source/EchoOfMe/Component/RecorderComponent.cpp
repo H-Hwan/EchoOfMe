@@ -6,7 +6,9 @@
 #include "Component/InventoryComponent.h"
 #include "Component/EquipmentComponent.h"
 #include "Component/FlashlightComponent.h"
+#include "Component/StoryPlayerComponent.h"
 #include "Data/RecorderItemDefinition.h"
+#include "Data/StorySequence.h"
 #include "EchoGameManager.h"
 #include "Player/EchoPlayerController.h"
 
@@ -78,7 +80,7 @@ void URecorderComponent::HandleRecorderCollected(URecorderItemDefinition* Defini
 		GM->SetLevelPhase(ELevelPhase::Return);
 	}
 
-	StartRecoverySequence();
+	PlayCollectStory();
 }
 
 
@@ -361,4 +363,51 @@ void URecorderComponent::HandleAudioFinished() {
 	}
 
 	OnPlaybackFinished.Broadcast();
+}
+
+
+void URecorderComponent::PlayCollectStory() {
+	UStoryPlayerComponent* StoryPlayer = GetOwner()->FindComponentByClass<UStoryPlayerComponent>();
+	UStorySequence* Story = RecorderDefinition ? RecorderDefinition->CollectStory : nullptr;
+
+	// 스토리나 재생기가 없으면 연출 없이 바로 장착 (안전장치 — 소프트락 방지)
+	if (!StoryPlayer || !Story) {
+		EquipRecorder();
+		return;
+	}
+
+	// 회수 연출 중 수동 재생 차단 유지
+	bRecoverySequencePlaying = true;
+
+	// 스토리 종료 1회 수신 → 장착
+	StoryPlayer->OnStoryFinished.AddDynamic(this, &URecorderComponent::HandleCollectStoryFinished);
+
+	// 딜레이 없이 즉시 컷 재생 (기억조각과 달리 회수음 대기 없음)
+	StoryPlayer->PlayStory(Story);
+}
+
+void URecorderComponent::HandleCollectStoryFinished() {
+	if (UStoryPlayerComponent* StoryPlayer = GetOwner()->FindComponentByClass<UStoryPlayerComponent>()) {
+		StoryPlayer->OnStoryFinished.RemoveDynamic(this, &URecorderComponent::HandleCollectStoryFinished);
+	}
+	EquipRecorder();
+}
+
+void URecorderComponent::EquipRecorder() {
+	bHasRecorder = true;
+	bRecoverySequencePlaying = false;
+
+	UE_LOG(LogTemp, Log, TEXT("[Recorder] 스토리 종료 / 녹음기 해금 + 장착"));
+
+	// 1회차 트랙 자동 재생 (기존 FinishRecoverySequence 동작 유지 — 불필요하면 이 줄 삭제)
+	PlayCurrentStage();
+
+	// 왼손에 녹음기 장착
+	if (APlayerController* PC = Cast<APlayerController>(GetOwner())) {
+		if (APawn* Pawn = PC->GetPawn()) {
+			if (UEquipmentComponent* Equipment = Pawn->FindComponentByClass<UEquipmentComponent>()) {
+				Equipment->RequestRecorder();
+			}
+		}
+	}
 }

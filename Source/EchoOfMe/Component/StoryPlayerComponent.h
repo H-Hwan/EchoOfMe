@@ -14,6 +14,8 @@ class UStorySequence;
 class AEndingDoorActor;
 enum class EEndingType : uint8;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStoryFinished);
+
 
 /*	[스토리 컷 재생기]
 	- 기억조각 회수음 종료 → 해당 조각의 스토리 컷
@@ -33,6 +35,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Story")
 	void PlayStory(UStorySequence* Sequence);
 
+	UPROPERTY(BlueprintAssignable, Category = "Story")
+	FOnStoryFinished OnStoryFinished;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -49,6 +54,9 @@ protected:
 	// 재생할 스토리 위젯 클래스
 	UPROPERTY(EditDefaultsOnly, Category="Story")
 	TSubclassOf<UStoryWidget> StoryWidgetClass;
+
+	UFUNCTION()
+	void HandleActiveStoryFinished();
 
 private:
 	// 레벨의 엔딩 문들을 찾아 OnEndingDoorOpened 구독

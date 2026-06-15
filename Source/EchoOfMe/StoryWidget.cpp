@@ -6,6 +6,10 @@
 #include "Components/AudioComponent.h"
 
 
+void UStoryWidget::NotifyStoryFinished() {
+	OnStoryFinished.Broadcast();
+}
+
 // bool UStoryWidget::GetPage(int32 Index, FStoryPage& OutPage) const
 // {
 // 	if (Pages.IsValidIndex(Index))
