@@ -422,21 +422,21 @@ bool UEchoEnemyBehaviorComponent::RequestMoveToInternal(const FVector& Destinati
 	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
 	return Result.Code != EPathFollowingRequestResult::Failed;
 	//-----------------------------
-	AAIController* AIController = Cast<AAIController>(Echo->GetController());
-	LastDestination = Destination;
-	if (!AIController) return false;
-
-	const float Radius = (InAcceptanceRadius > 0.0f) ? InAcceptanceRadius : AcceptanceRadius;
-
-	FAIMoveRequest Moveq;
-
-	Moveq.SetGoalLocation(Destination);
-	Moveq.SetAcceptanceRadius(Radius);
-	Moveq.SetAllowPartialPath(false);  // ✅ false로 변경
-	Moveq.SetUsePathfinding(true);
-	Moveq.SetProjectGoalLocation(true);
-
-	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
-
-	return Result.Code != EPathFollowingRequestResult::Failed;
+//	AAIController* AIController = Cast<AAIController>(Echo->GetController());
+//	LastDestination = Destination;
+//	if (!AIController) return false;
+//
+//	//const float Radius = (InAcceptanceRadius > 0.0f) ? InAcceptanceRadius : AcceptanceRadius;
+//
+//	FAIMoveRequest Moveq;
+//
+//	Moveq.SetGoalLocation(Destination);
+//	Moveq.SetAcceptanceRadius(Radius);
+//	Moveq.SetAllowPartialPath(false);  // ✅ false로 변경
+//	Moveq.SetUsePathfinding(true);
+//	Moveq.SetProjectGoalLocation(true);
+//
+//	const FPathFollowingRequestResult Result = AIController->MoveTo(Moveq);
+//
+//	return Result.Code != EPathFollowingRequestResult::Failed;
 }

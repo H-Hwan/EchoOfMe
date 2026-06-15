@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; Steam Audio Unreal Engine Integration  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/steamaudio.css?v=f5709e29" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=7f41d439"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User’s Guide" href="guide.html" />
+    <link rel="prev" title="Steam Audio Unreal Engine Integration" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/steam-audio-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Unreal Engine Integration</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-steam-audio-to-your-unreal-engine-project">Add Steam Audio to your Unreal Engine project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spatialize-an-audio-cue">Spatialize an Audio Cue</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide.html">User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build-instructions.html">Build Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Steam Audio Unreal Engine Integration</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>Steam Audio requires <strong>Unreal Engine 4.27</strong> or later.</p>
+<p>The Steam Audio Unreal Engine integration supports the following platforms:</p>
+<ul class="simple">
+<li><p>Windows 7 or later (32-bit and 64-bit)</p></li>
+<li><p>Linux (64-bit, tested with Ubuntu 18.04 LTS)</p></li>
+<li><p>macOS 10.7 or later (64-bit Intel)</p></li>
+<li><p>Android 5.0 or later (32-bit ARM, 64-bit ARM, 32-bit Intel)</p></li>
+<li><p>iOS 11.0 or later (64-bit ARM)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Steam Audio Unreal Engine integration currently does not ship with macOS binaries. However, opening a project containing the Steam Audio plugin in the Unreal Editor will automatically trigger a rebuild of the plugin for macOS, after which the plugin should work normally on macOS systems. This issue will be resolved in a future patch release of Steam Audio.</p>
+</div>
+</section>
+<section id="add-steam-audio-to-your-unreal-engine-project">
+<h2>Add Steam Audio to your Unreal Engine project<a class="headerlink" href="#add-steam-audio-to-your-unreal-engine-project" title="Link to this heading"></a></h2>
+<p>To add Steam Audio to your Unreal project:</p>
+<ol class="arabic simple">
+<li><p>Download the latest version of the Steam Audio Unreal Engine integration: <code class="docutils literal notranslate"><span class="pre">steamaudio_unreal.zip</span></code>. Extract the contents of this file to any directory of your choosing.</p></li>
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">unreal/Plugins/SteamAudio</span></code> into the <code class="docutils literal notranslate"><span class="pre">Plugins</span></code> subfolder of your project, in order to install Steam Audio for your project. Delete the Steam Audio plugin bundled with Unreal Engine. It is located at <code class="docutils literal notranslate"><span class="pre">Engine/Plugins/Runtime/Steam/SteamAudio</span></code> inside the folder where Unreal Engine has been installed.</p></li>
+<li><p>In Unreal’s main menu, choose <strong>Edit</strong> &gt; <strong>Plugins</strong>.</p></li>
+<li><p>In the Plugins window, under <strong>Audio</strong>, check <strong>Enabled</strong> in the entry for Steam Audio.</p></li>
+<li><p>In the main menu, choose <strong>Edit</strong> &gt; <strong>Project Settings</strong>.</p></li>
+<li><p>Under <strong>Platforms</strong> &gt; <strong>Windows</strong>, set <strong>Spatialization Plugin</strong> to <strong>Steam Audio Spatialization</strong>, <strong>Occlusion Plugin</strong> to <strong>Steam Audio Occlusion</strong>, and <strong>Reverb Plugin</strong> to <strong>Steam Audio Reverb</strong>. Repeat this for every platform you intend to use Steam Audio on.</p></li>
+</ol>
+<img alt="_images/plugins.png" src="_images/plugins.png" />
+</section>
+<section id="spatialize-an-audio-cue">
+<h2>Spatialize an Audio Cue<a class="headerlink" href="#spatialize-an-audio-cue" title="Link to this heading"></a></h2>
+<p>Once Steam Audio is added to your project, you can spatialize any Audio Component:</p>
+<ol class="arabic simple">
+<li><p>Select any actor that contains an Audio component.</p></li>
+<li><p>In the Details tab, select the Audio component.</p></li>
+</ol>
+<img alt="_images/audio_spatialize.png" src="_images/audio_spatialize.png" />
+<ol class="arabic simple" start="3">
+<li><p>Under <strong>Attenuation</strong>, check <strong>Override Attenuation</strong>.</p></li>
+<li><p>Under <strong>Attenuation (Spatialization)</strong>, set <strong>Spatialization Method</strong> to <strong>Binaural</strong>.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Steam Audio Unreal Engine Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="guide.html" class="btn btn-neutral float-right" title="User’s Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023, Valve Corporation.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
