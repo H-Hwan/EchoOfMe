@@ -7,7 +7,7 @@
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 #include "Enemy/ChaseStateComponent.h"
 #include "Enemy/ResonanceSensorComponent.h"
-#include "EchoCatchComponent.h"
+#include "Enemy/EchoCatchComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -77,7 +77,7 @@ void AEchoEnemy::Tick(float DeltaTime)
 void AEchoEnemy::Destroyed()
 {
 	FVector DeathLocation = GetActorLocation();
-	UE_LOG(LogTemp, Error, TEXT("🚨 [EchoEnemy] 몬스터가 파괴(증발)되었습니다! 마지막 위치: %s"), *DeathLocation.ToString());
+	UE_LOG(LogTemp, Error, TEXT("[EchoEnemy] 몬스터가 파괴(증발)되었습니다! 마지막 위치: %s"), *DeathLocation.ToString());
 
 	Super::Destroyed(); // 원래 엔진이 하던 파괴 작업 마저 실행
 
@@ -110,14 +110,5 @@ void AEchoEnemy::HandlePlayerCaught()
 {
 	// 예: BehaviorComponent의 상태를 정지 상태나 덮치기 상태로 강제 전환
 	// BehaviorComp->ChangeState(EFSMState::Attack);
-
-	TArray<AActor*> Flags;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("Flag_PlayerTeleprt"), Flags);
-	if (Flags.Num() == 0) return;
-
-	for (AActor* A : Flags)
-	{
-		YoYourDead.Broadcast(A->GetActorLocation(), true);
-	
-	}
+	EnemyBrain->ChangeState(EFSMState::Lost);
 }
