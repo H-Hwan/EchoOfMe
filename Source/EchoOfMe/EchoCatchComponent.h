@@ -22,7 +22,9 @@ class ECHOOFME_API UEchoCatchComponent : public UActorComponent {
 
 public:
 	UEchoCatchComponent();
-
+	// 잡힘 방송
+	UPROPERTY(BlueprintAssignable, Category = "Catch")
+	FOnPlayerCaught OnPlayerCaught;
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -43,9 +45,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Catch")
 	void OnPlayerCaughtBP();
 
-	// 잡힘 방송
-	UPROPERTY(BlueprintAssignable, Category = "Catch")
-	FOnPlayerCaught OnPlayerCaught;
+
 
 private:
 	UFUNCTION()

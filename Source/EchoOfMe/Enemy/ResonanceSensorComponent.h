@@ -47,20 +47,21 @@ enum class EResonanceCue : uint8 {
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSenseLevelChanged, ESenseChannel, Channel, ESenseLevel, Level);
 
 // 감지 관련 컴포넌트
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ECHOOFME_API UResonanceSensorComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UResonanceSensorComponent();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -187,6 +188,7 @@ private:
 	UFUNCTION() void HandleRecorderPlaybackChanged(int32 NewCount);    // 소리 +30 (수동 재생)
 	UFUNCTION() void HandleRecordingFinished();                        // 공명 +40 (완청)
 	UFUNCTION() void HandleNoiseEmitted(float Amount, FVector Location); // 문/물건/숨기
+	UFUNCTION() void NaturalPhenomenonSensor(FVector FlashLightHitLocation);
 
 	void TryBindRecorder();
 

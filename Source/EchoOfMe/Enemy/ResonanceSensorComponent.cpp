@@ -146,13 +146,6 @@ void UResonanceSensorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 }
 
 
-void UResonanceSensorComponent::LightSensorActivate()
-{
-
-
-
-}
-
 
 void UResonanceSensorComponent::SoundSensorActivate(ESoundCue Cue, FVector NoiseLocation)
 {
@@ -165,7 +158,7 @@ void UResonanceSensorComponent::SoundSensorActivate(ESoundCue Cue, FVector Noise
 	case ESoundCue::ItemDrop:       Amount = ItemDropAmount;       break;
 	case ESoundCue::HideFail:       Amount = HideFailAmount;       break;
 	case ESoundCue::RecorderManual: Amount = RecorderManualAmount; break;
-	}
+	} 
 
 	AddSoundNoise(Amount, NoiseLocation);
 }
