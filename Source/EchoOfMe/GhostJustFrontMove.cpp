@@ -65,14 +65,21 @@ void AGhostJustFrontMove::Tick(float DeltaTime)
 
 void AGhostJustFrontMove::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 이미 발동되었거나 밟은 사람이 플레이어가 아니면 무시
-	if (bIsTriggered || !OtherActor->IsA(ACharacter::StaticClass())) return;
+	if (bIsTriggered || !OtherActor->IsA(APawn::StaticClass())) return;
 
-	// 이벤트 발동
 	bIsTriggered = true;
-
-	// 콜리전 비활성화 (두 번 다시 밟히지 않도록)
 	TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	UE_LOG(LogTemp, Warning, TEXT("호러 이벤트 발동! 귀신이 지나갑니다."));
+	// 1. 일단 콜리전이 제대로 밟혔는지 확인하는 로그 (노란색)
+	UE_LOG(LogTemp, Warning, TEXT("✅ [호러 이벤트] 플레이어가 트리거를 밟았습니다!"));
+
+	// 2. 에디터에서 액터 할당을 깜빡했는지 검사하는 로그 (빨간색 에러)
+	if (!SpookyActor)
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ [에러] SpookyActor(지나갈 귀신)가 에디터에서 지정되지 않았습니다!"));
+	}
+	if (!DestinationPoint)
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ [에러] DestinationPoint(도착 지점)가 에디터에서 지정되지 않았습니다!"));
+	}
 }
