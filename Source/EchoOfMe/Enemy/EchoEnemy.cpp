@@ -83,8 +83,8 @@ void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
 {
 	if(bLockOn)
 	{
-		GetCharacterMovement()->MaxAcceleration = 500.0f;
-		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+		GetCharacterMovement()->MaxAcceleration = 400.0f;
+		GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 	}
 	else
 	{
