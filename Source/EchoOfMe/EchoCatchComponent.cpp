@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Enemy/EchoCatchComponent.h"
+#include "EchoCatchComponent.h"
 
 #include "Enemy/ResonanceSensorComponent.h"   // ESenseLevel / GetThreatLevel
 #include "Player/EchoPlayerController.h"
