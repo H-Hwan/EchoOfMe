@@ -146,6 +146,7 @@ void UResonanceSensorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 }
 
 
+
 void UResonanceSensorComponent::SoundSensorActivate(ESoundCue Cue, FVector NoiseLocation)
 {
 	if (!IsWithinHearingRange(NoiseLocation)) return;
@@ -157,7 +158,7 @@ void UResonanceSensorComponent::SoundSensorActivate(ESoundCue Cue, FVector Noise
 	case ESoundCue::ItemDrop:       Amount = ItemDropAmount;       break;
 	case ESoundCue::HideFail:       Amount = HideFailAmount;       break;
 	case ESoundCue::RecorderManual: Amount = RecorderManualAmount; break;
-	}
+	} 
 
 	AddSoundNoise(Amount, NoiseLocation);
 }
@@ -329,7 +330,7 @@ void UResonanceSensorComponent::NaturalPhenomenonSensor(FVector FlashLightHitLoc
 	if (DotResult <= CosAngle) return;
 
 	FHitResult HitResult;
-
+	
 	FCollisionQueryParams Param;
 
 	Param.AddIgnoredActor(EchoEnemy);
@@ -343,6 +344,6 @@ void UResonanceSensorComponent::NaturalPhenomenonSensor(FVector FlashLightHitLoc
 	}
 
 	return;
-
+	
 }
 

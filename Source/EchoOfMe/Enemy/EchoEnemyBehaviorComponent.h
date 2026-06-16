@@ -16,6 +16,7 @@ class UAmbushStateComponent;
 class AEchoEnemy;
 class UFlashlightComponent;
 
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLightNoise,bool,bIsShock);
 
 
@@ -76,7 +77,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	
+
 	UFSMStateBase* GetStateComponent(EFSMState NewState);
 
 	UFUNCTION(BlueprintCallable, Category = "State")
