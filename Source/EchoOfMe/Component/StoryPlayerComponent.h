@@ -58,6 +58,14 @@ protected:
 	UFUNCTION()
 	void HandleActiveStoryFinished();
 
+	// 레벨 시작 시 1회 재생할 프롤로그 컷 (비워두면 재생 안 함)
+	UPROPERTY(EditDefaultsOnly, Category = "Story")
+	TObjectPtr<UStorySequence> PrologueStory;
+
+	// 프롤로그 재생까지 지연 시간 (BeginPlay 경합 회피)
+	UPROPERTY(EditDefaultsOnly, Category = "Story", meta = (ClampMin = "0.0"))
+	float PrologueDelay = 0.1f;
+
 private:
 	// 레벨의 엔딩 문들을 찾아 OnEndingDoorOpened 구독
 	void BindEndingDoors();
@@ -73,4 +81,8 @@ private:
 	// 바인딩한 엔딩 문들 >> EndPlay 해제
 	UPROPERTY()
 	TArray<TObjectPtr<AEndingDoorActor>> BoundDoors;
+
+	void PlayPrologue();
+
+	FTimerHandle PrologueTimerHandle;
 };

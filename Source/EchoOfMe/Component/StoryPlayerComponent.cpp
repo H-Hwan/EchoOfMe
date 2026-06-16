@@ -35,6 +35,14 @@ void UStoryPlayerComponent::BeginPlay()
 
 	// 엔딩 문 → 엔딩 컷
 	BindEndingDoors();
+
+	// 프롤로그 예약
+	if (PrologueStory) {
+		if (UWorld* World = GetWorld()) {
+			World->GetTimerManager().SetTimer(
+				PrologueTimerHandle, this, &UStoryPlayerComponent::PlayPrologue, PrologueDelay, false);
+		}
+	}
 }
 
 
@@ -51,6 +59,10 @@ void UStoryPlayerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		}
 	}
 	BoundDoors.Reset();
+
+	if (UWorld* World = GetWorld()) {
+		World->GetTimerManager().ClearTimer(PrologueTimerHandle);
+	}
 
 	Super::EndPlay(EndPlayReason);
 }
@@ -123,4 +135,10 @@ void UStoryPlayerComponent::HandleActiveStoryFinished() {
 		ActiveStoryWidget->OnStoryFinished.RemoveDynamic(this, &UStoryPlayerComponent::HandleActiveStoryFinished);
 	}
 	OnStoryFinished.Broadcast();
+}
+
+
+void UStoryPlayerComponent::PlayPrologue() {
+	// PlayStory가 위젯 생성 / Pause / NextLevelName 라우팅까지 위임 처리
+	PlayStory(PrologueStory);
 }
