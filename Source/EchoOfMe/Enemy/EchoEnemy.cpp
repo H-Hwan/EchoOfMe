@@ -48,7 +48,11 @@ void AEchoEnemy::BeginPlay()
 		CatchComponent->OnPlayerCaught.AddDynamic(this, &AEchoEnemy::HandlePlayerCaught);
 	}
 
-	EnemyBrain = GetOwner()->FindComponentByClass<UEchoEnemyBehaviorComponent>();
+	EnemyBrain = FindComponentByClass<UEchoEnemyBehaviorComponent>();
+	if (!EnemyBrain)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[EchoEnemy] EnemyBrain component not found on %s"), *GetNameSafe(this));
+	}
 }
 
 // Called every frame
@@ -113,6 +117,12 @@ void AEchoEnemy::HandlePlayerCaught()
 	UE_LOG(LogTemp, Error,
 		TEXT("EnemyBrain=%s"),
 		*GetNameSafe(EnemyBrain));
+
+	if (!EnemyBrain)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[EchoEnemy] Cannot handle player caught: EnemyBrain is null."));
+		return;
+	}
 
 	FVector ToHere = EnemyBrain->PickTeleportToNewPoint();
 

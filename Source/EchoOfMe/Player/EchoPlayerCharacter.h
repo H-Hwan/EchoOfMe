@@ -10,6 +10,7 @@ class UAnimMontage;
 class USpringArmComponent;
 class UCameraComponent;
 class UStaticMeshComponent;
+class USceneComponent;
 
 class UListeningComponent;
 class UFlashlightComponent;
@@ -109,6 +110,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> CameraBoom;
+
+	UPROPERTY(EditAnywhere, Category="Components|Camera|Attachment", meta=(DisplayName="Camera Boom Parent Socket"))
+	FName CameraBoomParentSocket = NAME_None;
 
 	// 시선 변경 입력 바인딩
 	void Look(const FInputActionValue& Value);
@@ -222,6 +226,7 @@ public:
 
 private:
 	void ForceCharacterComponentMobility();
+	void AttachComponentToCharacterMesh(USceneComponent* Component, FName ParentSocket);
 	void UpdateFlashlightAim(float DeltaTime);
 
 	//---
