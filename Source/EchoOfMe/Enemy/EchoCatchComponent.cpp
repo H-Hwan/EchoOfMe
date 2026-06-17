@@ -9,10 +9,13 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"
-
+#include "EchoEnemy.h"
 
 UEchoCatchComponent::UEchoCatchComponent() {
 	PrimaryComponentTick.bCanEverTick = false;
+
+
+
 }
 
 
@@ -32,16 +35,14 @@ void UEchoCatchComponent::BeginPlay() {
 	CatchSphere->SetRelativeLocation(CatchOffset);
 	CatchSphere->InitSphereRadius(CatchRadius);
 
+	CatchSphere->RegisterComponent();
 	CatchSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CatchSphere->SetCollisionObjectType(ECC_WorldDynamic);
 	CatchSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CatchSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	CatchSphere->SetGenerateOverlapEvents(true);
-
 	CatchSphere->OnComponentBeginOverlap.AddDynamic(this, &UEchoCatchComponent::OnCatchBeginOverlap);
 	CatchSphere->OnComponentEndOverlap.AddDynamic(this, &UEchoCatchComponent::OnCatchEndOverlap);
-
-	CatchSphere->RegisterComponent();
 }
 
 
@@ -59,13 +60,25 @@ void UEchoCatchComponent::OnCatchBeginOverlap(UPrimitiveComponent* Comp, AActor*
 	if (bCaughtPending) return;
 
 	const APawn* Pawn = Cast<APawn>(Other);
-	if (!Pawn) return;
+	if (!Pawn)
+	{
+		UE_LOG(LogTemp, Error, TEXT("--> 실패: 닿은 액터가 Pawn(플레이어)이 아닙니다!"));
+		return;
+	}
 
 	// 플레이어 컨트롤러일 때만 — 자기/다른 잔향(AIController)은 무시
 	AEchoPlayerController* PC = Cast<AEchoPlayerController>(Pawn->GetController());
-	if (!PC) return;
+	if (!PC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("--> 실패: 조종 중인 컨트롤러가 EchoPlayerController가 아닙니다!"));
+		return;
+	}
 
-	if (!CanCatchNow()) return;
+	if (!CanCatchNow())
+	{
+		UE_LOG(LogTemp, Error, TEXT("--> 실패: CanCatchNow 조건 불만족 (아마 Alert 상태가 아님)"));
+		return;
+	}
 
 	bCaughtPending = true;
 

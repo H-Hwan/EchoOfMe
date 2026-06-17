@@ -15,7 +15,7 @@ class ULostStateComponent;
 class UAmbushStateComponent;
 class AEchoEnemy;
 class UFlashlightComponent;
-
+	
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLightNoise,bool,bIsShock);
 
