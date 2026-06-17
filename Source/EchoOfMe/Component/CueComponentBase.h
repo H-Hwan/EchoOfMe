@@ -66,8 +66,12 @@ private:
 	UPROPERTY() TObjectPtr<APawn> CachedPlayer;
 
 	bool bRevealed = false;
+	bool bAmbientAudible = false;
 
 	UAudioComponent* CreateCueAudio(USoundBase* Sound, bool bShouldAutoActivate);
+	void RefreshPlayerCache();
+	bool ComputeIsInRange() const;
 	bool ComputeShouldReveal() const;
 	void SetRevealed(bool bNewRevealed);
+	void SetAmbientAudible(bool bNewAmbientAudible);
 };

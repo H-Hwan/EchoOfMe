@@ -24,16 +24,16 @@ void UCueComponentBase::BeginPlay()
 
 	ResolveCueData();
 
-	CachedPlayer = UGameplayStatics::GetPlayerPawn(this, 0);
-	if (CachedPlayer)
-	{
-		ListeningComp = CachedPlayer->FindComponentByClass<UListeningComponent>();
-	}
+	RefreshPlayerCache();
 
 	// 상시 재생
-	if (AmbientSound) AmbientAudio = CreateCueAudio(AmbientSound, true);
+	if (AmbientSound) AmbientAudio = CreateCueAudio(AmbientSound, false);
 	// 듣기 시 페이드 인
 	if (ListeningSound) ListeningAudio = CreateCueAudio(ListeningSound, false);
+
+	const bool bShouldReveal = ComputeShouldReveal();
+	SetRevealed(bShouldReveal);
+	SetAmbientAudible(ComputeIsInRange() && !bShouldReveal);
 }
 
 
@@ -51,13 +51,11 @@ void UCueComponentBase::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!ListeningComp)
-	{
-		if (!CachedPlayer) CachedPlayer = UGameplayStatics::GetPlayerPawn(this, 0);
-		if (CachedPlayer) ListeningComp = CachedPlayer->FindComponentByClass<UListeningComponent>();
-	}
+	RefreshPlayerCache();
 
-	SetRevealed(ComputeShouldReveal());
+	const bool bShouldReveal = ComputeShouldReveal();
+	SetRevealed(bShouldReveal);
+	SetAmbientAudible(ComputeIsInRange() && !bShouldReveal);
 }
 
 
@@ -79,10 +77,20 @@ UAudioComponent* UCueComponentBase::CreateCueAudio(USoundBase* Sound, bool bShou
 }
 
 
-bool UCueComponentBase::ComputeShouldReveal() const
+void UCueComponentBase::RefreshPlayerCache()
 {
-	if (!ListeningComp || !CachedPlayer)	return false;
-	if (!ListeningComp->IsListening())		return false;
+	APawn* CurrentPlayer = UGameplayStatics::GetPlayerPawn(this, 0);
+	if (CurrentPlayer == CachedPlayer && IsValid(CachedPlayer) && IsValid(ListeningComp)) return;
+
+	CachedPlayer = CurrentPlayer;
+	ListeningComp = IsValid(CachedPlayer) ? CachedPlayer->FindComponentByClass<UListeningComponent>() : nullptr;
+}
+
+
+bool UCueComponentBase::ComputeIsInRange() const
+{
+	if (!IsValid(CachedPlayer))			return false;
+
 	// 거리 무시
 	if (CueRange <= 0.f)					return true;
 
@@ -94,6 +102,15 @@ bool UCueComponentBase::ComputeShouldReveal() const
 }
 
 
+bool UCueComponentBase::ComputeShouldReveal() const
+{
+	if (!IsValid(ListeningComp))			return false;
+	if (!ListeningComp->IsListening())	return false;
+
+	return ComputeIsInRange();
+}
+
+
 void UCueComponentBase::SetRevealed(bool bNewRevealed)
 {
 	if (bRevealed == bNewRevealed) return;
@@ -102,16 +119,32 @@ void UCueComponentBase::SetRevealed(bool bNewRevealed)
 	if (bNewRevealed)
 	{
 		if (ListeningAudio) ListeningAudio->FadeIn(CrossfadeTime, 1.f);
-		if (AmbientAudio) AmbientAudio->FadeOut(CrossfadeTime, 0.f);
-		if (ListeningComp) ListeningComp->SetCurrentCue(CueType);
+		if (IsValid(ListeningComp)) ListeningComp->SetCurrentCue(CueType);
 	}
 	else
 	{
 		if (ListeningAudio) ListeningAudio->FadeOut(CrossfadeTime, 0.f);
-		if (AmbientAudio) AmbientAudio->FadeIn(CrossfadeTime, 1.f);
-		if (ListeningComp && ListeningComp->GetCurrentCue() == CueType)
+		if (IsValid(ListeningComp) && ListeningComp->GetCurrentCue() == CueType)
 		{
 			ListeningComp->SetCurrentCue(EListeningCue::None);
 		}
+	}
+}
+
+
+void UCueComponentBase::SetAmbientAudible(bool bNewAmbientAudible)
+{
+	if (bAmbientAudible == bNewAmbientAudible) return;
+	bAmbientAudible = bNewAmbientAudible;
+
+	if (!AmbientAudio) return;
+
+	if (bNewAmbientAudible)
+	{
+		AmbientAudio->FadeIn(CrossfadeTime, 1.f);
+	}
+	else
+	{
+		AmbientAudio->FadeOut(CrossfadeTime, 0.f);
 	}
 }
