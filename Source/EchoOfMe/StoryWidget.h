@@ -6,11 +6,12 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h" // 텍스트 위젯을 위해 필수
 #include "Components/Image.h"     //
+#include "Data/StorySequence.h"
 #include "StoryWidget.generated.h"
 
 
-class UStorySequence;
-struct FStoryPage;
+//class UStorySequence;
+//struct FStoryPage;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStoryWidgetFinished);
 

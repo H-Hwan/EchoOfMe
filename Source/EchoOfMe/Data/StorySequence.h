@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -69,4 +69,22 @@ public:
 		(도입부는 false, 메모리 회수 컷은 true)	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Story")
 	bool bPauseWorldDuringPlayback = false;
+
+	/*	스토리 재생 동안 루프될 배경음악 (선택)
+		비워두면 기존 레벨의 음악이 유지되거나 조용히 재생됩니다. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story|Audio")
+	TObjectPtr<USoundBase> BackgroundMusic;
+
+	// 배경음악의 기본 볼륨 크기 (0.0 ~ 1.0)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story|Audio", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+	float BgmVolume = 1.0f;
+
+	// 음악이 처음 시작될 때 부드럽게 커지는 시간 (초)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story|Audio", meta = (ClampMin = "0.0"))
+	float BgmFadeInTime = 1.5f;
+
+	/*	스토리가 끝날 때 음악을 부드럽게 끌 시간 (초)
+		*주의: NextLevelName을 지정해 레벨이 바로 바뀌는 상황이라면 페이드아웃이 잘리지 않게 처리가 필요합니다. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Story|Audio", meta = (ClampMin = "0.0"))
+	float BgmFadeOutTime = 1.5f;
 };
