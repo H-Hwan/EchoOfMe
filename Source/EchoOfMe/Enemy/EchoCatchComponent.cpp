@@ -13,6 +13,9 @@
 
 UEchoCatchComponent::UEchoCatchComponent() {
 	PrimaryComponentTick.bCanEverTick = false;
+
+
+
 }
 
 
@@ -32,16 +35,14 @@ void UEchoCatchComponent::BeginPlay() {
 	CatchSphere->SetRelativeLocation(CatchOffset);
 	CatchSphere->InitSphereRadius(CatchRadius);
 
+	CatchSphere->RegisterComponent();
 	CatchSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CatchSphere->SetCollisionObjectType(ECC_WorldDynamic);
 	CatchSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CatchSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	CatchSphere->SetGenerateOverlapEvents(true);
-
 	CatchSphere->OnComponentBeginOverlap.AddDynamic(this, &UEchoCatchComponent::OnCatchBeginOverlap);
 	CatchSphere->OnComponentEndOverlap.AddDynamic(this, &UEchoCatchComponent::OnCatchEndOverlap);
-
-	CatchSphere->RegisterComponent();
 }
 
 

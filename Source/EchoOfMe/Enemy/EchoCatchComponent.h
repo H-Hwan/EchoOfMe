@@ -56,7 +56,7 @@ private:
 	// 지금 잡아도 되는 상태인지 (Alert 제한 등)
 	bool CanCatchNow();
 
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TObjectPtr<USphereComponent> CatchSphere;
 
 	UPROPERTY()

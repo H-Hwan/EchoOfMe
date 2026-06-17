@@ -47,6 +47,8 @@ void AEchoEnemy::BeginPlay()
 	{
 		CatchComponent->OnPlayerCaught.AddDynamic(this, &AEchoEnemy::HandlePlayerCaught);
 	}
+
+	EnemyBrain = GetOwner()->FindComponentByClass<UEchoEnemyBehaviorComponent>();
 }
 
 // Called every frame
@@ -108,7 +110,16 @@ void AEchoEnemy::LightDetect(float DeltaTime)
 
 void AEchoEnemy::HandlePlayerCaught()
 {
+	UE_LOG(LogTemp, Error,
+		TEXT("EnemyBrain=%s"),
+		*GetNameSafe(EnemyBrain));
+
+	FVector ToHere = EnemyBrain->PickTeleportToNewPoint();
+
 	// 예: BehaviorComponent의 상태를 정지 상태나 덮치기 상태로 강제 전환
 	// BehaviorComp->ChangeState(EFSMState::Attack);
-	EnemyBrain->ChangeState(EFSMState::Lost);
+
+	EnemyBrain->ChangeState(EFSMState::Patrol);
+
+	SetActorLocation(ToHere);
 }
