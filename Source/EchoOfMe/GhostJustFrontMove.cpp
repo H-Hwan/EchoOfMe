@@ -20,6 +20,11 @@ AGhostJustFrontMove::AGhostJustFrontMove()
 	TriggerBox->SetCollisionProfileName(TEXT("Trigger"));
 
 	bIsTriggered = false;
+	TriggerBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	TriggerBox->SetCollisionObjectType(ECC_WorldDynamic);
+	TriggerBox->SetCollisionResponseToAllChannels(ECR_Ignore);
+	TriggerBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	TriggerBox->SetGenerateOverlapEvents(true);
 }
 
 void AGhostJustFrontMove::BeginPlay()
@@ -29,12 +34,8 @@ void AGhostJustFrontMove::BeginPlay()
 	// [수정됨] AHorrorPassbyEvent -> AGhostJustFrontMove 로 클래스 이름 변경
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AGhostJustFrontMove::OnOverlapBegin);
 
-	// 시작할 때 귀신 액터를 목적지 방향으로 쳐다보게 회전시켜둠
-	if (SpookyActor && DestinationPoint)
-	{
-		FVector Direction = DestinationPoint->GetActorLocation() - SpookyActor->GetActorLocation();
-		SpookyActor->SetActorRotation(Direction.Rotation());
-	}
+	SpookyActor->SetActorHiddenInGame(true);
+
 }
 
 void AGhostJustFrontMove::Tick(float DeltaTime)
@@ -44,9 +45,23 @@ void AGhostJustFrontMove::Tick(float DeltaTime)
 	// 이벤트가 발동되었고, 관련 액터들이 유효하다면 이동 시작
 	if (bIsTriggered && SpookyActor && DestinationPoint)
 	{
+		if (bIsTriggered)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Triggered"));
+		}
+
+		if (!SpookyActor)
+		{
+			UE_LOG(LogTemp, Error, TEXT("SpookyActor NULL"));
+		}
+
+		if (!DestinationPoint)
+		{
+			UE_LOG(LogTemp, Error, TEXT("DestinationPoint NULL"));
+		}
 		FVector CurrentLoc = SpookyActor->GetActorLocation();
 		FVector TargetLoc = DestinationPoint->GetActorLocation();
-
+		TargetLoc.Z = 0.0f;
 		// VInterpConstantTo: 처음부터 끝까지 일정한 속도로 이동
 		FVector NewLoc = FMath::VInterpConstantTo(CurrentLoc, TargetLoc, DeltaTime, MoveSpeed);
 		SpookyActor->SetActorLocation(NewLoc);
@@ -69,7 +84,7 @@ void AGhostJustFrontMove::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 
 	bIsTriggered = true;
 	TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	SpookyActor->SetActorHiddenInGame(false);
 	// 1. 일단 콜리전이 제대로 밟혔는지 확인하는 로그 (노란색)
 	UE_LOG(LogTemp, Warning, TEXT("✅ [호러 이벤트] 플레이어가 트리거를 밟았습니다!"));
 

@@ -34,15 +34,11 @@ void ADoorActor::BeginPlay() {
 // 매 프레임 호출
 void ADoorActor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
 	if (FMath::IsNearlyEqual(CurrentAngle, TargetAngle)) return;
-
 	// 열림/닫힘 방향에 따라 다른 속도 — 닫힐 때 더 느리게
 	const bool bOpening = FMath::Abs(TargetAngle) > FMath::Abs(CurrentAngle);
 	const float Speed = bOpening ? OpenSpeed : CloseSpeed;
-
 	CurrentAngle = FMath::FInterpConstantTo(CurrentAngle, TargetAngle, DeltaTime, Speed);
-
 	FRotator Rot = DoorMesh->GetRelativeRotation();
 	Rot.Yaw = CurrentAngle;
 	DoorMesh->SetRelativeRotation(Rot);
