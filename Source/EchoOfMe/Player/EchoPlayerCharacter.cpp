@@ -70,7 +70,6 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 	// 손전등 추가
 	FlashLight = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashLight"));
 	FlashLight->SetupAttachment(FlashlightMesh);
-	FlashLight->SetRelativeLocation()
 	FlashLight->SetUsingAbsoluteRotation(true);
 	FlashLight->Intensity = 5000.f;
 	FlashLight->OuterConeAngle = 35.f;
