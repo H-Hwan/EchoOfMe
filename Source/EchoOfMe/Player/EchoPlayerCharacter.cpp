@@ -34,7 +34,7 @@ AEchoPlayerCharacter::AEchoPlayerCharacter() {
 	GetCharacterMovement()->JumpZVelocity = 380.f;
 	// 카메라 설정
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->SetupAttachment(GetMesh(), CameraBoomParentSocket);
 	CameraBoom->TargetArmLength = 5.0f; //
 	// 마우스 입력으로 카메라 회전
 	CameraBoom->bUsePawnControlRotation = true;
@@ -104,6 +104,43 @@ void AEchoPlayerCharacter::ForceCharacterComponentMobility()
 	{
 		RecorderMesh->SetMobility(EComponentMobility::Movable);
 	}
+	if (FlashLight)
+	{
+		FlashLight->SetMobility(EComponentMobility::Movable);
+	}
+}
+
+void AEchoPlayerCharacter::AttachComponentToCharacterMesh(USceneComponent* Component, FName ParentSocket)
+{
+	USkeletalMeshComponent* CharacterMesh = GetMesh();
+	if (!CharacterMesh || !Component)
+	{
+		return;
+	}
+
+	if (ParentSocket != NAME_None && CharacterMesh->DoesSocketExist(ParentSocket))
+	{
+		Component->AttachToComponent(
+			CharacterMesh,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+			ParentSocket
+		);
+		return;
+	}
+
+	if (ParentSocket != NAME_None)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[EchoPlayerCharacter] Socket '%s' not found on %s. Keeping %s relative transform."),
+			*ParentSocket.ToString(),
+			*GetNameSafe(CharacterMesh),
+			*GetNameSafe(Component));
+	}
+
+	Component->AttachToComponent(
+		CharacterMesh,
+		FAttachmentTransformRules::KeepRelativeTransform,
+		NAME_None
+	);
 }
 
 void AEchoPlayerCharacter::PreRegisterAllComponents()
@@ -118,26 +155,9 @@ void AEchoPlayerCharacter::OnConstruction(const FTransform& Transform)
 
 	Super::OnConstruction(Transform);
 
-	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
-	{
-		if (FlashlightMesh)
-		{
-			FlashlightMesh->AttachToComponent(
-				CharacterMesh,
-				FAttachmentTransformRules::KeepRelativeTransform,
-				FlashlightParentSocket
-			);
-		}
-
-		if (RecorderMesh)
-		{
-			RecorderMesh->AttachToComponent(
-				CharacterMesh,
-				FAttachmentTransformRules::KeepRelativeTransform,
-				RecorderParentSocket
-			);
-		}
-	}
+	AttachComponentToCharacterMesh(CameraBoom, CameraBoomParentSocket);
+	AttachComponentToCharacterMesh(FlashlightMesh, FlashlightParentSocket);
+	AttachComponentToCharacterMesh(RecorderMesh, RecorderParentSocket);
 }
 
 // 게임 시작 또는 스폰 시 호출

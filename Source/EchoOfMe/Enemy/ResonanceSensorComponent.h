@@ -47,7 +47,7 @@ enum class EResonanceCue : uint8 {
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSenseLevelChanged, ESenseChannel, Channel, ESenseLevel, Level);
 
 // 감지 관련 컴포넌트
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ECHOOFME_API UResonanceSensorComponent : public UActorComponent
 {
 	GENERATED_BODY()

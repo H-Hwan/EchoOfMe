@@ -47,7 +47,22 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 		FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
 	}
 	Echo = Cast<AEchoEnemy>(GetOwner());
+
+	// 🟢 방어 코드 추가: 주인이 EchoEnemy가 아니면 여기서 즉시 중단 (크래시 방지)
+	if (!Echo)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[BehaviorComponent] 주인이 EchoEnemy가 아닙니다! 초기화 중단."));
+		return;
+	}
+
 	CurrentState = EFSMState::Patrol;
+	// 🟢 방어 코드 추가: 컴포넌트가 제대로 생성되었는지 확인
+	if (!PatrolStateComp || !SuspectStateComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[BehaviorComponent] 상태 컴포넌트가 생성되지 않았습니다!"));
+		return;
+	}
+
 	PatrolStateComp->Startreference(Echo, this);
 	SuspectStateComp->Startreference(Echo, this);
 	ChaseStateComp->Startreference(Echo, this);
@@ -139,7 +154,10 @@ bool UEchoEnemyBehaviorComponent::RequestMoveTo(const FVector& Destination, floa
 // 플레이어 정보 반환
 APawn* UEchoEnemyBehaviorComponent::GetPlayerInfo() const
 {
-	return CachedPlayer;
+
+	
+
+	return UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 }
 // 플레이어의 위치값 반환
 FVector UEchoEnemyBehaviorComponent::GetPlayerLocation()
@@ -233,49 +251,100 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
+	UE_LOG(LogTemp, Error,
+		TEXT("CachedPlayer=%s"),
+		*GetNameSafe(CachedPlayer));
+	if (!CachedPlayer)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[LightDetect] CachedPlayer NULL"));
+		return false;
+	}
+
 	if (!FlashlightComponent)
 	{
-		FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
-		UE_LOG(LogTemp, Log, TEXT("[아니 플래시좀 갖고 다녀라]"));
+		FlashlightComponent =
+			CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+
+		if (!FlashlightComponent)
+		{
+			UE_LOG(LogTemp, Error, TEXT("[LightDetect] FlashlightComponent NULL"));
+			return false;
+		}
 	}
 
 	if (!FlashlightComponent->IsFlashLightOn())
 	{
 		return false;
-
 	}
+
 	LightLocation = FlashlightComponent->LightEndPoint();
-	UE_LOG(LogTemp, Log, TEXT("[빛을 찾는중]"));
-	return IsTargetInSight(FlashlightComponent->LightEndPoint());
+
+	return IsTargetInSight(LightLocation);
 }
 // 깃발을 배열로 돌린후 플레이어으로부터 일정 거리 초과 범위내 랜덤 텔레포팅
 FVector UEchoEnemyBehaviorComponent::PickTeleportToNewPoint()
 {
+    UE_LOG(LogTemp, Error, TEXT("PT 1"));
 
-	TArray<AActor*> Flags;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), SelectTag, Flags);
-	if (SelectTag == NAME_None) return FVector::ZeroVector;
+    TArray<AActor*> Flags;
 
-	CachedFlags.Reset();
-	for (AActor* A : Flags)
-	{
-		if (FVector::Dist(A->GetActorLocation(), GetPlayerLocation()) <= SpawnMinimumDistance)
-		{
+    UE_LOG(LogTemp, Error, TEXT("PT 2"));
 
-			continue;
-		}
-		CachedFlags.Add(A);
-	}
+    if (SelectTag == NAME_None)
+        return FVector::ZeroVector;
 
-	if (CachedFlags.Num() <= 0) return FVector::ZeroVector;
+    UE_LOG(LogTemp, Error, TEXT("PT 3"));
 
-	int32 Random = FMath::RandRange(0, CachedFlags.Num() - 1);
-	// 액터
-	AActor* ACT = CachedFlags[Random];
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), SelectTag, Flags);
 
-	UE_LOG(LogTemp, Log, TEXT("[PickTeleportToNewPoint] 스폰 지점 순간이동"));
+    UE_LOG(LogTemp, Error, TEXT("PT 4"));
 
-	return ACT->GetActorLocation();
+    CachedFlags.Reset();
+
+    UE_LOG(LogTemp, Error, TEXT("PT 5"));
+
+    for (AActor* A : Flags)
+    {
+        UE_LOG(LogTemp, Error, TEXT("PT 6"));
+
+        if (!IsValid(A))
+        {
+            UE_LOG(LogTemp, Error, TEXT("Invalid Flag Actor"));
+            continue;
+        }
+
+        UE_LOG(LogTemp, Error, TEXT("PT 7"));
+
+        FVector PlayerLoc = GetPlayerLocation();
+
+        UE_LOG(LogTemp, Error, TEXT("PT 8"));
+
+        if (FVector::Dist(A->GetActorLocation(), PlayerLoc) <= SpawnMinimumDistance)
+        {
+            continue;
+        }
+
+        UE_LOG(LogTemp, Error, TEXT("PT 9"));
+
+        CachedFlags.Add(A);
+    }
+
+    UE_LOG(LogTemp, Error, TEXT("PT 10"));
+
+    if (CachedFlags.Num() <= 0)
+        return FVector::ZeroVector;
+
+    UE_LOG(LogTemp, Error, TEXT("PT 11"));
+
+    int32 Random = FMath::RandRange(0, CachedFlags.Num() - 1);
+
+    UE_LOG(LogTemp, Error, TEXT("PT 12"));
+
+    AActor* ACT = CachedFlags[Random];
+
+    UE_LOG(LogTemp, Error, TEXT("PT 13"));
+
+    return ACT->GetActorLocation();
 }
 // Enemy 신체를 반만 노출할 지점 지정
 FVector UEchoEnemyBehaviorComponent::FindPeekPoint()

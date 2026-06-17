@@ -7,13 +7,16 @@
 #include "EchoOfMe/Enemy/EchoEnemyBehaviorComponent.h"
 #include "Enemy/ChaseStateComponent.h"
 #include "Enemy/ResonanceSensorComponent.h"
+#include "Enemy/EchoCatchComponent.h"
+#include "Kismet/GameplayStatics.h"
+
+
 
 // Sets default values
 AEchoEnemy::AEchoEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	AIControllerClass = AEchoEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
@@ -31,18 +34,24 @@ AEchoEnemy::AEchoEnemy()
 	GetCharacterMovement()->bUseRVOAvoidance = true; // AI 캐릭터들끼리 겹쳐지지 않도록 설정
 
 
-
+	CatchComponent = CreateDefaultSubobject<UEchoCatchComponent>(TEXT("CatchComponent"));
 }
 
 // Called when the game starts or when spawned
 void AEchoEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	// 플레이어를 잡았을 때 내 함수 실행
+	if (CatchComponent)
+	{
+		CatchComponent->OnPlayerCaught.AddDynamic(this, &AEchoEnemy::HandlePlayerCaught);
+	}
 
-
-
-
-	
+	EnemyBrain = FindComponentByClass<UEchoEnemyBehaviorComponent>();
+	if (!EnemyBrain)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[EchoEnemy] EnemyBrain component not found on %s"), *GetNameSafe(this));
+	}
 }
 
 // Called every frame
@@ -73,7 +82,7 @@ void AEchoEnemy::Tick(float DeltaTime)
 void AEchoEnemy::Destroyed()
 {
 	FVector DeathLocation = GetActorLocation();
-	UE_LOG(LogTemp, Error, TEXT("🚨 [EchoEnemy] 몬스터가 파괴(증발)되었습니다! 마지막 위치: %s"), *DeathLocation.ToString());
+	UE_LOG(LogTemp, Error, TEXT("[EchoEnemy] 몬스터가 파괴(증발)되었습니다! 마지막 위치: %s"), *DeathLocation.ToString());
 
 	Super::Destroyed(); // 원래 엔진이 하던 파괴 작업 마저 실행
 
@@ -83,8 +92,8 @@ void AEchoEnemy::IsLockOnToTarget(bool bLockOn)
 {
 	if(bLockOn)
 	{
-		GetCharacterMovement()->MaxAcceleration = 500.0f;
-		GetCharacterMovement()->MaxWalkSpeed = 380.0f;
+		GetCharacterMovement()->MaxAcceleration = 400.0f;
+		GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 	}
 	else
 	{
@@ -102,12 +111,24 @@ void AEchoEnemy::LightDetect(float DeltaTime)
 	DetectCurrentCount += DeltaTime;
 }
 
-void AEchoEnemy::LookPlayer()
+void AEchoEnemy::HandlePlayerCaught()
 {
+	UE_LOG(LogTemp, Error,
+		TEXT("EnemyBrain=%s"),
+		*GetNameSafe(EnemyBrain));
 
+	if (!EnemyBrain)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[EchoEnemy] Cannot handle player caught: EnemyBrain is null."));
+		return;
+	}
 
+	FVector ToHere = EnemyBrain->PickTeleportToNewPoint();
 
+	// 예: BehaviorComponent의 상태를 정지 상태나 덮치기 상태로 강제 전환
+	// BehaviorComp->ChangeState(EFSMState::Attack);
 
+	EnemyBrain->ChangeState(EFSMState::Patrol);
 
-
+	SetActorLocation(ToHere);
 }

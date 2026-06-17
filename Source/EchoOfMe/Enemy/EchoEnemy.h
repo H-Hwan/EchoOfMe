@@ -8,6 +8,10 @@
 
 class UEchoEnemyBehaviorComponent;
 class UResonanceSensorComponent;
+class UEchoCatchComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnYoYourDead, FVector, TeleportPoint, bool, IsDead);
+
 
 UCLASS()
 class ECHOOFME_API AEchoEnemy : public ACharacter
@@ -37,6 +41,9 @@ public:
 	UFUNCTION()
 	void IsLockOnToTarget(bool bLockOn);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UEchoCatchComponent> CatchComponent;
+
 	// 감지 게이지
 	UPROPERTY()
 	float DetectCurrentCount = 0.0f;
@@ -54,7 +61,7 @@ public:
 
 	// 플레이어를처다봐라 처리 메소드
 	UFUNCTION()
-	void LookPlayer();
+	void HandlePlayerCaught();
 
 	UPROPERTY()
 	FVector SmoothedVelocity = FVector::ZeroVector;
@@ -62,6 +69,5 @@ public:
 	//UPROPERTY(VisibleAnywhere, Category = "Sensor")
 	//TObjectPtr<UResonanceSensorComponent> ResonanceComp;
 
-
-
+	FOnYoYourDead YoYourDead;
 };

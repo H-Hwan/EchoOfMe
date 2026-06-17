@@ -29,11 +29,11 @@ protected:
 
 	// 잡기 판정 반경
 	UPROPERTY(EditAnywhere, Category = "Catch", meta = (ClampMin = "10"))
-	float CatchRadius = 70.f;
+	float CatchRadius = 100.0f;
 
 	// 루트 기준 오프셋 (앞쪽으로 살짝 빼고 싶을 때)
 	UPROPERTY(EditAnywhere, Category = "Catch")
-	FVector CatchOffset = FVector::ZeroVector;
+	FVector CatchOffset;
 
 	// 추적(Alert) 상태에서만 잡도록 제한
 	UPROPERTY(EditAnywhere, Category = "Catch")
@@ -43,11 +43,10 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Catch")
 	void OnPlayerCaughtBP();
 
-	// 잡힘 방송
-	UPROPERTY(BlueprintAssignable, Category = "Catch")
-	FOnPlayerCaught OnPlayerCaught;
+
 
 private:
+
 	UFUNCTION()
 	void OnCatchBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp,
 		int32 BodyIndex, bool bFromSweep, const FHitResult& Sweep);
@@ -57,7 +56,7 @@ private:
 	// 지금 잡아도 되는 상태인지 (Alert 제한 등)
 	bool CanCatchNow();
 
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TObjectPtr<USphereComponent> CatchSphere;
 
 	UPROPERTY()
@@ -65,4 +64,11 @@ private:
 
 	// 중복 KillPlayer 방지 (오버랩 떠나면 재무장)
 	bool bCaughtPending = false;
+
+public:
+	// 잡힘 방송
+	UPROPERTY(BlueprintAssignable, Category = "Catch")
+	FOnPlayerCaught OnPlayerCaught;
+
+
 };
