@@ -35,7 +35,7 @@ void AGhostJustFrontMove::BeginPlay()
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AGhostJustFrontMove::OnOverlapBegin);
 
 	SpookyActor->SetActorHiddenInGame(true);
-
+	
 }
 
 void AGhostJustFrontMove::Tick(float DeltaTime)
@@ -81,7 +81,7 @@ void AGhostJustFrontMove::Tick(float DeltaTime)
 void AGhostJustFrontMove::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bIsTriggered || !OtherActor->IsA(APawn::StaticClass())) return;
-
+	NowSound();
 	bIsTriggered = true;
 	TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SpookyActor->SetActorHiddenInGame(false);
