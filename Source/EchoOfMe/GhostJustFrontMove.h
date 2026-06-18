@@ -40,10 +40,14 @@ public:
 	// 이동 속도
 	UPROPERTY(EditAnywhere, Category = "Trigger Event")
 	float MoveSpeed = 2000.0f;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sound")
 
+	void NowSound();
 private:
 	// 단발성 이벤트 체크용
 	bool bIsTriggered;
+
+
 
 	// 오버랩 이벤트 함수
 	UFUNCTION()
