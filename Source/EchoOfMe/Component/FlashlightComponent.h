@@ -1,9 +1,12 @@
-﻿#pragma once
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/SpotLightComponent.h"
 #include "FlashlightComponent.generated.h"
 
+class USoundBase;
 
 //	[플레이어 손전등 컴포넌트]
 UCLASS(ClassGroup = (EchoOfMe), meta = (BlueprintSpawnableComponent))
@@ -23,31 +26,41 @@ protected:
 	virtual void BeginPlay() override;
 
 	// 벽이 없을 때 최대 도달 거리
-	UPROPERTY(EditAnywhere, Category = "Flash Light", meta = (ClmapMin = "0", ClampMax = "3000"))
+	UPROPERTY(EditAnywhere, Category = "Flash Light", meta = (ClampMin = "0", ClampMax = "3000"))
 	float MaxAttenuationRadius = 2000.f;
 
 	// 벽에 붙었을 때 줄어들 수 있는 하한
-	UPROPERTY(EditAnywhere, Category = "Flash Light", meta = (ClmapMin = "0", ClampMax = "3000"))
+	UPROPERTY(EditAnywhere, Category = "Flash Light", meta = (ClampMin = "0", ClampMax = "3000"))
 	float MinAttenuationRadius = 100.f;
 
 	UPROPERTY(EditAnywhere, Category = "Flash Light")
 	float RadiusInterpSpeed = 50.f;
 
 	// 의심 게이지 누적 속도 (/sec)
-	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Suspicion")
 	float SuspicionGainPerSec = 10.f;
 
 	// ON 상태가 아닐 때 의심 게이지 감쇠 속도 (/sec)
-	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Suspicion")
 	float SuspicionDecayPerSec = 6.f;
 
 	// 빛의 실패 발동 임계치
-	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Suspicion")
 	float SuspicionThreshold = 100.f;
 
 	// 강제 OFF 지속 시간
-	UPROPERTY(EditAnywhere, Category="Flash Light|Suspicion")
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Suspicion")
 	float ForcedOffDuration = 1.0f;
+
+	// ======= [추가된 사운드 에셋 슬롯] =======
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Sound")
+	TObjectPtr<USoundBase> SoundFlashlightOn;
+
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Sound")
+	TObjectPtr<USoundBase> SoundFlashlightOff;
+
+	UPROPERTY(EditAnywhere, Category = "Flash Light|Sound")
+	TObjectPtr<USoundBase> SoundLightFailure;
 
 private:
 	float CalculateTargetRadius() const;
@@ -61,7 +74,6 @@ public:
 
 	UPROPERTY()
 	FVector CachedLightHitPoint;
-
 
 	// 빛의 실패 1초간 강제 OFF
 	void TriggerLightFailure();
@@ -78,11 +90,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Flash Light")
 	bool IsLightTurnOn();
 
-
 	UPROPERTY()
 	FVector CurrentLight;
-
-
 
 private:
 	bool bIsOn = false;
