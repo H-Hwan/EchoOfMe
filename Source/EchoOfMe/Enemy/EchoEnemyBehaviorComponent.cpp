@@ -251,6 +251,23 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
+
+	if (!FlashlightComponent->IsFlashLightOn())
+	{
+		return false;
+	}
+
+	if (!IsValid(FlashlightComponent))
+	{
+		if (IsValid(CachedPlayer))
+		{
+			FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+		}
+
+		// 그래도 없다면 감지 불가
+		if (!IsValid(FlashlightComponent)) return false;
+	}
+
 	UE_LOG(LogTemp, Error,
 		TEXT("CachedPlayer=%s"),
 		*GetNameSafe(CachedPlayer));
