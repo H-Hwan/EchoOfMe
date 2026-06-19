@@ -83,7 +83,16 @@ void UEchoEnemyBehaviorComponent::BeginPlay()
 void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
+	if (!CachedPlayer) {
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		if (!FlashlightComponent)
+		{
+			CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+		}
+	}
+
+
 	if (CurrentStateComp) {
 	
 		CurrentStateComp->OnStateUpdate(DeltaTime);
@@ -251,6 +260,7 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
+	if (!FlashlightComponent) return false;
 
 	if (!FlashlightComponent->IsFlashLightOn())
 	{

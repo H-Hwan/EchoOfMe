@@ -68,6 +68,7 @@ void UFlashlightComponent::ToggleFlashLight() {
 
 void UFlashlightComponent::SetFlashLightOn(bool bOn) {
 	// 기존 상태와 다를 때만 사운드가 1번 나도록 방어 조건 추가
+
 	if (bIsOn != bOn)
 	{
 		if (bOn)
