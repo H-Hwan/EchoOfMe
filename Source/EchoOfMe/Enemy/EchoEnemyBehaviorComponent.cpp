@@ -84,11 +84,22 @@ void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!CachedPlayer) {
-		CachedPlayer = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-		if (!FlashlightComponent)
+	APawn* CurrentPlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	// 2. 내가 기억하는 플레이어(CachedPlayer)와 현재 플레이어가 다르다면 (리스폰 발생)
+	if (CachedPlayer != CurrentPlayerPawn)
+	{
+		// 새로운 플레이어로 정보를 갱신합니다.
+		CachedPlayer = CurrentPlayerPawn;
+
+		// 3. 플레이어의 몸이 바뀌었으므로 손전등 컴포넌트도 새로운 몸에서 다시 찾아옵니다.
+		if (IsValid(CachedPlayer))
 		{
-			CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+			FlashlightComponent = CachedPlayer->FindComponentByClass<UFlashlightComponent>();
+		}
+		else
+		{
+			FlashlightComponent = nullptr;
 		}
 	}
 
