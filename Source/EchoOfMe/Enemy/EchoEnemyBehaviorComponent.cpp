@@ -85,7 +85,7 @@ void UEchoEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (!CachedPlayer) {
-		UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		CachedPlayer = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 		if (!FlashlightComponent)
 		{
 			CachedPlayer->FindComponentByClass<UFlashlightComponent>();
@@ -260,12 +260,7 @@ bool UEchoEnemyBehaviorComponent::IsTargetInSight(const FVector& TargetLocation)
 
 bool UEchoEnemyBehaviorComponent::IsLightDetected()
 {
-	if (!FlashlightComponent) return false;
 
-	if (!FlashlightComponent->IsFlashLightOn())
-	{
-		return false;
-	}
 
 	if (!IsValid(FlashlightComponent))
 	{
@@ -277,7 +272,10 @@ bool UEchoEnemyBehaviorComponent::IsLightDetected()
 		// 그래도 없다면 감지 불가
 		if (!IsValid(FlashlightComponent)) return false;
 	}
-
+	if (!FlashlightComponent->IsFlashLightOn())
+	{
+		return false;
+	}
 	UE_LOG(LogTemp, Error,
 		TEXT("CachedPlayer=%s"),
 		*GetNameSafe(CachedPlayer));
